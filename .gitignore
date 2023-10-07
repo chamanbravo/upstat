@@ -1,0 +1,5 @@
+vendor
+.env
+*.exe
+tmp
+server
