@@ -3,9 +3,11 @@ package controllers
 import (
 	"context"
 
+	"github.com/chamanbravo/upstat/app/models"
 	"github.com/chamanbravo/upstat/platform/database"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -46,7 +48,7 @@ func AddMonitor(c *fiber.Ctx) error {
 }
 
 func ListMonitor(c *fiber.Ctx) error {
-	var list []Monitor
+	var list []models.Monitor
 	coll := database.GetDBCollection("monitor")
 	cursor, err := coll.Find(c.Context(), bson.D{})
 	if err != nil {
@@ -70,8 +72,15 @@ func ListMonitor(c *fiber.Ctx) error {
 }
 
 func EditMonitor(c *fiber.Ctx) error {
-	name := c.Params("name")
-	data := new(Monitor)
+	id := c.Params("id")
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "invalid ID format",
+		})
+	}
+
+	data := new(models.Monitor)
 	if err := c.BodyParser(data); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "invalid data",
@@ -80,7 +89,7 @@ func EditMonitor(c *fiber.Ctx) error {
 
 	coll := database.GetDBCollection("monitor")
 
-	filter := bson.M{"name": name}
+	filter := bson.M{"_id": objID}
 	update := bson.M{"$set": bson.M{
 		"name":      data.Name,
 		"url":       data.Url,
@@ -90,8 +99,8 @@ func EditMonitor(c *fiber.Ctx) error {
 
 	options := options.FindOneAndUpdate().SetReturnDocument(options.After)
 
-	var updatedDocument Monitor
-	err := coll.FindOneAndUpdate(context.Background(), filter, update, options).Decode(&updatedDocument)
+	var updatedDocument models.Monitor
+	err = coll.FindOneAndUpdate(context.Background(), filter, update, options).Decode(&updatedDocument)
 	if err == mongo.ErrNoDocuments {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error": "Document not found",

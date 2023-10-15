@@ -11,5 +11,5 @@ func MonitorRoutes(app *fiber.App) {
 
 	route.Post("/add", middleware.Protected, controllers.AddMonitor)
 	route.Get("/list", middleware.Protected, controllers.ListMonitor)
-	route.Put("/edit/:name", middleware.Protected, controllers.EditMonitor)
+	route.Put("/edit/:id", middleware.Protected, controllers.EditMonitor)
 }
