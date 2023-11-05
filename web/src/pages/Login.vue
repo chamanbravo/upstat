@@ -11,7 +11,7 @@ const login = () => {
   if (!username.value || !password.value) {
     console.log("dumb fuck");
   } else {
-    router.push("/dashboard")
+    router.push("/app/monitors")
   }
 }
 </script>
