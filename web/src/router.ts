@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "./pages/Login.vue";
 import Register from "./pages/Register.vue";
 import NotFound from "./pages/NotFound.vue";
-import Monitors from "./pages/Monitors.vue";
+import Monitors from "./pages/Monitors/Monitors.vue";
 import SettingsVue from "./pages/Settings.vue";
 
 const routes = [
