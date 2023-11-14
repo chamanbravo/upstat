@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"github.com/chamanbravo/upstat/app/controllers"
-	"github.com/chamanbravo/upstat/app/middleware"
+	"github.com/chamanbravo/upstat/controllers"
+	"github.com/chamanbravo/upstat/middleware"
 	"github.com/gofiber/fiber/v2"
 )
 

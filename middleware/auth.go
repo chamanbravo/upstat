@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"github.com/chamanbravo/upstat/pkg/utils"
+	"github.com/chamanbravo/upstat/utils"
 	"github.com/gofiber/fiber/v2"
 )
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/chamanbravo/upstat/pkg/routes"
-	"github.com/chamanbravo/upstat/platform/database"
+	"github.com/chamanbravo/upstat/database"
+	"github.com/chamanbravo/upstat/routes"
 	"github.com/joho/godotenv"
 
 	"github.com/gofiber/fiber/v2"

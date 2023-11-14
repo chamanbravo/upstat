@@ -3,9 +3,9 @@ package controllers
 import (
 	"log"
 
-	"github.com/chamanbravo/upstat/app/models"
-	"github.com/chamanbravo/upstat/pkg/utils"
-	"github.com/chamanbravo/upstat/platform/database"
+	"github.com/chamanbravo/upstat/database"
+	"github.com/chamanbravo/upstat/models"
+	"github.com/chamanbravo/upstat/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"

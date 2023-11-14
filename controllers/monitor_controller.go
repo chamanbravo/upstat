@@ -3,8 +3,8 @@ package controllers
 import (
 	"context"
 
-	"github.com/chamanbravo/upstat/app/models"
-	"github.com/chamanbravo/upstat/platform/database"
+	"github.com/chamanbravo/upstat/database"
+	"github.com/chamanbravo/upstat/models"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
