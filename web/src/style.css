@@ -13,7 +13,39 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 272 51% 54%;
+    --primary: 263 69% 42%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 263 69% 42%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -36,10 +68,19 @@
 
 @layer base {
   * {
-    @apply border-[hsl(var(--border))];
+    @apply border-border;
   }
   body {
-    @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
+    @apply bg-background text-foreground;
+  }
+  p,
+  span {
+    @apply text-muted-foreground;
+  }
+  /* Remove auto fill background color */
+  input:-webkit-autofill,
+  input:-webkit-autofill:focus {
+    transition: background-color 600000s 0s, color 600000s 0s;
   }
   .custom-scrollbar::-webkit-scrollbar {
     width: 5px;
@@ -47,10 +88,4 @@
   .custom-scrollbar::-webkit-scrollbar-thumb {
     @apply bg-[#e2e8f0] rounded-sm dark:bg-[#1e293b];
   }
-  input {
-    @apply bg-[hsl(var(--background))] ring-[hsl(var(--border))] border-[hsl(var(--border))] border-[1.5px] rounded py-1 px-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-600;
-  }
-  p, span {
-    @apply text-[hsl(var(--muted-foreground))]
-  }
-} 
+}

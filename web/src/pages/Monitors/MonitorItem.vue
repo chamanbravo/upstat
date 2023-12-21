@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { MoreHorizontal, Trash, Pencil } from 'lucide-vue-next';
+import { MoreHorizontal, Trash, Pencil, KanbanSquare } from 'lucide-vue-next';
 
 defineProps(['monitor'])
 
@@ -51,11 +51,17 @@ const toggleAction = (e: MouseEvent) => {
     <div v-if="actionState" class="fixed top-0 left-0 z-10 w-full h-full" @click="toggleAction" />
     <div v-if="actionState" class="absolute bg-[hsl(var(--background))] z-20 flex flex-col gap-1 border py-2 px-2 rounded"
         :style="{ top: `${cursorCord?.y && cursorCord?.y + 6}px`, left: `${cursorCord?.x && cursorCord?.x - 70}px` }">
-        <router-link to="#" class="link">
-            <Pencil :size="16" />
+        <router-link :to="'/app/monitors/edit?id=' + monitor.id"
+            class="link  text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--accent-foreground))]">
+            <pencil :size="16" />
             Edit
         </router-link>
-        <router-link to="#" class="link">
+        <router-link :to="'/app/monitors/' + monitor.id"
+            class="link  text-[hsl(var(--muted-foreground))] hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--accent-foreground))]">
+            <KanbanSquare :size="16" />
+            Details
+        </router-link>
+        <router-link to="#" class="link text-red-400 hover:bg-red-500 hover:text-white">
             <Trash :size="16" />
             Delete
         </router-link>
@@ -64,6 +70,6 @@ const toggleAction = (e: MouseEvent) => {
 
 <style scoped>
 .link {
-    @apply inline-flex gap-1 items-center px-2 py-1 rounded hover:bg-[hsl(var(--accent))] hover:text-[hsl(var(--accent-foreground))] text-[hsl(var(--muted-foreground))] transition-all duration-200
+    @apply inline-flex gap-1 items-center px-2 py-1 rounded transition-all duration-200
 }
 </style>

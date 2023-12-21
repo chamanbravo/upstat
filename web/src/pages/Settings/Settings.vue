@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Layout from '../components/Layout.vue';
-import UpdateAccount from '../components/UpdateAccount.vue';
-import UpdateSecurity from '../components/UpdateSecurity.vue';
+import Layout from '../../components/Layout.vue';
+import UpdateAccount from './UpdateAccount.vue';
+import UpdateSecurity from './UpdateSecurity.vue';
 import { ref } from 'vue';
 
 const tab = ref(0)
