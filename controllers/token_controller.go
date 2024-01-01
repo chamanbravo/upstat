@@ -1,11 +1,9 @@
 package controllers
 
 import (
-	"github.com/chamanbravo/upstat/database"
-	"github.com/chamanbravo/upstat/models"
+	"github.com/chamanbravo/upstat/queries"
 	"github.com/chamanbravo/upstat/utils"
 	"github.com/gofiber/fiber/v2"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 func RefreshToken(c *fiber.Ctx) error {
@@ -19,14 +17,18 @@ func RefreshToken(c *fiber.Ctx) error {
 	payload, _ := utils.VerifyToken(refreshToken)
 
 	username := payload.Username
-	coll := database.GetDBCollection("users")
 
-	existingUser := models.User{}
-
-	err := coll.FindOne(c.Context(), bson.M{"username": username}).Decode(&existingUser)
+	existingUser, err := queries.FindUserByUsername(username)
 	if err != nil {
-		return c.JSON(fiber.Map{
-			"message": "user with givern id not found",
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   "Internal server error",
+			"message": err.Error(),
+		})
+	}
+	if existingUser == nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error":   "Unauthorized",
+			"message": "User not found",
 		})
 	}
 
