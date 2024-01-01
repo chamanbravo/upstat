@@ -1,66 +1,51 @@
 package controllers
 
 import (
-	"log"
-
-	"github.com/chamanbravo/upstat/database"
-	"github.com/chamanbravo/upstat/models"
+	"github.com/chamanbravo/upstat/queries"
+	"github.com/chamanbravo/upstat/serializers"
 	"github.com/chamanbravo/upstat/utils"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"go.mongodb.org/mongo-driver/bson"
 )
-
-type UserSignUp struct {
-	Username string `json:"username" validate:"required,min=3,max=32"`
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required,min=8,max=32"`
-}
 
 var validate = validator.New()
 
 func SignUp(c *fiber.Ctx) error {
-	user := new(UserSignUp)
+	user := new(serializers.UserSignUp)
 	if err := c.BodyParser(user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid body",
 		})
 	}
 
-	if err := validate.Struct(user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": err.Error(),
-		})
+	errors := utils.BodyValidator.Validate(user)
+	if len(errors) > 0 {
+		return c.Status(400).JSON(errors)
 	}
 
-	existingUser := models.User{}
-	coll := database.GetDBCollection("users")
-
-	err := coll.FindOne(c.Context(), bson.M{"$or": bson.A{
-		bson.M{"email": user.Email},
-		bson.M{"username": user.Username},
-	}}).Decode(&existingUser)
-
-	if err != nil {
-		log.Println(err)
-	}
-
-	if existingUser.Username != "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "User already exists",
-		})
-	}
-
-	user.Password = utils.HashPassword(user.Password)
-	_, err = coll.InsertOne(c.Context(), user)
+	existingUser, err := queries.FindUserByUsernameAndEmail(user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Failed to create user",
-			"error":   err.Error(),
+			"error":   "Internal server error",
+			"message": err.Error(),
 		})
 	}
 
-	tokens, err := utils.GenerateJWT(existingUser.Username)
+	if existingUser != nil {
+		return c.Status(fiber.StatusConflict).JSON(fiber.Map{
+			"error":   "Conflict",
+			"message": "User with this username or email already exists",
+		})
+	}
+
+	if err := queries.SaveUser(user); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   "Internal server error",
+			"message": err.Error(),
+		})
+	}
+
+	tokens, err := utils.GenerateJWT(user.Username)
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"error": err.Error(),
@@ -89,44 +74,30 @@ func SignUp(c *fiber.Ctx) error {
 	})
 }
 
-type UserSignIn struct {
-	Username string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
-}
-
 func SignIn(c *fiber.Ctx) error {
-	user := new(UserSignIn)
+	user := new(serializers.UserSignIn)
 	if err := c.BodyParser(user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid body",
 		})
 	}
 
-	if err := validate.Struct(user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": err.Error(),
-		})
+	errors := utils.BodyValidator.Validate(user)
+	if len(errors) > 0 {
+		return c.Status(400).JSON(errors)
 	}
 
-	existingUser := models.User{}
-	coll := database.GetDBCollection("users")
-	if coll == nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "unable to get database collection",
-		})
-	}
-
-	err := coll.FindOne(c.Context(), bson.M{"username": user.Username}).Decode(&existingUser)
+	existingUser, err := queries.FindUserByUsernameAndPassword(user)
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "User does not exist",
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   "Internal server error",
+			"message": err.Error(),
 		})
 	}
-
-	comparePassword := utils.ComparePassword(existingUser.Password, user.Password)
-	if !comparePassword {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid credentials",
+	if existingUser == nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error":   "Not found",
+			"message": "Invalid username or password",
 		})
 	}
 

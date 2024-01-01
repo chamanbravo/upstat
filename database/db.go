@@ -1,35 +1,42 @@
 package database
 
 import (
-	"context"
-	"errors"
+	"database/sql"
+	"embed"
+	"fmt"
 	"os"
 
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	_ "github.com/lib/pq"
+	"github.com/pressly/goose/v3"
 )
 
-var db *mongo.Database
+var DB *sql.DB
 
-func GetDBCollection(col string) *mongo.Collection {
-	return db.Collection(col)
-}
+//go:embed migrations/*.sql
+var embedMigrations embed.FS
 
-func InitDB() error {
-	uri := os.Getenv("MONGODB_URI")
-	if uri == "" {
-		return errors.New("you must set your 'MONGODB_URI' environmental variable.")
-	}
-	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(uri))
+func DBConnect() error {
+	psqlInfo := os.Getenv("POSTGRES_DSN")
+	var err error
+	DB, err = sql.Open("postgres", psqlInfo)
+
 	if err != nil {
-		return err
+		return fmt.Errorf("could not connect to database: %v", err)
 	}
 
-	db = client.Database(os.Getenv("DB"))
+	if err = DB.Ping(); err != nil {
+		panic(err)
+	}
+
+	goose.SetBaseFS(embedMigrations)
+
+	if err := goose.SetDialect("postgres"); err != nil {
+		panic(err)
+	}
+
+	if err := goose.Up(DB, "migrations"); err != nil {
+		panic(err)
+	}
 
 	return nil
-}
-
-func CloseDB() error {
-	return db.Client().Disconnect(context.Background())
 }
