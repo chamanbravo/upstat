@@ -6,3 +6,6 @@ run: build
 
 dev:
 	air
+
+swag:
+	swag init

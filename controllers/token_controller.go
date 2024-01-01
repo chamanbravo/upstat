@@ -6,6 +6,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// RefreshToken method for renew access and refresh tokens.
+// @Description Renew access and refresh tokens.
+// @Summary renew access and refresh tokens
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Success 200 {object} serializers.SuccessResponse
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/auth/refresh-token [post]
 func RefreshToken(c *fiber.Ctx) error {
 	refreshToken := c.Get("refresh_token")
 	if refreshToken == "" {

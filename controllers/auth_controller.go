@@ -10,6 +10,16 @@ import (
 
 var validate = validator.New()
 
+// SignUp method to create a new user.
+// @Description Create a new user.
+// @Summary create a new user
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param body body serializers.UserSignUp true "Body"
+// @Success 200 {object} serializers.SuccessResponse
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/auth/signup [post]
 func SignUp(c *fiber.Ctx) error {
 	user := new(serializers.UserSignUp)
 	if err := c.BodyParser(user); err != nil {
@@ -30,7 +40,6 @@ func SignUp(c *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
-
 	if existingUser != nil {
 		return c.Status(fiber.StatusConflict).JSON(fiber.Map{
 			"error":   "Conflict",
@@ -74,6 +83,16 @@ func SignUp(c *fiber.Ctx) error {
 	})
 }
 
+// SignIn method to auth user and return access and refresh tokens.
+// @Description Auth user and return access and refresh token.
+// @Summary auth user and return access and refresh token
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param body body serializers.UserSignIn true "Body"
+// @Success 200 {object} serializers.SuccessResponse
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/auth/signin [post]
 func SignIn(c *fiber.Ctx) error {
 	user := new(serializers.UserSignIn)
 	if err := c.BodyParser(user); err != nil {
@@ -127,6 +146,16 @@ func SignIn(c *fiber.Ctx) error {
 	}})
 }
 
+// SignOut method to signin user.
+// @Description De-authorize user and delete refresh token from Redis.
+// @Summary de-authorize user and delete refresh token from Redis
+// @Summary refresh jwt token
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Success 200 {object} serializers.SuccessResponse
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/auth/signout [post]
 func SignOut(c *fiber.Ctx) error {
 	c.ClearCookie("access_token")
 	c.ClearCookie("refresh_token")

@@ -10,3 +10,11 @@ type UserSignIn struct {
 	Username string `json:"username" validate:"required"`
 	Password string `json:"password" validate:"required"`
 }
+
+type SuccessResponse struct {
+	Message string `json:"message"`
+}
+
+type ErrorResponse struct {
+	Message string `json:"message"`
+}
