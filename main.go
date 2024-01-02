@@ -4,18 +4,25 @@ import (
 	"log"
 
 	"github.com/chamanbravo/upstat/database"
+	_ "github.com/chamanbravo/upstat/docs"
+
 	"github.com/chamanbravo/upstat/routes"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/joho/godotenv"
+	_ "github.com/joho/godotenv/autoload"
 )
 
+// @title Upstat API
+// @version 1.0
+// @description This is an auto-generated API Docs for Upstat API.
+// @contact.email chamanpro9@gmail.com
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @BasePath /api
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file", err)
-	}
-
 	app := fiber.New()
 	app.Use(logger.New())
 
@@ -24,6 +31,7 @@ func main() {
 	}
 
 	routes.AuthRoutes(app)
+	routes.SwaggerRoute(app)
 
 	app.Listen(":8000")
 }
