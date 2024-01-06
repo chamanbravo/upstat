@@ -3,3 +3,6 @@ vendor
 *.exe
 tmp
 server
+node_modules
+build
+dist

@@ -1,21 +1,21 @@
-const animate = require("tailwindcss-animate")
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
-  
   content: [
-    './pages/**/*.{ts,tsx,vue}',
-    './components/**/*.{ts,tsx,vue}',
-    './app/**/*.{ts,tsx,vue}',
-    './src/**/*.{ts,tsx,vue}',
-	],
-  
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   theme: {
     container: {
       center: true,
       padding: "2rem",
       screens: {
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
         "2xl": "1400px",
       },
     },
@@ -69,12 +69,23 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        "height-strech-shrink": {
+          "0%, 25%, 100%": { height: "0%" },
+          "50%, 75%": { height: "100%" },
+        },
+        "spin-wait": {
+          "0%": { transform: "rotate(0deg)" },
+          "25%, 50%": { transform: "rotate(180deg)" },
+          "75%, 100%": { transform: "rotate(360deg)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "height-strech-shrink": "height-strech-shrink 2s infinite ease-in",
+        "spin-wait": "spin-wait 2s infinite ease",
       },
     },
   },
-  plugins: [animate],
-}
+  plugins: [require("tailwindcss-animate")],
+};
