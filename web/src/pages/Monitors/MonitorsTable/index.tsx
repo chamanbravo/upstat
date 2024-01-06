@@ -4,6 +4,7 @@ import { DataTable } from "./DataTable";
 export default function DemoPage() {
   const data: MonitorItem[] = [
     {
+      id: 2,
       name: "Chad",
       url: "chad.com",
       frequency: "30",

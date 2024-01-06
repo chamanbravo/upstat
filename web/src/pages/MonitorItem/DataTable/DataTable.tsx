@@ -15,7 +15,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Filter from "./Filter";
 import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
@@ -41,7 +40,6 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="flex flex-col gap-4">
-      <Filter table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -70,7 +68,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="font-medium py-1">
+                    <TableCell key={cell.id} className="font-medium h-9">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

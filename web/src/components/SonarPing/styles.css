@@ -1,0 +1,59 @@
+.pulse {
+  background: #10c97a;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pulse:before,
+.pulse:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-sizing: border-box;
+  border: #0dbc18 1px solid;
+  z-index: 1;
+}
+
+.pulse:before {
+  animation: smallPulse 3s ease-out infinite;
+}
+
+.pulse:after {
+  animation: largePulse 3s ease-out infinite;
+}
+
+@keyframes smallPulse {
+  from {
+    transform: scale(0.75);
+    opacity: 1;
+  }
+
+  95%,
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes largePulse {
+  from {
+    transform: scale(0.75);
+    opacity: 1;
+  }
+
+  to {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}

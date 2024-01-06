@@ -8,8 +8,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router";
 
 export type MonitorItem = {
+  id: number;
   name: string;
   url: string;
   frequency: string;
@@ -20,6 +22,17 @@ export const columns: ColumnDef<MonitorItem>[] = [
   {
     accessorKey: "name",
     header: "Name",
+    cell: ({ row }) => {
+      const navigate = useNavigate();
+      return (
+        <p
+          className="text-primary font-medium hover:underline cursor-pointer"
+          onClick={() => navigate("/app/monitors/" + row.original.id)}
+        >
+          {row.getValue("name")}
+        </p>
+      );
+    },
   },
   {
     accessorKey: "url",
