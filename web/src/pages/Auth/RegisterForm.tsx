@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -21,8 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
-// import { paths } from "@/lib/api/v1";
-import createClient from "openapi-fetch";
+import { useNavigate } from "react-router";
 
 const registerFormSchema = z.object({
   username: z
@@ -40,18 +38,8 @@ const registerFormSchema = z.object({
 
 type RegisterFormValues = z.infer<typeof registerFormSchema>;
 
-interface RegisterFormProps {
-  onLoginURLClick: () => void;
-  onRegister: () => void;
-}
-
-// const client = createClient<paths>({ baseUrl: "/" });
-// const { POST } = client;
-
-export default function RegisterForm({
-  onRegister,
-  onLoginURLClick,
-}: RegisterFormProps) {
+export default function RegisterForm() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
@@ -59,35 +47,41 @@ export default function RegisterForm({
   });
 
   async function onSubmit(formData: RegisterFormValues) {
-    // try {
-    //   setLoading(true);
-    //   const { error, response } = await POST("/api/users/register/", {
-    //     body: {
-    //       username: formData.username,
-    //       email: formData.email,
-    //       password: formData.password,
-    //     },
-    //   });
-    //   if (response.ok) {
-    //     onRegister();
-    //     return toast({
-    //       title: "Account Created",
-    //     });
-    //   }
-    //   if (error?.username)
-    //     form.setError("username", { message: error.username[0] });
-    //   if (error?.email) form.setError("email", { message: error.email[0] });
-    //   if (error?.password)
-    //     form.setError("password", { message: error.password[0] });
-    //   if (error?.detail) toast({ title: error.detail });
-    // } catch (error) {
-    //   console.log(error);
-    //   return toast({
-    //     title: "Something went wrong!",
-    //   });
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      setLoading(true);
+      const response = await fetch("/api/auth/signup/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Account Created",
+        });
+        return navigate("/app/monitors");
+      } else if (response.status === 400) {
+        const data = await response.json();
+        if (data?.message) {
+          return toast({
+            title: data?.message,
+          });
+        }
+      }
+    } catch (error) {
+      console.log("error:", error);
+      return toast({
+        title: "Something went wrong!",
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -158,14 +152,6 @@ export default function RegisterForm({
           </form>
         </Form>
       </CardContent>
-      <CardFooter>
-        <a
-          className="text-sm text-muted-foreground hover:text-primary underline underline-offset-4 cursor-pointer text-center w-full"
-          onClick={() => onLoginURLClick()}
-        >
-          Already have an account? Sign In
-        </a>
-      </CardFooter>
     </Card>
   );
 }

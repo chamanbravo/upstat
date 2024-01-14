@@ -5,6 +5,7 @@ import (
 
 	"github.com/chamanbravo/upstat/database"
 	_ "github.com/chamanbravo/upstat/docs"
+	"github.com/chamanbravo/upstat/utils"
 
 	"github.com/chamanbravo/upstat/routes"
 	"github.com/gofiber/fiber/v2"
@@ -30,8 +31,12 @@ func main() {
 		log.Fatal("Could not connect to database", err)
 	}
 
+	utils.StartGoroutineSetup()
+
 	routes.AuthRoutes(app)
 	routes.SwaggerRoute(app)
+	routes.MonitorRoutes(app)
+	routes.UserRoutes(app)
 
 	app.Listen(":8000")
 }

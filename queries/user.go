@@ -93,3 +93,23 @@ func FindUserByUsername(username string) (*models.User, error) {
 	}
 	return user, nil
 }
+
+func UsersCount() (int, error) {
+	stmt, err := database.DB.Prepare("SELECT COUNT(*) FROM users")
+	if err != nil {
+		log.Println("Error when trying to prepare statement")
+		log.Println(err)
+		return -1, err
+	}
+	defer stmt.Close()
+
+	var count int
+	err = stmt.QueryRow().Scan(&count)
+	if err != nil {
+		log.Println("Error when trying to retrieve user count")
+		log.Println(err)
+		return -1, err
+	}
+
+	return count, nil
+}

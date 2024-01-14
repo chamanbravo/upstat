@@ -24,7 +24,8 @@ func SignUp(c *fiber.Ctx) error {
 	user := new(serializers.UserSignUp)
 	if err := c.BodyParser(user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid body",
+			"error":   "Invalid body",
+			"message": err.Error(),
 		})
 	}
 
@@ -41,7 +42,7 @@ func SignUp(c *fiber.Ctx) error {
 		})
 	}
 	if existingUser != nil {
-		return c.Status(fiber.StatusConflict).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   "Conflict",
 			"message": "User with this username or email already exists",
 		})
@@ -62,14 +63,12 @@ func SignUp(c *fiber.Ctx) error {
 	}
 
 	accessToken := fiber.Cookie{
-		Name:     "access_token",
-		Value:    tokens.AccessToken,
-		HTTPOnly: true,
+		Name:  "access_token",
+		Value: tokens.AccessToken,
 	}
 	refreshToken := fiber.Cookie{
-		Name:     "refresh_token",
-		Value:    tokens.RefreshToken,
-		HTTPOnly: true,
+		Name:  "refresh_token",
+		Value: tokens.RefreshToken,
 	}
 	c.Cookie(&accessToken)
 	c.Cookie(&refreshToken)
@@ -114,7 +113,7 @@ func SignIn(c *fiber.Ctx) error {
 		})
 	}
 	if existingUser == nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   "Not found",
 			"message": "Invalid username or password",
 		})
@@ -128,14 +127,12 @@ func SignIn(c *fiber.Ctx) error {
 	}
 
 	accessToken := fiber.Cookie{
-		Name:     "access_token",
-		Value:    tokens.AccessToken,
-		HTTPOnly: true,
+		Name:  "access_token",
+		Value: tokens.AccessToken,
 	}
 	refreshToken := fiber.Cookie{
-		Name:     "refresh_token",
-		Value:    tokens.RefreshToken,
-		HTTPOnly: true,
+		Name:  "refresh_token",
+		Value: tokens.RefreshToken,
 	}
 	c.Cookie(&accessToken)
 	c.Cookie(&refreshToken)

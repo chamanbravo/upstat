@@ -17,20 +17,6 @@ export default defineConfig({
           origin: BACKEND_URL,
         },
       },
-      "/admin/": {
-        // same configuration as /api/
-        target: BACKEND_URL,
-        changeOrigin: true,
-        headers: {
-          origin: BACKEND_URL,
-        },
-      },
-      "/static/": {
-        // setting origin header is not required because
-        // static urls are all GET and does not use csrftoken
-        changeOrigin: true,
-        target: BACKEND_URL,
-      },
     },
   },
   resolve: {

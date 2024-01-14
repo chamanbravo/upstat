@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -22,11 +21,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
-// import { paths } from "@/lib/api/v1";
-// import createClient from "openapi-fetch";
-import Cookies from "js-cookie";
-// import { useUser } from "@/contexts/UserContext";
-// import { useQuery } from "@/lib/hooks";
 
 const loginFormSchema = z.object({
   username: z
@@ -39,63 +33,43 @@ const loginFormSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginFormSchema>;
 
-interface LoginFormProps {
-  onSignUpURLClick: () => void;
-}
-
-// const client = createClient<paths>({ baseUrl: "/" });
-// const { POST } = client;
-
-export default function LoginForm({
-  onSignUpURLClick: onSignUpURLClick,
-}: LoginFormProps) {
+export default function LoginForm() {
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  //   const { setUser } = useUser();
-  //   const query = useQuery();
+
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: { username: "", password: "" },
   });
 
   async function onSubmit(formData: LoginFormValues) {
-    // try {
-    //   setLoading(true);
-    //   const { error, response, data } = await POST("/api/users/login/", {
-    //     body: {
-    //       username: formData.username,
-    //       password: formData.password,
-    //     },
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "X-CSRFToken": Cookies.get("csrftoken") || "",
-    //     },
-    //   });
-    //   if (response.ok && data?.id && data?.email && data?.username) {
-    //     setUser(
-    //       data.id,
-    //       data.username,
-    //       data.email,
-    //       data.first_name || undefined,
-    //       data.last_name || undefined
-    //     );
-    //     setLoading(false);
-    //     navigate(query.get("next") || "/dashboard/");
-    //   } else {
-    //     if (error?.username)
-    //       form.setError("username", { message: error.username[0] });
-    //     if (error?.password)
-    //       form.setError("password", { message: error.password[0] });
-    //     if (error?.detail) toast({ title: error.detail });
-    //     // if there is no error details, show generic error
-    //     if (!error?.username && !error?.password && !error?.detail)
-    //       toast({ title: "Something went wrong." });
-    //   }
-    // } catch (error) {
-    //   toast({ title: "Something went wrong." });
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      setLoading(true);
+      const response = await fetch("/api/auth/signin", {
+        method: "POST",
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setLoading(false);
+        navigate("/app/monitors");
+      } else if (response.status === 400) {
+        const data = await response.json();
+        return toast({
+          title: data?.message,
+        });
+      }
+    } catch (error) {
+      toast({ title: "Something went wrong." });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -147,14 +121,6 @@ export default function LoginForm({
           </form>
         </Form>
       </CardContent>
-      <CardFooter>
-        <p
-          className="text-sm text-muted-foreground hover:text-primary underline underline-offset-4 cursor-pointer text-center w-full"
-          onClick={() => onSignUpURLClick()}
-        >
-          Don&apos;t have an account? Sign Up
-        </p>
-      </CardFooter>
     </Card>
   );
 }

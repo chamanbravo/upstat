@@ -14,24 +14,24 @@ interface JwtPayload {
   username: string;
 }
 
-export default function RedirectOnNoUser({ children }: Props) {
+export default function RedirectOnUser({ children }: Props) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(true);
   const username = useUserStore((state) => state.username);
   const setUser = useUserStore((state) => state.setUser);
 
   const checkUserAuth = async () => {
-    if (username) return setLoading(false);
+    if (username) return navigate("/app/monitors");
 
     const accessToken = Cookies.get("access_token") || "";
     if (isValidToken(accessToken)) {
       const payload: JwtPayload | null = jwtDecode(accessToken);
       if (payload) {
         setUser(payload.username);
-        return setLoading(false);
+        return navigate("/app/monitors");
       }
     } else {
-      navigate("/");
+      return setLoading(false);
     }
   };
 

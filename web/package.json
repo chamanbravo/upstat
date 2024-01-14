@@ -23,6 +23,7 @@
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
     "lucide-react": "^0.292.0",
     "openapi-fetch": "^0.8.1",
     "openapi-typescript": "5.4.0",

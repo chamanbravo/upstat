@@ -1,24 +1,37 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useState } from "react";
-// import RedirectOnAuthSuccess from "@/components/RedirectOnAuthSuccess";
+import { useEffect, useState } from "react";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
+import RedirectOnUser from "@/components/RedirectOnUser";
 
 export default function index() {
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const [needSetup, setNeedSetup] = useState<boolean | undefined>(undefined);
+
+  const fetchNeedSetup = async () => {
+    try {
+      const resp = await fetch("/api/users/setup");
+      if (resp.ok) {
+        const data = await resp.json();
+        setNeedSetup(data?.needSetup);
+      }
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchNeedSetup();
+  }, []);
 
   return (
-    // <RedirectOnAuthSuccess>
-    <div className="mt-4 px-4 flex justify-center items-center  md:h-[100vh] md:mt-0 md:px-0">
-      {isLogin ? (
-        <LoginForm onSignUpURLClick={() => setIsLogin(false)} />
-      ) : (
-        <RegisterForm
-          onLoginURLClick={() => setIsLogin(true)}
-          onRegister={() => setIsLogin(true)}
-        />
-      )}
-    </div>
-    // </RedirectOnAuthSuccess>
+    <RedirectOnUser>
+      <div className="mt-4 px-4 flex justify-center items-center  md:h-[100vh] md:mt-0 md:px-0">
+        {needSetup === undefined ? null : needSetup ? (
+          <RegisterForm />
+        ) : (
+          <LoginForm />
+        )}
+      </div>
+    </RedirectOnUser>
   );
 }
