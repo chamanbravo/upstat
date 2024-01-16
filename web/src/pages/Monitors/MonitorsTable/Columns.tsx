@@ -15,7 +15,7 @@ export type MonitorItem = {
   name: string;
   url: string;
   frequency: string;
-  lastStatus: string;
+  heartbeat: [];
 };
 
 export const columns: ColumnDef<MonitorItem>[] = [
@@ -37,18 +37,48 @@ export const columns: ColumnDef<MonitorItem>[] = [
   {
     accessorKey: "url",
     header: "URL",
-  },
-  {
-    accessorKey: "lastStatus",
-    header: "Last Status",
+    cell: (row) => (
+      <div className="max-w-[150px]">{row.getValue() as React.ReactNode}</div>
+    ),
   },
   {
     accessorKey: "frequency",
     header: "Frequency",
   },
   {
+    accessorKey: "heartbeat",
+    header: "Heartbeat Summary",
+    cell: ({ row }) => {
+      const heartbeat: [] = row.getValue("heartbeat") || [];
+      function fillArray(arr: []) {
+        while (arr.length < 10) {
+          arr.unshift(undefined);
+        }
+        return arr;
+      }
+      const finalHeartbeat = fillArray(heartbeat);
+      return (
+        <div className="flex gap-1 h-full">
+          {finalHeartbeat.map((h, i) => (
+            <div
+              key={i}
+              className={`h-4 w-1 rounded-[2px] ${
+                h
+                  ? h?.status.includes("200")
+                    ? "bg-green-400"
+                    : "bg-red-400"
+                  : "bg-gray-400"
+              }`}
+            />
+          ))}
+        </div>
+      );
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
+      const navigate = useNavigate();
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -58,7 +88,11 @@ export const columns: ColumnDef<MonitorItem>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Details</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate("/app/monitors/" + row.original.id)}
+            >
+              Details
+            </DropdownMenuItem>
             <DropdownMenuItem>Configure</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Delete</DropdownMenuItem>

@@ -1,5 +1,6 @@
 import DebouncedInput from "@/components/DebouncedInput";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function Filter({ table }) {
   return (
@@ -10,7 +11,9 @@ export default function Filter({ table }) {
         onChange={(value) => table.getColumn("name")?.setFilterValue(value)}
         className="max-w-xs"
       />
-      <Button>Create</Button>
+      <Button asChild>
+        <Link to="/app/monitors/new">Create</Link>
+      </Button>
     </div>
   );
 }
