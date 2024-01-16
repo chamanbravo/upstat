@@ -51,9 +51,9 @@ func generateNewRefreshToken(username string) (string, error) {
 
 	claims := token.Claims.(jwt.MapClaims)
 	claims["username"] = username
-	claims["exp"] = time.Now().Add(time.Hour).Unix()
+	claims["exp"] = time.Now().Add(time.Hour * 5).Unix()
 
-	secretKey := []byte(os.Getenv("JWT_REFRESH_KEY"))
+	secretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
 
 	accessToken, err := token.SignedString(secretKey)
 	if err != nil {

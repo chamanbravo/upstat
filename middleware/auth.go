@@ -13,6 +13,7 @@ func Protected(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"message": "Unauthorized",
+			"error":   err.Error(),
 		})
 	}
 

@@ -1,18 +1,20 @@
 package utils
 
 import (
+	"errors"
 	"log"
 	"os"
+	"time"
 
 	"github.com/golang-jwt/jwt/v4"
 )
 
-type payload struct {
+type Payload struct {
 	Username  string
-	ExpiresAt float64
+	ExpiresAt time.Time
 }
 
-func VerifyToken(refreshToken string) (*payload, error) {
+func VerifyToken(refreshToken string) (*Payload, error) {
 	token, err := jwt.Parse(refreshToken, jwtKeyFunc)
 	if err != nil {
 		log.Println("jwt.Parse:", err)
@@ -21,18 +23,34 @@ func VerifyToken(refreshToken string) (*payload, error) {
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return nil, err
+		return nil, errors.New("invalid token")
 	}
 
-	username := claims["username"].(string)
-	expiresAt := claims["exp"].(float64)
+	username, ok := claims["username"].(string)
+	if !ok {
+		return nil, errors.New("invalid username claim")
+	}
 
-	return &payload{
+	expRaw, ok := claims["exp"]
+	if !ok {
+		return nil, errors.New("missing expiration time")
+	}
+
+	exp, ok := expRaw.(float64)
+	if !ok {
+		return nil, errors.New("invalid expiration time type")
+	}
+
+	return &Payload{
 		Username:  username,
-		ExpiresAt: expiresAt,
+		ExpiresAt: time.Unix(int64(exp), 0),
 	}, nil
 }
 
 func jwtKeyFunc(token *jwt.Token) (interface{}, error) {
-	return []byte(os.Getenv("JWT_SECRET_KEY")), nil
+	secretKey := os.Getenv("JWT_SECRET_KEY")
+	if secretKey == "" {
+		return nil, errors.New("JWT_SECRET_KEY not set")
+	}
+	return []byte(secretKey), nil
 }

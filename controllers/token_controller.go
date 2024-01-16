@@ -16,14 +16,20 @@ import (
 // @Success 400 {object} serializers.ErrorResponse
 // @Router /api/auth/refresh-token [post]
 func RefreshToken(c *fiber.Ctx) error {
-	refreshToken := c.Get("refresh_token")
+	refreshToken := c.Cookies("refresh_token")
 	if refreshToken == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "refresh token not found",
 		})
 	}
 
-	payload, _ := utils.VerifyToken(refreshToken)
+	payload, err := utils.VerifyToken(refreshToken)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   "Internal server error",
+			"message": err.Error(),
+		})
+	}
 
 	username := payload.Username
 
