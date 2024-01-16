@@ -18,3 +18,12 @@ type SuccessResponse struct {
 type ErrorResponse struct {
 	Message string `json:"message"`
 }
+
+type AddMonitorIn struct {
+	Name      string `json:"name" validate:"required"`
+	URL       string `json:"url" validate:"required"`
+	Type      string `json:"type" validate:"required"`
+	Timeout   int    `json:"timeout" validate:"required"`
+	Frequency int    `json:"frequency" validate:"required"`
+	Method    string `json:"method" validate:"required"`
+}

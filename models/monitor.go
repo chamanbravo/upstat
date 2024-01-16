@@ -1,9 +1,11 @@
 package models
 
 type Monitor struct {
-	ID        string `json:"id"`
+	ID        int    `json:"id"`
 	Name      string `json:"name"`
 	Url       string `json:"url"`
 	Method    string `json:"method"`
-	Heartbeat string `json:"heartbeat"`
+	Frequency int    `json:"frequency"`
+	Timeout   int    `json:"timeout"`
+	Type      string `json:"type"`
 }
