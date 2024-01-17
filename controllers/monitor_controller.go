@@ -133,6 +133,7 @@ func MonitorsList(c *fiber.Ctx) error {
 			"name":      v.Name,
 			"url":       v.Url,
 			"frequency": v.Frequency,
+			"status":    v.Status,
 			"heartbeat": heartbeat,
 		}
 		monitorsList = append(monitorsList, monitorItem)
