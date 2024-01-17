@@ -10,7 +10,7 @@ import (
 )
 
 func CreateMonitor(u *serializers.AddMonitorIn) (*models.Monitor, error) {
-	stmt, err := database.DB.Prepare("INSERT INTO monitors(name, url, type, timeout, frequency, method) VALUES($1, $2, $3, $4, $5, $6) RETURNING id, frequency, url")
+	stmt, err := database.DB.Prepare("INSERT INTO monitors(name, url, type, frequency, method, status) VALUES($1, $2, $3, $4, $5, $6) RETURNING id, frequency, url")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
 		log.Println(err)
@@ -19,7 +19,7 @@ func CreateMonitor(u *serializers.AddMonitorIn) (*models.Monitor, error) {
 	defer stmt.Close()
 
 	monitor := new(models.Monitor)
-	result := stmt.QueryRow(u.Name, u.URL, u.Type, u.Timeout, u.Frequency, u.Method).Scan(&monitor.ID, &monitor.Frequency, &monitor.Url)
+	result := stmt.QueryRow(u.Name, u.URL, u.Type, u.Frequency, u.Method, "green").Scan(&monitor.ID, &monitor.Frequency, &monitor.Url)
 	if result != nil {
 		if result == sql.ErrNoRows {
 			return nil, nil
@@ -76,7 +76,7 @@ func RetrieveMonitors() ([]*models.Monitor, error) {
 
 	for rows.Next() {
 		monitor := new(models.Monitor)
-		err := rows.Scan(&monitor.ID, &monitor.Name, &monitor.Url, &monitor.Type, &monitor.Timeout, &monitor.Frequency, &monitor.Method)
+		err := rows.Scan(&monitor.ID, &monitor.Name, &monitor.Url, &monitor.Type, &monitor.Method, &monitor.Frequency, &monitor.Status)
 		if err != nil {
 			log.Println("Error when trying to scan row")
 			log.Println(err)
