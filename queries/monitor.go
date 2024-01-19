@@ -2,6 +2,7 @@ package queries
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	"github.com/chamanbravo/upstat/database"
@@ -92,4 +93,34 @@ func RetrieveMonitors() ([]*models.Monitor, error) {
 	}
 
 	return monitors, nil
+}
+
+func UpdateMonitorStatus(id int, status string) error {
+	stmt, err := database.DB.Prepare("UPDATE monitors SET status = $1 WHERE id = $2")
+	if err != nil {
+		log.Println("Error when trying to prepare statement")
+		log.Println(err)
+		return err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(status, id)
+	if err != nil {
+		log.Println("Error when trying to update monitor status")
+		log.Println(err)
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		log.Println("Error getting RowsAffected")
+		log.Println(err)
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("No monitor found with ID %v", id)
+	}
+
+	return nil
 }

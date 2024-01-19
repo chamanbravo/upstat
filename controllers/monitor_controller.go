@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"strconv"
 
 	"github.com/chamanbravo/upstat/queries"
@@ -66,6 +67,10 @@ func PauseMonitor(c *fiber.Ctx) error {
 	}
 
 	utils.StopGoroutine(int(id))
+	err = queries.UpdateMonitorStatus(id, "yellow")
+	if err != nil {
+		log.Printf("Error when trying to update monitor status: %v", err.Error())
+	}
 
 	return c.Status(200).JSON(fiber.Map{
 		"message": "success",
@@ -98,6 +103,10 @@ func ResumeMonitor(c *fiber.Ctx) error {
 	}
 
 	utils.StartGoroutine(monitor)
+	err = queries.UpdateMonitorStatus(id, "green")
+	if err != nil {
+		log.Printf("Error when trying to update monitor status: %v", err.Error())
+	}
 
 	return c.Status(200).JSON(fiber.Map{
 		"message": "success",

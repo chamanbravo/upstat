@@ -28,7 +28,7 @@ func RetrieveHeartbeats(id int, limit int) ([]*models.Heartbeat, error) {
 
 	for rows.Next() {
 		heartbeat := new(models.Heartbeat)
-		err := rows.Scan(&heartbeat.ID, &heartbeat.Latency, &heartbeat.Message, &heartbeat.MonitorId, &heartbeat.Status, &heartbeat.Timestamp)
+		err := rows.Scan(&heartbeat.ID, &heartbeat.MonitorId, &heartbeat.Timestamp, &heartbeat.Status, &heartbeat.Latency, &heartbeat.Message)
 		if err != nil {
 			log.Println("Error when trying to scan row")
 			log.Println(err)

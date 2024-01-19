@@ -44,6 +44,13 @@ export const columns: ColumnDef<MonitorItem>[] = [
   {
     accessorKey: "frequency",
     header: "Frequency",
+    cell: ({ row }) => (
+      <>
+        {+row.original.frequency <= 60
+          ? `${row.getValue("frequency")}s`
+          : `${row.getValue("frequency")}h`}
+      </>
+    ),
   },
   {
     accessorKey: "heartbeat",
@@ -68,7 +75,12 @@ export const columns: ColumnDef<MonitorItem>[] = [
                     ? "bg-green-400"
                     : "bg-red-400"
                   : "bg-gray-400"
-              }`}
+              } ${h && "hover:scale-125"} `}
+              title={
+                h?.status
+                  ? `${new Date(h?.timestamp).toLocaleString()} - ${h?.status}`
+                  : ""
+              }
             />
           ))}
         </div>
@@ -93,7 +105,11 @@ export const columns: ColumnDef<MonitorItem>[] = [
             >
               Details
             </DropdownMenuItem>
-            <DropdownMenuItem>Configure</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate("/app/configure/" + row.original.id)}
+            >
+              Configure
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Delete</DropdownMenuItem>
           </DropdownMenuContent>
