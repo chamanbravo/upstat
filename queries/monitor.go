@@ -43,12 +43,12 @@ func FindMonitorById(id int) (*models.Monitor, error) {
 	defer stmt.Close()
 
 	monitor := new(models.Monitor)
-	result := stmt.QueryRow(id).Scan(&monitor.ID, &monitor.Frequency, &monitor.Url)
-	if result != nil {
-		if result == sql.ErrNoRows {
-			return nil, nil
+	err = stmt.QueryRow(id).Scan(&monitor.ID, &monitor.Name, &monitor.Url, &monitor.Type, &monitor.Method, &monitor.Frequency, &monitor.Status)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, fmt.Errorf("Monitor doesn't exist")
 		}
-		log.Println("Error when trying to find user")
+		log.Println("Error when trying to find monitor")
 		log.Println(err)
 		return nil, err
 	}

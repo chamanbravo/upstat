@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   LineChart,
   Line,
@@ -80,16 +79,18 @@ export default function GenericLineChart({ data }: Props) {
                 tick={{
                   fill: "hsl(var(--muted-foreground))",
                 }}
+                tickFormatter={(value) => `${value}ms`}
               />
               <XAxis
                 interval="preserveStartEnd"
-                dataKey="date"
+                dataKey="timestamp"
                 fontSize={14}
                 tickLine={false}
                 axisLine={false}
                 tick={{
                   fill: "hsl(var(--muted-foreground))",
                 }}
+                tickFormatter={(value) => new Date(value).toLocaleTimeString()}
               />
             </LineChart>
           </ResponsiveContainer>

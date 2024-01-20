@@ -11,7 +11,10 @@ func MonitorRoutes(app *fiber.App) {
 	route := app.Group("/api/monitors")
 
 	route.Post("/create", middleware.Protected, controllers.CreateMonitor)
-	route.Get("/pause", middleware.Protected, controllers.PauseMonitor)
-	route.Get("/resume", middleware.Protected, controllers.ResumeMonitor)
+	route.Get("/info/:id", middleware.Protected, controllers.MonitorInfo)
+	route.Put("/pause/:id", middleware.Protected, controllers.PauseMonitor)
+	route.Put("/resume/:id", middleware.Protected, controllers.ResumeMonitor)
 	route.Get("/list", middleware.Protected, controllers.MonitorsList)
+	// route.Get("/summary/:id", middleware.Protected, controllers.MonitorSummary)
+	route.Get("/heartbeat/:id", middleware.Protected, controllers.RetrieveHeartbeat)
 }

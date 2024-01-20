@@ -55,7 +55,8 @@ func StartGoroutine(monitor *models.Monitor) {
 					response, err := http.Get(monitor.Url)
 					if err != nil {
 						heartbeat.Status = "error"
-						heartbeat.Message = err.Error()
+						heartbeat.Message = "unable to ping"
+						heartbeat.Latency = 0
 						if monitor.Status != "red" {
 							err := queries.UpdateMonitorStatus(monitor.ID, "red")
 							if err != nil {
@@ -65,20 +66,21 @@ func StartGoroutine(monitor *models.Monitor) {
 					} else {
 						heartbeat.Status = strings.Split(response.Status, " ")[0]
 						heartbeat.Message = strings.Split(response.Status, " ")[1]
+						latency := time.Since(startTime).Milliseconds()
+						heartbeat.Latency = int(latency)
 						defer response.Body.Close()
+
+						if monitor.Status != "green" {
+							err := queries.UpdateMonitorStatus(monitor.ID, "green")
+							if err != nil {
+								log.Printf("Error when trying to update monitor status: %v", err.Error())
+							}
+						}
 					}
-					latency := time.Since(startTime).Microseconds()
-					heartbeat.Latency = int(latency)
 					err = queries.SaveHeartbeat(heartbeat)
 					if err != nil {
 						log.Printf("Error when trying to save heartbeat: %v", err.Error())
 					}
-					// if monitor.Status != "green" {
-					// 	err := queries.UpdateMonitorStatus(monitor.ID, "green")
-					// 	if err != nil {
-					// 		log.Printf("Error when trying to update monitor status: %v", err.Error())
-					// 	}
-					// }
 				}
 				time.Sleep(time.Duration(monitor.Frequency) * time.Second)
 			}

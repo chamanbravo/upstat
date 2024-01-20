@@ -15,6 +15,7 @@ export type MonitorItem = {
   name: string;
   url: string;
   frequency: string;
+  status: string;
   heartbeat: [];
 };
 
@@ -25,12 +26,24 @@ export const columns: ColumnDef<MonitorItem>[] = [
     cell: ({ row }) => {
       const navigate = useNavigate();
       return (
-        <p
-          className="text-primary font-medium hover:underline cursor-pointer"
-          onClick={() => navigate("/app/monitors/" + row.original.id)}
-        >
-          {row.getValue("name")}
-        </p>
+        <div className="inline-flex items-center gap-[0.3rem]">
+          <div
+            className={`w-[6px] h-[6px] rounded-[50%] bg-${row.original.status}-500`}
+            title={
+              row.original.status === "green"
+                ? "Up"
+                : row.original.status === "yellow"
+                ? "Paused"
+                : "Down"
+            }
+          />
+          <p
+            className="text-primary font-medium hover:underline cursor-pointer"
+            onClick={() => navigate("/app/monitors/" + row.original.id)}
+          >
+            {row.getValue("name")}
+          </p>
+        </div>
       );
     },
   },
@@ -66,7 +79,7 @@ export const columns: ColumnDef<MonitorItem>[] = [
       const finalHeartbeat = fillArray(heartbeat);
       return (
         <div className="flex gap-1 h-full">
-          {finalHeartbeat.map((h, i) => (
+          {finalHeartbeat.reverse().map((h, i) => (
             <div
               key={i}
               className={`h-4 w-1 rounded-[2px] ${
