@@ -143,7 +143,10 @@ export default function index() {
                   variant="ghost"
                   className="w-fit text-muted-foreground p-2 flex gap-1 h-7"
                   onClick={() => {
-                    if (monitorInfo?.status === "green") {
+                    if (
+                      monitorInfo?.status === "green" ||
+                      monitorInfo?.status === "red"
+                    ) {
                       pauseMonitor();
                     } else {
                       resumeMonitor();

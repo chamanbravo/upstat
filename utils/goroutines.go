@@ -47,10 +47,15 @@ func StartGoroutine(monitor *models.Monitor) {
 				fmt.Printf("Goroutine with ID %d stopped by request\n", id)
 				return
 			default:
-				fmt.Printf("Goroutine with ID %d is running...\n", id)
+				monitor, err := queries.FindMonitorById(id)
+				if err != nil {
+					log.Printf("Error retrieving updated monitor data: %v", err)
+					continue
+				}
 				heartbeat := new(models.Heartbeat)
 				heartbeat.MonitorId = id
 				if monitor.Status != "yellow" {
+					fmt.Printf("Goroutine with ID %d is running...\n", id)
 					startTime := time.Now()
 					response, err := http.Get(monitor.Url)
 					if err != nil {
