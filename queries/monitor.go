@@ -56,6 +56,24 @@ func FindMonitorById(id int) (*models.Monitor, error) {
 	return monitor, nil
 }
 
+func UpdateMonitorById(id int, monitor *serializers.AddMonitorIn) error {
+	stmt, err := database.DB.Prepare("UPDATE monitors SET name = $1, url = $2, type = $3, method = $4, frequency = $5  WHERE id = $6")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	result := stmt.QueryRow(monitor.Name, monitor.URL, monitor.Type, monitor.Method, monitor.Frequency, id)
+	if result != nil {
+		if err == sql.ErrNoRows {
+			return nil
+		}
+		return err
+	}
+
+	return nil
+}
+
 func RetrieveMonitors() ([]*models.Monitor, error) {
 	stmt, err := database.DB.Prepare("SELECT * FROM monitors")
 	if err != nil {

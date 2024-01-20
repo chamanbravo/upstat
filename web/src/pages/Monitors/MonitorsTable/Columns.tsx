@@ -72,14 +72,14 @@ export const columns: ColumnDef<MonitorItem>[] = [
       const heartbeat: [] = row.getValue("heartbeat") || [];
       function fillArray(arr: []) {
         while (arr.length < 10) {
-          arr.unshift(undefined);
+          arr.push(undefined);
         }
         return arr;
       }
-      const finalHeartbeat = fillArray(heartbeat);
+      const finalHeartbeat = [...fillArray(heartbeat)].reverse();
       return (
         <div className="flex gap-1 h-full">
-          {finalHeartbeat.reverse().map((h, i) => (
+          {finalHeartbeat.map((h, i) => (
             <div
               key={i}
               className={`h-4 w-1 rounded-[2px] ${
@@ -119,7 +119,9 @@ export const columns: ColumnDef<MonitorItem>[] = [
               Details
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => navigate("/app/configure/" + row.original.id)}
+              onClick={() =>
+                navigate("/app/monitors/configure/" + row.original.id)
+              }
             >
               Configure
             </DropdownMenuItem>

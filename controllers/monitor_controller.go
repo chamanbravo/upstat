@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"strconv"
 
 	"github.com/chamanbravo/upstat/queries"
@@ -80,6 +79,50 @@ func MonitorInfo(c *fiber.Ctx) error {
 	})
 }
 
+func UpdateMonitor(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	if idParam == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"error":   "Bad Request",
+			"message": "ID parameter is missing",
+		})
+	}
+
+	monitor := new(serializers.AddMonitorIn)
+	if err := c.BodyParser(monitor); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   "Invalid body",
+			"message": err.Error(),
+		})
+	}
+
+	errors := utils.BodyValidator.Validate(monitor)
+	if len(errors) > 0 {
+		return c.Status(400).JSON(errors)
+	}
+
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error":   "Bad Request",
+			"message": "Invalid ID parameter",
+		})
+	}
+
+	err = queries.UpdateMonitorById(id, monitor)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   "Internal server error",
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"message": "success",
+	})
+
+}
+
 func PauseMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -100,7 +143,10 @@ func PauseMonitor(c *fiber.Ctx) error {
 	utils.StopGoroutine(int(id))
 	err = queries.UpdateMonitorStatus(id, "yellow")
 	if err != nil {
-		log.Printf("Error when trying to update monitor status: %v", err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   "Internal server error",
+			"message": err.Error(),
+		})
 	}
 
 	return c.Status(200).JSON(fiber.Map{
@@ -136,7 +182,10 @@ func ResumeMonitor(c *fiber.Ctx) error {
 	utils.StartGoroutine(monitor)
 	err = queries.UpdateMonitorStatus(id, "green")
 	if err != nil {
-		log.Printf("Error when trying to update monitor status: %v", err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   "Internal server error",
+			"message": err.Error(),
+		})
 	}
 
 	return c.Status(200).JSON(fiber.Map{

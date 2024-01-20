@@ -164,6 +164,7 @@ export default function index() {
                 <Button
                   variant="ghost"
                   className="w-fit text-muted-foreground p-2 flex gap-1 h-7"
+                  onClick={() => navigate(`/app/monitors/configure/${id}`)}
                 >
                   <Settings className="h-4 w-4" />
                   Configure
@@ -171,7 +172,9 @@ export default function index() {
               </div>
               <div className="flex flex-col gap-8">
                 <Summary />
-                <GenericLineChart data={[...monitorData]?.reverse()} />
+                <GenericLineChart
+                  data={monitorData?.length ? [...monitorData].reverse() : []}
+                />
               </div>
             </div>
           </div>

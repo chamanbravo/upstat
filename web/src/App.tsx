@@ -24,6 +24,10 @@ function App() {
             <Route path="/app/monitors" element={<Monitors />} />
             <Route path="/app/monitors/:id" element={<MonitorItem />} />
             <Route path="/app/monitors/new" element={<CreateMonitor />} />
+            <Route
+              path="/app/monitors/configure/:id"
+              element={<CreateMonitor />}
+            />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
         </div>
