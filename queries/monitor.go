@@ -142,3 +142,27 @@ func UpdateMonitorStatus(id int, status string) error {
 
 	return nil
 }
+
+func DeleteMonitorById(id int) error {
+	stmt, err := database.DB.Prepare("DELETE FROM monitors WHERE id = $1")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("Monitor with ID %d not found", id)
+	}
+
+	return nil
+}

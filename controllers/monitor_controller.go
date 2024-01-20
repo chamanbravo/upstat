@@ -295,3 +295,31 @@ func RetrieveHeartbeat(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(fiber.Map{"message": "success", "heartbeat": heartbeat})
 }
+
+func DeleteMonitor(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	if idParam == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"error":   "Bad Request",
+			"message": "ID parameter is missing",
+		})
+	}
+
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"error":   "Bad Request",
+			"message": "Invalid ID parameter",
+		})
+	}
+
+	err = queries.DeleteMonitorById(id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   "Internal server error",
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{"message": "success"})
+}

@@ -133,6 +133,27 @@ export default function index() {
     } catch (error) {}
   };
 
+  const deleteMonitor = async () => {
+    try {
+      const response = await api(`/api/monitors/delete/${id}`, {
+        method: "DELETE",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
+      if (response.ok) {
+        navigate("/app/monitors");
+        return toast({
+          title: "Monitor deleted successfull.",
+        });
+      } else {
+        return toast({
+          title: "Something went wrong.",
+        });
+      }
+    } catch (err) {}
+  };
+
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -193,7 +214,7 @@ export default function index() {
                 <Button
                   variant="ghost"
                   className="w-fit text-muted-foreground p-2 flex gap-1 h-7"
-                  onClick={() => navigate(`/app/monitors/configure/${id}`)}
+                  onClick={deleteMonitor}
                 >
                   <Trash2 className="h-4 w-4" />
                   Delete

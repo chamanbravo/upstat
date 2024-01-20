@@ -9,6 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router";
+import { api } from "@/lib/api";
+import { toast } from "@/components/ui/use-toast";
 
 export type MonitorItem = {
   id: number;
@@ -104,6 +106,29 @@ export const columns: ColumnDef<MonitorItem>[] = [
     id: "actions",
     cell: ({ row }) => {
       const navigate = useNavigate();
+      const deleteMonitor = async () => {
+        try {
+          const response = await api(
+            `/api/monitors/delete/${row.original.id}`,
+            {
+              method: "DELETE",
+              headers: {
+                "content-type": "application/json",
+              },
+            }
+          );
+          if (response.ok) {
+            navigate("/app/monitors");
+            return toast({
+              title: "Monitor deleted successfull.",
+            });
+          } else {
+            return toast({
+              title: "Something went wrong.",
+            });
+          }
+        } catch (err) {}
+      };
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -126,7 +151,7 @@ export const columns: ColumnDef<MonitorItem>[] = [
               Configure
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={deleteMonitor}>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
