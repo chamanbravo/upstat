@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import useThemeStore from "@/store/ThemeStore";
+import CommandMenu from "../CommandMenu";
 
 export default function Navbar() {
   const theme = useThemeStore((state) => state.theme);
@@ -11,7 +12,8 @@ export default function Navbar() {
       <div className="m-auto max-w-[1200px] flex items-center py-2 px-4">
         <span className="font-bold">Upstat</span>
 
-        <div className="ml-auto flex items-center">
+        <div className="ml-auto flex items-center gap-2">
+          <CommandMenu />
           <Button variant="ghost" className="w-9 px-0" onClick={toggleTheme}>
             {theme === "light" ? (
               <Sun className="h-[1.2rem] w-[1.2rem] cursor-pointer" />

@@ -43,6 +43,7 @@ export default function Sidebar() {
           className={`justify-start text-muted-foreground hover:text-foreground ${
             pathname.includes("settings") && selectedStyle
           }`}
+          onClick={() => navigate("/app/settings")}
         >
           <Cog className="mr-2 h-4 w-4" />
           Settings
