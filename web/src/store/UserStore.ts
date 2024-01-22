@@ -5,6 +5,7 @@ interface UserState {
   firstname: string | undefined;
   lastname: string | undefined;
   setUser: (user: string) => void;
+  clearUser: () => void;
 }
 
 const useUserStore = create<UserState>((set) => ({
@@ -12,6 +13,8 @@ const useUserStore = create<UserState>((set) => ({
   firstname: undefined,
   lastname: undefined,
   setUser: (username: string) => set({ username }),
+  clearUser: () =>
+    set({ username: undefined, firstname: undefined, lastname: undefined }),
 }));
 
 export default useUserStore;

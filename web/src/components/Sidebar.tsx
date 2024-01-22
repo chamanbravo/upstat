@@ -1,12 +1,15 @@
 import { Activity, BellDot, Cog, LogOut, PanelTop } from "lucide-react";
 import { Button } from "./ui/button";
 import { useLocation, useNavigate } from "react-router";
+import Cookies from "js-cookie";
+import useUserStore from "@/store/UserStore";
 
 const selectedStyle = "bg-secondary text-foreground";
 
 export default function Sidebar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const clearUser = useUserStore((state) => state.clearUser);
 
   return (
     <div className="max-w-[200px] h-[calc(100vh-80px)] border-r sticky top-[70px] px-2 pr-4 py-6 flex flex-col justify-between">
@@ -49,6 +52,9 @@ export default function Sidebar() {
         variant="ghost"
         className="justify-start text-muted-foreground hover:text-foreground"
         onClick={() => {
+          Cookies.remove("access_token");
+          Cookies.remove("refresh_token");
+          clearUser();
           navigate("/");
         }}
       >
