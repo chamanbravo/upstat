@@ -5,6 +5,7 @@ import {
   MonitorItem,
   Monitors,
   PageNotFound,
+  Settings,
 } from "./pages";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -27,6 +28,11 @@ function App() {
             <Route
               path="/app/monitors/configure/:id"
               element={<CreateMonitor />}
+            />
+            <Route path="/app/settings" element={<Settings />} />
+            <Route
+              path="/app/settings/password-security"
+              element={<Settings />}
             />
             <Route path="*" element={<PageNotFound />} />
           </Routes>

@@ -37,7 +37,9 @@ export default function Sidebar() {
         </Button>
         <Button
           variant="ghost"
-          className="justify-start text-muted-foreground hover:text-foreground"
+          className={`justify-start text-muted-foreground hover:text-foreground ${
+            pathname.includes("settings") && selectedStyle
+          }`}
         >
           <Cog className="mr-2 h-4 w-4" />
           Settings
@@ -46,6 +48,9 @@ export default function Sidebar() {
       <Button
         variant="ghost"
         className="justify-start text-muted-foreground hover:text-foreground"
+        onClick={() => {
+          navigate("/");
+        }}
       >
         <LogOut className="mr-2 h-4 w-4" />
         Logout
