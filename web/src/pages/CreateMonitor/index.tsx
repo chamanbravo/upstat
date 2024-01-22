@@ -175,10 +175,10 @@ export default function index() {
               <Button
                 variant="ghost"
                 className="w-fit text-muted-foreground p-2 h-7"
-                onClick={() => navigate("/app/monitors")}
+                onClick={() => navigate(`/app/monitors/${monitorInfo?.id}`)}
               >
                 <ChevronLeft className="h-4 w-4" />
-                Monitors
+                Monitor
               </Button>
               <div className="flex gap-4 items-center">
                 <div className="flex flex-col gap-1">
