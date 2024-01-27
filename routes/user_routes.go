@@ -12,4 +12,5 @@ func UserRoutes(app *fiber.App) {
 
 	route.Get("/setup", controllers.Setup)
 	route.Post("/update-password", middleware.Protected, controllers.UpdatePassword)
+	route.Patch("/update/:username", middleware.Protected, controllers.UpdateAccount)
 }

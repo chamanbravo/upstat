@@ -1,18 +1,19 @@
 import { create } from "zustand";
 
 interface UserState {
-  username: string | undefined;
-  firstname: string | undefined;
-  lastname: string | undefined;
-  setUser: (user: string) => void;
+  username: string;
+  firstname: string;
+  lastname: string;
+  setUser: (user: string, firstname: string, lastname: string) => void;
   clearUser: () => void;
 }
 
 const useUserStore = create<UserState>((set) => ({
-  username: undefined,
-  firstname: undefined,
-  lastname: undefined,
-  setUser: (username: string) => set({ username }),
+  username: "",
+  firstname: "",
+  lastname: "",
+  setUser: (username: string, firstname: string, lastname: string) =>
+    set({ username, firstname, lastname }),
   clearUser: () =>
     set({ username: undefined, firstname: undefined, lastname: undefined }),
 }));

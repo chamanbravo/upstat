@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import useUserStore from "@/store/UserStore";
+import { api } from "@/lib/api";
 
 const accountFormSchema = z.object({
   firstname: z
@@ -38,7 +39,10 @@ const accountFormSchema = z.object({
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 export function AccountForm() {
-  const { firstname, lastname } = useUserStore((state) => state);
+  const firstname = useUserStore((state) => state.firstname);
+  const lastname = useUserStore((state) => state.lastname);
+  const username = useUserStore((state) => state.username);
+  const setUser = useUserStore((state) => state.setUser);
   const [loading, setLoading] = useState(false);
 
   const defaultValues = {
@@ -52,6 +56,24 @@ export function AccountForm() {
 
   async function onSubmit(formData: AccountFormValues) {
     try {
+      const response = await api(`/api/users/update/${username}`, {
+        method: "PATCH",
+        body: JSON.stringify(formData),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status === 200) {
+        toast({
+          title: "Account updated!",
+        });
+        setUser(username, formData.firstname, formData.lastname);
+      } else {
+        const data = await response.json();
+        toast({
+          title: data?.message,
+        });
+      }
     } catch (error) {
       console.log(error);
       toast({

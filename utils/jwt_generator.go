@@ -12,13 +12,13 @@ type Tokens struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
-func GenerateJWT(username string) (*Tokens, error) {
-	accessToken, err := generateAccessToken(username)
+func GenerateJWT(username, firstname, lastname string) (*Tokens, error) {
+	accessToken, err := generateAccessToken(username, firstname, lastname)
 	if err != nil {
 		return nil, err
 	}
 
-	refreshToken, err := generateNewRefreshToken(username)
+	refreshToken, err := generateNewRefreshToken(username, firstname, lastname)
 	if err != nil {
 		return nil, err
 	}
@@ -29,11 +29,13 @@ func GenerateJWT(username string) (*Tokens, error) {
 	}, nil
 }
 
-func generateAccessToken(username string) (string, error) {
+func generateAccessToken(username, firstname, lastname string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
 	claims["username"] = username
+	claims["firstname"] = firstname
+	claims["lastname"] = lastname
 	claims["exp"] = time.Now().Add(time.Hour).Unix()
 
 	secretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
@@ -46,11 +48,13 @@ func generateAccessToken(username string) (string, error) {
 	return accessToken, nil
 }
 
-func generateNewRefreshToken(username string) (string, error) {
+func generateNewRefreshToken(username, firstname, lastname string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
 	claims["username"] = username
+	claims["firstname"] = firstname
+	claims["lastname"] = lastname
 	claims["exp"] = time.Now().Add(time.Hour * 5).Unix()
 
 	secretKey := []byte(os.Getenv("JWT_SECRET_KEY"))

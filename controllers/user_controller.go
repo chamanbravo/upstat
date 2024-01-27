@@ -84,3 +84,41 @@ func UpdatePassword(c *fiber.Ctx) error {
 		"message": "success",
 	})
 }
+
+// @Accept json
+// @Produce json
+// @Router /api/users/{username} [patch]
+func UpdateAccount(c *fiber.Ctx) error {
+	username := c.Params("username")
+	if username == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"error":   "Bad Request",
+			"message": "Username parameter is missing",
+		})
+	}
+
+	updateAccountBody := new(serializers.UpdateAccountIn)
+	if err := c.BodyParser(updateAccountBody); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   "Invalid body",
+			"message": err.Error(),
+		})
+	}
+
+	errors := utils.BodyValidator.Validate(updateAccountBody)
+	if len(errors) > 0 {
+		return c.Status(400).JSON(errors)
+	}
+
+	err := queries.UpdateAccount(username, updateAccountBody)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   "Internal server error",
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"message": "Account updated successfully.",
+	})
+}

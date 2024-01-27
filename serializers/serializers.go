@@ -31,3 +31,8 @@ type UpdatePasswordIn struct {
 	CurrentPassword string `json:"currentPassword" validate:"required"`
 	NewPassword     string `json:"newPassword" validate:"required,min=8,max=32"`
 }
+
+type UpdateAccountIn struct {
+	Firstname string `json:"firstname" validate:"required,min=2,max=32"`
+	Lastname  string `json:"lastname" validate:"required,min=2,max=32"`
+}

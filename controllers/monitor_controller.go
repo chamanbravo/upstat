@@ -313,6 +313,7 @@ func DeleteMonitor(c *fiber.Ctx) error {
 		})
 	}
 
+	utils.StopGoroutine(id)
 	err = queries.DeleteMonitorById(id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

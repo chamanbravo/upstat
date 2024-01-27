@@ -55,7 +55,7 @@ func SignUp(c *fiber.Ctx) error {
 		})
 	}
 
-	tokens, err := utils.GenerateJWT(user.Username)
+	tokens, err := utils.GenerateJWT(user.Username, "", "")
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"error": err.Error(),
@@ -119,7 +119,7 @@ func SignIn(c *fiber.Ctx) error {
 		})
 	}
 
-	tokens, err := utils.GenerateJWT(existingUser.Username)
+	tokens, err := utils.GenerateJWT(existingUser.Username, existingUser.Firstname, existingUser.Lastname)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
