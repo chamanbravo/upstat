@@ -26,3 +26,8 @@ type AddMonitorIn struct {
 	Frequency int    `json:"frequency" validate:"required"`
 	Method    string `json:"method" validate:"required"`
 }
+
+type UpdatePasswordIn struct {
+	CurrentPassword string `json:"currentPassword" validate:"required"`
+	NewPassword     string `json:"newPassword" validate:"required,min=8,max=32"`
+}

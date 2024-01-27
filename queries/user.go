@@ -50,7 +50,7 @@ func FindUserByUsernameAndEmail(u *serializers.UserSignUp) (*models.User, error)
 	return user, nil
 }
 
-func FindUserByUsernameAndPassword(u *serializers.UserSignIn) (*models.User, error) {
+func FindUserByUsernameAndPassword(username, password string) (*models.User, error) {
 	stmt, err := database.DB.Prepare("SELECT id, username, email FROM users WHERE username = $1 AND password = crypt($2, password)")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
@@ -60,7 +60,7 @@ func FindUserByUsernameAndPassword(u *serializers.UserSignIn) (*models.User, err
 	defer stmt.Close()
 
 	user := new(models.User)
-	result := stmt.QueryRow(u.Username, u.Password).Scan(&user.ID, &user.Username, &user.Email)
+	result := stmt.QueryRow(username, password).Scan(&user.ID, &user.Username, &user.Email)
 	if result != nil {
 		if result == sql.ErrNoRows {
 			return nil, nil
@@ -112,4 +112,23 @@ func UsersCount() (int, error) {
 	}
 
 	return count, nil
+}
+
+func UpdatePassword(username string, u *serializers.UpdatePasswordIn) error {
+	stmt, err := database.DB.Prepare("UPDATE users SET password = crypt($2, gen_salt('bf')) WHERE username = $1 AND password = crypt($3, password)")
+	if err != nil {
+		log.Println("Error when trying to prepare statement")
+		log.Println(err)
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(username, u.CurrentPassword, u.NewPassword)
+	if err != nil {
+		log.Println("Error when trying to update password")
+		log.Println(err)
+		return err
+	}
+
+	return nil
 }

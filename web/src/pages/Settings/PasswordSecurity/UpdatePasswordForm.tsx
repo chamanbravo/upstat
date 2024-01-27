@@ -13,18 +13,16 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
-import { useNavigate } from "react-router-dom";
-import useUserStore from "@/store/UserStore";
 
 const accountFormSchema = z.object({
-  currentPassword: z.string({
-    required_error: "validation.current-password",
+  currentPassword: z.string().min(8, {
+    message: "Current Password is required",
   }),
   newPassword: z.string().min(8, {
-    message: "validation.min-password",
+    message: "Password must be at least 8 characters",
   }),
   confirmPassword: z.string().min(8, {
-    message: "validation.min-password",
+    message: "Password must be at least 8 characters",
   }),
 });
 
@@ -32,8 +30,6 @@ type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 export function UpdatePasswordForm() {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { username } = useUserStore((state) => state);
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues: {
@@ -51,6 +47,30 @@ export function UpdatePasswordForm() {
       });
       return;
     }
+    try {
+      setLoading(true);
+      const response = await fetch("/api/users/update-password", {
+        method: "POST",
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        toast({
+          title: "Password updated.",
+        });
+      } else if (response.status === 400) {
+        const { message } = await response.json();
+        toast({
+          title: message,
+        });
+      }
+      setLoading(false);
+    } catch (err) {}
   }
 
   return (

@@ -10,4 +10,5 @@ func UserRoutes(app *fiber.App) {
 	route := app.Group("/api/users")
 
 	route.Get("/setup", controllers.Setup)
+	route.Post("/update-password", controllers.UpdatePassword)
 }

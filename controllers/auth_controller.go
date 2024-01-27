@@ -105,7 +105,7 @@ func SignIn(c *fiber.Ctx) error {
 		return c.Status(400).JSON(errors)
 	}
 
-	existingUser, err := queries.FindUserByUsernameAndPassword(user)
+	existingUser, err := queries.FindUserByUsernameAndPassword(user.Username, user.Password)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":   "Internal server error",
