@@ -12,6 +12,8 @@ interface Props {
 
 interface JwtPayload {
   username: string;
+  firstname: string;
+  lastname: string;
 }
 
 export default function RedirectOnUser({ children }: Props) {
@@ -27,7 +29,7 @@ export default function RedirectOnUser({ children }: Props) {
     if (isValidToken(accessToken)) {
       const payload: JwtPayload | null = jwtDecode(accessToken);
       if (payload) {
-        setUser(payload.username);
+        setUser(payload.username, payload.firstname, payload.lastname);
         return navigate("/app/monitors");
       }
     } else {

@@ -10,10 +10,7 @@ import { api } from "@/lib/api";
 import Summary from "./Summary";
 import RedirectOnNoUser from "@/components/RedirectOnNoUser";
 import { toast } from "@/components/ui/use-toast";
-import { client } from "@/lib/utils";
 import { components } from "@/lib/api/v1";
-
-const { GET } = client;
 
 const statusColor: Record<string, string> = {
   green: "text-green-500",
@@ -27,9 +24,6 @@ export default function index() {
   const [monitorInfo, setMonitorInfo] = useState<
     components["schemas"]["MonitorInfoOut"]["monitor"]
   >({});
-  const [monitorData, setMonitorData] = useState<
-    components["schemas"]["HeartbeatsOut"]["heartbeat"]
-  >([]);
 
   const fetchMonitorInfo = async (signal: AbortSignal) => {
     try {
@@ -43,23 +37,6 @@ export default function index() {
       if (response.ok) {
         const data = await response.json();
         setMonitorInfo(data?.monitor);
-      }
-    } catch (error) {}
-  };
-
-  const fetchMonitorData = async (signal: AbortSignal) => {
-    if (!id) return;
-    try {
-      const { response, data } = await GET(`/api/monitors/heartbeat/{id}`, {
-        params: {
-          path: {
-            id: `${id}`,
-          },
-        },
-        signal,
-      });
-      if (response.ok) {
-        setMonitorData(data?.heartbeat);
       }
     } catch (error) {}
   };
@@ -101,7 +78,6 @@ export default function index() {
   useEffect(() => {
     const controller = new AbortController();
     fetchMonitorInfo(controller.signal);
-    fetchMonitorData(controller.signal);
   }, []);
 
   return (
@@ -185,9 +161,7 @@ export default function index() {
               </div>
               <div className="flex flex-col gap-8">
                 <Summary />
-                <GenericLineChart
-                  data={monitorData?.length ? [...monitorData].reverse() : []}
-                />
+                <GenericLineChart />
               </div>
             </div>
           </div>

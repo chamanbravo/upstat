@@ -14,8 +14,7 @@ const useUserStore = create<UserState>((set) => ({
   lastname: "",
   setUser: (username: string, firstname: string, lastname: string) =>
     set({ username, firstname, lastname }),
-  clearUser: () =>
-    set({ username: undefined, firstname: undefined, lastname: undefined }),
+  clearUser: () => set({ username: "", firstname: "", lastname: "" }),
 }));
 
 export default useUserStore;

@@ -1,6 +1,8 @@
 package serializers
 
 import (
+	"time"
+
 	"github.com/chamanbravo/upstat/models"
 )
 
@@ -79,4 +81,8 @@ type NeedSetup struct {
 type MonitorInfoOut struct {
 	SuccessResponse
 	Monitor models.Monitor `json:"monitor"`
+}
+
+type RetrieveHeartbeatIn struct {
+	StartTime time.Time `query:"startTime"`
 }

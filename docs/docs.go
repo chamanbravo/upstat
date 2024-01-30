@@ -256,6 +256,16 @@ const docTemplate = `
               "format": "string",
               "description": "Monitor ID"
             }
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "description": "Start Time",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
           }
         ]
       }

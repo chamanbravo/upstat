@@ -1,11 +1,6 @@
 import { Card, CardTitle } from "@/components/ui/card";
-import { useState } from "react";
 
 export default function Summary() {
-  const [monitorSummary, setMonitorSummary] = useState();
-
-  const fetchMonitorSummary = () => {};
-
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card className="px-4 py-5 flex flex-col gap-3">

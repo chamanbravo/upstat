@@ -132,6 +132,10 @@ export interface paths {
           /** Monitor ID */
           id: string;
         };
+        query: {
+          /** Start Time */
+          startTime: string;
+        };
       };
       responses: {
         200: {

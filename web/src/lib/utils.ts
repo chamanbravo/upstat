@@ -7,9 +7,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const formatAsMonthDateHour = (value: string) =>
+export const formatAsDateHour = (value: string) =>
   new Date(value).toLocaleString(undefined, {
-    month: "short",
+    hour: "numeric",
+    minute: "numeric",
+  });
+
+export const formatAsDayDateHour = (value: string) =>
+  new Date(value).toLocaleString(undefined, {
     day: "2-digit",
     hour: "numeric",
     minute: "numeric",
@@ -26,9 +31,6 @@ export const formatAsMonthYear = (value: string) =>
     month: "short",
     year: "numeric",
   });
-
-export const formatAsYear = (value: string) =>
-  new Date(value).toLocaleString(undefined, { year: "numeric" });
 
 export const isValidToken = (token: string) => {
   if (!token) {

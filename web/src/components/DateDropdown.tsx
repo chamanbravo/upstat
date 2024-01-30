@@ -7,12 +7,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
-import { subDays, subHours, subMonths, subYears } from "date-fns";
+import { subDays, subHours, subMonths } from "date-fns";
 import {
+  formatAsDateHour,
+  formatAsDayDateHour,
   formatAsMonthDate,
-  formatAsMonthDateHour,
   formatAsMonthYear,
-  formatAsYear,
 } from "@/lib/utils";
 
 export type DateItem = {
@@ -39,7 +39,7 @@ const data: DateItem[] = [
       new Date() instanceof Date
         ? subHours(new Date(), 24).toString()
         : new Date().toISOString(),
-    formatter: formatAsMonthDateHour,
+    formatter: formatAsDateHour,
   },
   {
     value: "7_day",
@@ -50,7 +50,7 @@ const data: DateItem[] = [
       new Date() instanceof Date
         ? subDays(new Date(), 7).toString()
         : new Date().toISOString(),
-    formatter: formatAsMonthDate,
+    formatter: formatAsDayDateHour,
   },
   {
     value: "14_day",
@@ -61,7 +61,7 @@ const data: DateItem[] = [
       new Date() instanceof Date
         ? subDays(new Date(), 14).toString()
         : new Date().toISOString(),
-    formatter: formatAsMonthDate,
+    formatter: formatAsDayDateHour,
   },
   {
     value: "30_day",
@@ -84,17 +84,6 @@ const data: DateItem[] = [
         ? subMonths(new Date(), 12).toString()
         : new Date().toISOString(),
     formatter: formatAsMonthYear,
-  },
-  {
-    value: "10_year",
-    label: "Last Decade",
-    interval: "year",
-    count: 10,
-    getStartTimeStamp:
-      new Date() instanceof Date
-        ? subYears(new Date(), 10).toString()
-        : new Date().toISOString(),
-    formatter: formatAsYear,
   },
 ];
 

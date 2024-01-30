@@ -20,7 +20,6 @@ func CreateMonitor(c *fiber.Ctx) error {
 	newMonitor := new(serializers.AddMonitorIn)
 	if err := c.BodyParser(newMonitor); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   "Invalid body",
 			"message": err.Error(),
 		})
 	}
@@ -98,7 +97,6 @@ func UpdateMonitor(c *fiber.Ctx) error {
 	monitor := new(serializers.AddMonitorIn)
 	if err := c.BodyParser(monitor); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   "Invalid body",
 			"message": err.Error(),
 		})
 	}
@@ -247,6 +245,7 @@ func MonitorsList(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
+// @Param startTime query time.Time true "Start Time" format(json)
 // @Success 200 {object} serializers.HeartbeatsOut
 // @Success 400 {object} serializers.ErrorResponse
 // @Router /api/monitors/heartbeat/{id} [get]
@@ -265,7 +264,19 @@ func RetrieveHeartbeat(c *fiber.Ctx) error {
 		})
 	}
 
-	heartbeat, err := queries.RetrieveHeartbeats(id, 10)
+	query := new(serializers.RetrieveHeartbeatIn)
+	if err := c.QueryParser(query); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	errors := utils.BodyValidator.Validate(query)
+	if len(errors) > 0 {
+		return c.Status(400).JSON(errors)
+	}
+
+	heartbeat, err := queries.RetrieveHeartbeatsByTime(id, query.StartTime)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
