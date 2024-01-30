@@ -9,16 +9,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// CreateMonitor method to create a new monitor.
-// @Description Create a new monitor.
-// @Summary create a new monitor
-// @Tags Auth
+// @Tags Monitors
 // @Accept json
 // @Produce json
 // @Param body body serializers.AddMonitorIn true "Body"
 // @Success 200 {object} serializers.SuccessResponse
 // @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitor/create [post]
+// @Router /api/monitors/create [post]
 func CreateMonitor(c *fiber.Ctx) error {
 	newMonitor := new(serializers.AddMonitorIn)
 	if err := c.BodyParser(newMonitor); err != nil {
@@ -36,7 +33,6 @@ func CreateMonitor(c *fiber.Ctx) error {
 	monitor, err := queries.CreateMonitor(newMonitor)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}
@@ -48,11 +44,17 @@ func CreateMonitor(c *fiber.Ctx) error {
 	})
 }
 
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
+// @Success 200 {object} serializers.SuccessResponse
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/monitors/info/{id} [post]
 func MonitorInfo(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
 		return c.Status(400).JSON(fiber.Map{
-			"error":   "Bad Request",
 			"message": "ID parameter is missing",
 		})
 	}
@@ -60,7 +62,6 @@ func MonitorInfo(c *fiber.Ctx) error {
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error":   "Bad Request",
 			"message": "Invalid ID parameter",
 		})
 	}
@@ -68,7 +69,6 @@ func MonitorInfo(c *fiber.Ctx) error {
 	monitor, err := queries.FindMonitorById(id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}
@@ -79,11 +79,18 @@ func MonitorInfo(c *fiber.Ctx) error {
 	})
 }
 
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
+// @Param body body serializers.AddMonitorIn true "Body"
+// @Success 200 {object} serializers.SuccessResponse
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/monitors/update/{id} [post]
 func UpdateMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
 		return c.Status(400).JSON(fiber.Map{
-			"error":   "Bad Request",
 			"message": "ID parameter is missing",
 		})
 	}
@@ -104,7 +111,6 @@ func UpdateMonitor(c *fiber.Ctx) error {
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error":   "Bad Request",
 			"message": "Invalid ID parameter",
 		})
 	}
@@ -112,7 +118,6 @@ func UpdateMonitor(c *fiber.Ctx) error {
 	err = queries.UpdateMonitorById(id, monitor)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}
@@ -123,11 +128,17 @@ func UpdateMonitor(c *fiber.Ctx) error {
 
 }
 
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
+// @Success 200 {object} serializers.SuccessResponse
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/monitors/pause/{id} [post]
 func PauseMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
 		return c.Status(400).JSON(fiber.Map{
-			"error":   "Bad Request",
 			"message": "ID parameter is missing",
 		})
 	}
@@ -135,7 +146,6 @@ func PauseMonitor(c *fiber.Ctx) error {
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error":   "Bad Request",
 			"message": "Invalid ID parameter",
 		})
 	}
@@ -144,7 +154,6 @@ func PauseMonitor(c *fiber.Ctx) error {
 	err = queries.UpdateMonitorStatus(id, "yellow")
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}
@@ -154,11 +163,17 @@ func PauseMonitor(c *fiber.Ctx) error {
 	})
 }
 
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
+// @Success 200 {object} serializers.SuccessResponse
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/monitors/resume/{id} [post]
 func ResumeMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
 		return c.Status(400).JSON(fiber.Map{
-			"error":   "Bad Request",
 			"message": "ID parameter is missing",
 		})
 	}
@@ -166,7 +181,6 @@ func ResumeMonitor(c *fiber.Ctx) error {
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error":   "Bad Request",
 			"message": "Invalid ID parameter",
 		})
 	}
@@ -174,7 +188,6 @@ func ResumeMonitor(c *fiber.Ctx) error {
 	monitor, err := queries.FindMonitorById(id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}
@@ -183,7 +196,6 @@ func ResumeMonitor(c *fiber.Ctx) error {
 	err = queries.UpdateMonitorStatus(id, "green")
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}
@@ -193,17 +205,15 @@ func ResumeMonitor(c *fiber.Ctx) error {
 	})
 }
 
-// MonitorsList method to retrieve list of monitors.
 // @Accept json
 // @Produce json
-// @Success 200 {object} serializers.SuccessResponse
+// @Success 200 {object} serializers.MonitorsListOut
 // @Success 400 {object} serializers.ErrorResponse
 // @Router /api/monitors/list [get]
 func MonitorsList(c *fiber.Ctx) error {
 	monitors, err := queries.RetrieveMonitors()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}
@@ -213,7 +223,6 @@ func MonitorsList(c *fiber.Ctx) error {
 		heartbeat, err := queries.RetrieveHeartbeats(v.ID, 10)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error":   "Internal server error",
 				"message": err.Error(),
 			})
 		}
@@ -234,45 +243,17 @@ func MonitorsList(c *fiber.Ctx) error {
 	})
 }
 
-// MonitorSummary method to retrieve monitor summary.
+// @Tags Monitors
 // @Accept json
 // @Produce json
-// @Success 200 {object} serializers.SuccessResponse
+// @Param id path string true "Monitor ID"
+// @Success 200 {object} serializers.HeartbeatsOut
 // @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/:id[get]
-// func MonitorSummary(c *fiber.Ctx) error {
-// 	idParam := c.Params("id")
-// 	if idParam == "" {
-// 		return c.Status(400).JSON(fiber.Map{
-// 			"error":   "Bad Request",
-// 			"message": "ID parameter is missing",
-// 		})
-// 	}
-
-// 	id, err := strconv.Atoi(idParam)
-// 	if err != nil {
-// 		return c.Status(400).JSON(fiber.Map{
-// 			"error":   "Bad Request",
-// 			"message": "Invalid ID parameter",
-// 		})
-// 	}
-
-// 	summary, err := queries.MonitorSummary(id)
-// 	if err != nil {
-// 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-// 			"error":   "Internal server error",
-// 			"message": err.Error(),
-// 		})
-// 	}
-
-// 	return c.Status(200).JSON(fiber.Map{"message": "success", "summary": summary})
-// }
-
+// @Router /api/monitors/heartbeat/{id} [post]
 func RetrieveHeartbeat(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
 		return c.Status(400).JSON(fiber.Map{
-			"error":   "Bad Request",
 			"message": "ID parameter is missing",
 		})
 	}
@@ -280,7 +261,6 @@ func RetrieveHeartbeat(c *fiber.Ctx) error {
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error":   "Bad Request",
 			"message": "Invalid ID parameter",
 		})
 	}
@@ -288,7 +268,6 @@ func RetrieveHeartbeat(c *fiber.Ctx) error {
 	heartbeat, err := queries.RetrieveHeartbeats(id, 10)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}
@@ -296,11 +275,17 @@ func RetrieveHeartbeat(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{"message": "success", "heartbeat": heartbeat})
 }
 
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
+// @Success 200 {object} serializers.SuccessResponse
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/monitors/delete/{id} [post]
 func DeleteMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
 		return c.Status(400).JSON(fiber.Map{
-			"error":   "Bad Request",
 			"message": "ID parameter is missing",
 		})
 	}
@@ -308,7 +293,6 @@ func DeleteMonitor(c *fiber.Ctx) error {
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{
-			"error":   "Bad Request",
 			"message": "Invalid ID parameter",
 		})
 	}
@@ -317,7 +301,6 @@ func DeleteMonitor(c *fiber.Ctx) error {
 	err = queries.DeleteMonitorById(id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}

@@ -1,5 +1,15 @@
 package serializers
 
+import "github.com/chamanbravo/upstat/models"
+
+type SuccessResponse struct {
+	Message string `json:"message"`
+}
+
+type ErrorResponse struct {
+	Message string `json:"message"`
+}
+
 type UserSignUp struct {
 	Username string `json:"username" validate:"required,min=3,max=32"`
 	Email    string `json:"email" validate:"required,email"`
@@ -11,12 +21,16 @@ type UserSignIn struct {
 	Password string `json:"password" validate:"required"`
 }
 
-type SuccessResponse struct {
-	Message string `json:"message"`
+type User struct {
+	Username  string `json:"username"`
+	Email     string `json:"email"`
+	Firstname string `json:"firstname"`
+	Lastname  string `json:"lastname"`
 }
 
-type ErrorResponse struct {
-	Message string `json:"message"`
+type UserSignInOut struct {
+	SuccessResponse
+	User User `json:"user"`
 }
 
 type AddMonitorIn struct {
@@ -35,4 +49,23 @@ type UpdatePasswordIn struct {
 type UpdateAccountIn struct {
 	Firstname string `json:"firstname" validate:"required,min=2,max=32"`
 	Lastname  string `json:"lastname" validate:"required,min=2,max=32"`
+}
+
+type HeartbeatsOut struct {
+	Message    string             `json:"message"`
+	Heartbeats []models.Heartbeat `json:"heartbeat"`
+}
+
+type MonitorItem struct {
+	ID         string             `json:"id"`
+	Name       string             `json:"name"`
+	URL        string             `json:"url"`
+	Frequency  int                `json:"frequency"`
+	Status     string             `json:"status"`
+	Heartbeats []models.Heartbeat `json:"heartbeat"`
+}
+
+type MonitorsListOut struct {
+	Message  string        `json:"message"`
+	Monitors []MonitorItem `json:"monitors"`
 }

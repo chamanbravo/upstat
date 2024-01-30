@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// @Group Auth
 func AuthRoutes(app *fiber.App) {
 	route := app.Group("/api/auth")
 

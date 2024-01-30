@@ -17,14 +17,13 @@ var validate = validator.New()
 // @Accept json
 // @Produce json
 // @Param body body serializers.UserSignUp true "Body"
-// @Success 200 {object} serializers.SuccessResponse
+// @Success 200 {object} serializers.UserSignInOut
 // @Success 400 {object} serializers.ErrorResponse
 // @Router /api/auth/signup [post]
 func SignUp(c *fiber.Ctx) error {
 	user := new(serializers.UserSignUp)
 	if err := c.BodyParser(user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   "Invalid body",
 			"message": err.Error(),
 		})
 	}
@@ -37,20 +36,17 @@ func SignUp(c *fiber.Ctx) error {
 	existingUser, err := queries.FindUserByUsernameAndEmail(user)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}
 	if existingUser != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   "Conflict",
 			"message": "User with this username or email already exists",
 		})
 	}
 
 	if err := queries.SaveUser(user); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}
@@ -58,7 +54,7 @@ func SignUp(c *fiber.Ctx) error {
 	tokens, err := utils.GenerateJWT(user.Username, "", "")
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
-			"error": err.Error(),
+			"message": err.Error(),
 		})
 	}
 
@@ -89,14 +85,14 @@ func SignUp(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param body body serializers.UserSignIn true "Body"
-// @Success 200 {object} serializers.SuccessResponse
+// @Success 200 {object} serializers.UserSignInOut
 // @Success 400 {object} serializers.ErrorResponse
 // @Router /api/auth/signin [post]
 func SignIn(c *fiber.Ctx) error {
 	user := new(serializers.UserSignIn)
 	if err := c.BodyParser(user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid body",
+			"message": "Invalid body",
 		})
 	}
 
@@ -108,13 +104,11 @@ func SignIn(c *fiber.Ctx) error {
 	existingUser, err := queries.FindUserByUsernameAndPassword(user.Username, user.Password)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}
 	if existingUser == nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   "Not found",
 			"message": "Invalid username or password",
 		})
 	}

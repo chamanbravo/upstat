@@ -17,7 +17,7 @@ run: build
 	./server
 
 swag:
-	swag init
+	go-swagger3 --module-path . --output ./docs/swagger.json --schema-without-pkg
 
 critic:
 	gocritic check -enableAll ./...

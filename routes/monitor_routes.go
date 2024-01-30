@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// @Group Monitors
 func MonitorRoutes(app *fiber.App) {
 	route := app.Group("/api/monitors")
 

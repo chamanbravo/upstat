@@ -9,12 +9,13 @@ import (
 
 // @Accept json
 // @Produce json
+// @Success 200 {object} fiber.Map{"needSetup": bool}
+// @Failure 400 {object} serializers.ErrorResponse
 // @Router /api/users/setup [get]
 func Setup(c *fiber.Ctx) error {
 	usersCount, err := queries.UsersCount()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
 			"message": err.Error(),
 		})
 	}
@@ -26,12 +27,14 @@ func Setup(c *fiber.Ctx) error {
 
 // @Accept json
 // @Produce json
+// @Param body body serializers.UpdatePasswordIn true "Body"
+// @Success 200 {object} serializers.SuccessResponse
+// @Failure 400 {object} serializers.ErrorResponse
 // @Router /api/users/update-password [post]
 func UpdatePassword(c *fiber.Ctx) error {
 	updatePasswordBody := new(serializers.UpdatePasswordIn)
 	if err := c.BodyParser(updatePasswordBody); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   "Invalid body",
 			"message": err.Error(),
 		})
 	}
@@ -87,6 +90,10 @@ func UpdatePassword(c *fiber.Ctx) error {
 
 // @Accept json
 // @Produce json
+// @Param username path string true "Username"
+// @Param body body serializers.UpdateAccountIn true "Body"
+// @Success 200 {object} serializers.SuccessResponse
+// @Failure 400 {object} serializers.ErrorResponse
 // @Router /api/users/{username} [patch]
 func UpdateAccount(c *fiber.Ctx) error {
 	username := c.Params("username")
@@ -100,7 +107,6 @@ func UpdateAccount(c *fiber.Ctx) error {
 	updateAccountBody := new(serializers.UpdateAccountIn)
 	if err := c.BodyParser(updateAccountBody); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   "Invalid body",
 			"message": err.Error(),
 		})
 	}
