@@ -1,8 +1,14 @@
 import DebouncedInput from "@/components/DebouncedInput";
 import { Button } from "@/components/ui/button";
+import { components } from "@/lib/api/v1";
+import { Table } from "@tanstack/react-table";
 import { Link } from "react-router-dom";
 
-export default function Filter({ table }) {
+interface FilterProps {
+  table: Table<components["schemas"]["MonitorsListOut"]["monitors"]>;
+}
+
+export default function Filter({ table }: FilterProps) {
   return (
     <div className="flex justify-between gap-2 items-center">
       <DebouncedInput

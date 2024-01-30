@@ -9,7 +9,7 @@ import (
 
 // @Accept json
 // @Produce json
-// @Success 200 {object} fiber.Map{"needSetup": bool}
+// @Success 200 {object} serializers.NeedSetup
 // @Failure 400 {object} serializers.ErrorResponse
 // @Router /api/users/setup [get]
 func Setup(c *fiber.Ctx) error {

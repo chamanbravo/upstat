@@ -2,10 +2,10 @@ import { cn } from "@/lib/utils";
 import "./styles.css";
 
 interface Props {
-  status: "green" | "yellow" | "red";
+  status: string;
 }
 
-const sonarColor = {
+const sonarColor: Record<string, string> = {
   green: "bg-green-500",
   yellow: "bg-yellow-500",
   red: "bg-red-500",

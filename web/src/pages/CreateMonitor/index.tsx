@@ -18,6 +18,10 @@ import { toast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { api } from "@/lib/api";
 import { ChevronLeft, PauseCircle, Trash2 } from "lucide-react";
+import { client } from "@/lib/utils";
+import { components } from "@/lib/api/v1";
+
+const { GET } = client;
 
 const MonitorFormSchema = z.object({
   name: z
@@ -34,7 +38,9 @@ export default function index() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState<boolean>(false);
-  const [monitorInfo, setMonitorInfo] = useState({});
+  const [monitorInfo, setMonitorInfo] = useState<
+    components["schemas"]["MonitorInfoOut"]["monitor"]
+  >({});
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(MonitorFormSchema),
@@ -83,18 +89,18 @@ export default function index() {
   const fetchMonitorInfo = async (signal: AbortSignal) => {
     if (!id) return;
     try {
-      const response = await api(`/api/monitors/info/${id}`, {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
+      const { response, data } = await GET(`/api/monitors/info/{id}`, {
+        params: {
+          path: {
+            id: `${id}`,
+          },
         },
         signal,
       });
       if (response.ok) {
-        const data = await response.json();
         setMonitorInfo(data?.monitor);
-        form.setValue("name", data?.monitor?.name);
-        form.setValue("url", data?.monitor?.url);
+        form.setValue("name", data?.monitor?.name || "");
+        form.setValue("url", data?.monitor?.url || "");
       }
     } catch (error) {}
   };

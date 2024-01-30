@@ -1,6 +1,8 @@
 package serializers
 
-import "github.com/chamanbravo/upstat/models"
+import (
+	"github.com/chamanbravo/upstat/models"
+)
 
 type SuccessResponse struct {
 	Message string `json:"message"`
@@ -68,4 +70,13 @@ type MonitorItem struct {
 type MonitorsListOut struct {
 	Message  string        `json:"message"`
 	Monitors []MonitorItem `json:"monitors"`
+}
+
+type NeedSetup struct {
+	NeedSetup bool `json:"needSetup"`
+}
+
+type MonitorInfoOut struct {
+	SuccessResponse
+	Monitor models.Monitor `json:"monitor"`
 }

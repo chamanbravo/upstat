@@ -183,7 +183,7 @@ const docTemplate = `
       }
     },
     "/api/monitors/delete/{id}": {
-      "post": {
+      "delete": {
         "responses": {
           "200": {
             "description": "",
@@ -222,7 +222,7 @@ const docTemplate = `
       }
     },
     "/api/monitors/heartbeat/{id}": {
-      "post": {
+      "get": {
         "responses": {
           "200": {
             "description": "",
@@ -261,14 +261,14 @@ const docTemplate = `
       }
     },
     "/api/monitors/info/{id}": {
-      "post": {
+      "get": {
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
+                  "$ref": "#/components/schemas/MonitorInfoOut"
                 }
               }
             }
@@ -326,7 +326,7 @@ const docTemplate = `
       }
     },
     "/api/monitors/pause/{id}": {
-      "post": {
+      "put": {
         "responses": {
           "200": {
             "description": "",
@@ -365,7 +365,7 @@ const docTemplate = `
       }
     },
     "/api/monitors/resume/{id}": {
-      "post": {
+      "put": {
         "responses": {
           "200": {
             "description": "",
@@ -404,7 +404,7 @@ const docTemplate = `
       }
     },
     "/api/monitors/update/{id}": {
-      "post": {
+      "put": {
         "responses": {
           "200": {
             "description": "",
@@ -456,11 +456,11 @@ const docTemplate = `
       "get": {
         "responses": {
           "200": {
-            "description": "needSetup\": bool}",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/"
+                  "$ref": "#/components/schemas/NeedSetup"
                 }
               }
             }
@@ -566,7 +566,6 @@ const docTemplate = `
   },
   "components": {
     "schemas": {
-      "": {},
       "AddMonitorIn": {
         "type": "object",
         "properties": {
@@ -630,6 +629,44 @@ const docTemplate = `
             "items": {
               "$ref": "#/components/schemas/Heartbeat"
             }
+          }
+        }
+      },
+      "Monitor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "MonitorInfoOut": {
+        "type": "object",
+        "properties": {
+          "monitor": {
+            "type": "object",
+            "$ref": "#/components/schemas/Monitor"
+          },
+          "message": {
+            "type": "string"
           }
         }
       },
@@ -735,6 +772,14 @@ const docTemplate = `
                 }
               }
             }
+          }
+        }
+      },
+      "NeedSetup": {
+        "type": "object",
+        "properties": {
+          "needSetup": {
+            "type": "boolean"
           }
         }
       },

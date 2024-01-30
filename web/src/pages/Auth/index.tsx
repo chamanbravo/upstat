@@ -3,15 +3,17 @@ import { useEffect, useState } from "react";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import RedirectOnUser from "@/components/RedirectOnUser";
+import { client } from "@/lib/utils";
+
+const { GET } = client;
 
 export default function index() {
   const [needSetup, setNeedSetup] = useState<boolean | undefined>(undefined);
 
   const fetchNeedSetup = async () => {
     try {
-      const resp = await fetch("/api/users/setup");
-      if (resp.ok) {
-        const data = await resp.json();
+      const { response, data } = await GET("/api/users/setup");
+      if (response.ok) {
         setNeedSetup(data?.needSetup);
       }
     } catch (err) {

@@ -48,9 +48,9 @@ func CreateMonitor(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
-// @Success 200 {object} serializers.SuccessResponse
+// @Success 200 {object} serializers.MonitorInfoOut
 // @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/info/{id} [post]
+// @Router /api/monitors/info/{id} [get]
 func MonitorInfo(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -86,7 +86,7 @@ func MonitorInfo(c *fiber.Ctx) error {
 // @Param body body serializers.AddMonitorIn true "Body"
 // @Success 200 {object} serializers.SuccessResponse
 // @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/update/{id} [post]
+// @Router /api/monitors/update/{id} [put]
 func UpdateMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -134,7 +134,7 @@ func UpdateMonitor(c *fiber.Ctx) error {
 // @Param id path string true "Monitor ID"
 // @Success 200 {object} serializers.SuccessResponse
 // @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/pause/{id} [post]
+// @Router /api/monitors/pause/{id} [put]
 func PauseMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -169,7 +169,7 @@ func PauseMonitor(c *fiber.Ctx) error {
 // @Param id path string true "Monitor ID"
 // @Success 200 {object} serializers.SuccessResponse
 // @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/resume/{id} [post]
+// @Router /api/monitors/resume/{id} [put]
 func ResumeMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -249,7 +249,7 @@ func MonitorsList(c *fiber.Ctx) error {
 // @Param id path string true "Monitor ID"
 // @Success 200 {object} serializers.HeartbeatsOut
 // @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/heartbeat/{id} [post]
+// @Router /api/monitors/heartbeat/{id} [get]
 func RetrieveHeartbeat(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -281,7 +281,7 @@ func RetrieveHeartbeat(c *fiber.Ctx) error {
 // @Param id path string true "Monitor ID"
 // @Success 200 {object} serializers.SuccessResponse
 // @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/delete/{id} [post]
+// @Router /api/monitors/delete/{id} [delete]
 func DeleteMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {

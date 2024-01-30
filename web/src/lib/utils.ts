@@ -1,5 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { paths } from "./api/v1";
+import createClient from "openapi-fetch";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -44,3 +46,7 @@ export const isValidToken = (token: string) => {
   const currentTime = Date.now();
   return expiryTime > currentTime;
 };
+
+export const client = createClient<paths>({
+  baseUrl: "/",
+});

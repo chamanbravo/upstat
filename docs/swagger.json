@@ -177,7 +177,7 @@
       }
     },
     "/api/monitors/delete/{id}": {
-      "post": {
+      "delete": {
         "responses": {
           "200": {
             "description": "",
@@ -216,7 +216,7 @@
       }
     },
     "/api/monitors/heartbeat/{id}": {
-      "post": {
+      "get": {
         "responses": {
           "200": {
             "description": "",
@@ -255,14 +255,14 @@
       }
     },
     "/api/monitors/info/{id}": {
-      "post": {
+      "get": {
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
+                  "$ref": "#/components/schemas/MonitorInfoOut"
                 }
               }
             }
@@ -320,7 +320,7 @@
       }
     },
     "/api/monitors/pause/{id}": {
-      "post": {
+      "put": {
         "responses": {
           "200": {
             "description": "",
@@ -359,7 +359,7 @@
       }
     },
     "/api/monitors/resume/{id}": {
-      "post": {
+      "put": {
         "responses": {
           "200": {
             "description": "",
@@ -398,7 +398,7 @@
       }
     },
     "/api/monitors/update/{id}": {
-      "post": {
+      "put": {
         "responses": {
           "200": {
             "description": "",
@@ -450,11 +450,11 @@
       "get": {
         "responses": {
           "200": {
-            "description": "needSetup\": bool}",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/"
+                  "$ref": "#/components/schemas/NeedSetup"
                 }
               }
             }
@@ -560,7 +560,6 @@
   },
   "components": {
     "schemas": {
-      "": {},
       "AddMonitorIn": {
         "type": "object",
         "properties": {
@@ -624,6 +623,44 @@
             "items": {
               "$ref": "#/components/schemas/Heartbeat"
             }
+          }
+        }
+      },
+      "Monitor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "MonitorInfoOut": {
+        "type": "object",
+        "properties": {
+          "monitor": {
+            "type": "object",
+            "$ref": "#/components/schemas/Monitor"
+          },
+          "message": {
+            "type": "string"
           }
         }
       },
@@ -729,6 +766,14 @@
                 }
               }
             }
+          }
+        }
+      },
+      "NeedSetup": {
+        "type": "object",
+        "properties": {
+          "needSetup": {
+            "type": "boolean"
           }
         }
       },

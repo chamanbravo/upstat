@@ -11,17 +11,9 @@ import {
 import { useNavigate } from "react-router";
 import { api } from "@/lib/api";
 import { toast } from "@/components/ui/use-toast";
+import { components } from "@/lib/api/v1";
 
-export type MonitorItem = {
-  id: number;
-  name: string;
-  url: string;
-  frequency: string;
-  status: string;
-  heartbeat: [];
-};
-
-export const columns: ColumnDef<MonitorItem>[] = [
+export const columns: ColumnDef<components["schemas"]["MonitorItem"]>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -61,7 +53,7 @@ export const columns: ColumnDef<MonitorItem>[] = [
     header: "Frequency",
     cell: ({ row }) => (
       <>
-        {+row.original.frequency <= 60
+        {row.original.frequency && +row.original.frequency <= 60
           ? `${row.getValue("frequency")}s`
           : `${row.getValue("frequency")}h`}
       </>
@@ -71,8 +63,11 @@ export const columns: ColumnDef<MonitorItem>[] = [
     accessorKey: "heartbeat",
     header: "Heartbeat Summary",
     cell: ({ row }) => {
-      const heartbeat: [] = row.getValue("heartbeat") || [];
-      function fillArray(arr: []) {
+      const heartbeat: components["schemas"]["Heartbeat"][] =
+        row.getValue("heartbeat") || [];
+      function fillArray(
+        arr: (components["schemas"]["Heartbeat"] | undefined)[]
+      ) {
         while (arr.length < 10) {
           arr.push(undefined);
         }
@@ -85,14 +80,14 @@ export const columns: ColumnDef<MonitorItem>[] = [
             <div
               key={i}
               className={`h-4 w-1 rounded-[2px] ${
-                h
+                h?.status
                   ? h?.status.includes("200")
                     ? "bg-green-400"
                     : "bg-red-400"
                   : "bg-gray-400"
               } ${h && "hover:scale-125"} `}
               title={
-                h?.status
+                h?.status && h?.timestamp
                   ? `${new Date(h?.timestamp).toLocaleString()} - ${h?.status}`
                   : ""
               }

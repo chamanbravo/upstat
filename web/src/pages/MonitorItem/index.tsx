@@ -10,8 +10,12 @@ import { api } from "@/lib/api";
 import Summary from "./Summary";
 import RedirectOnNoUser from "@/components/RedirectOnNoUser";
 import { toast } from "@/components/ui/use-toast";
+import { client } from "@/lib/utils";
+import { components } from "@/lib/api/v1";
 
-const statusColor = {
+const { GET } = client;
+
+const statusColor: Record<string, string> = {
   green: "text-green-500",
   yellow: "text-yellow-500",
   red: "text-red-500",
@@ -20,8 +24,12 @@ const statusColor = {
 export default function index() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [monitorInfo, setMonitorInfo] = useState({});
-  const [monitorData, setMonitorData] = useState([]);
+  const [monitorInfo, setMonitorInfo] = useState<
+    components["schemas"]["MonitorInfoOut"]["monitor"]
+  >({});
+  const [monitorData, setMonitorData] = useState<
+    components["schemas"]["HeartbeatsOut"]["heartbeat"]
+  >([]);
 
   const fetchMonitorInfo = async (signal: AbortSignal) => {
     try {
@@ -40,16 +48,17 @@ export default function index() {
   };
 
   const fetchMonitorData = async (signal: AbortSignal) => {
+    if (!id) return;
     try {
-      const response = await api(`/api/monitors/heartbeat/${id}`, {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
+      const { response, data } = await GET(`/api/monitors/heartbeat/{id}`, {
+        params: {
+          path: {
+            id: `${id}`,
+          },
         },
         signal,
       });
       if (response.ok) {
-        const data = await response.json();
         setMonitorData(data?.heartbeat);
       }
     } catch (error) {}
@@ -112,13 +121,13 @@ export default function index() {
               Monitors
             </Button>
             <div className="flex gap-4 items-center">
-              <SonarPing status={monitorInfo?.status} />
+              <SonarPing status={monitorInfo?.status || ""} />
               <div className="flex flex-col gap-1">
                 <h1 className="text-2xl font-semibold flex gap-1 items-center">
                   {monitorInfo?.name}
                 </h1>
                 <div className="flex gap-1 items-center">
-                  <p className={statusColor[monitorInfo?.status]}>
+                  <p className={statusColor[monitorInfo?.status || ""]}>
                     {monitorInfo?.status === "green"
                       ? "Up"
                       : monitorInfo?.status === "red"
@@ -127,10 +136,14 @@ export default function index() {
                   </p>
                   <DotIcon className="text-muted-foreground h-4 w-4" />
                   <p className="text-muted-foreground">
-                    Checked every{" "}
-                    {monitorInfo?.frequency <= 60
-                      ? monitorInfo?.frequency + " seconds"
-                      : monitorInfo?.frequency / 60 + " minutes"}
+                    {monitorInfo?.frequency && (
+                      <>
+                        Checked every{" "}
+                        {monitorInfo.frequency <= 60
+                          ? `${monitorInfo.frequency} seconds`
+                          : `${monitorInfo.frequency / 60} minutes`}
+                      </>
+                    )}
                   </p>
                   <DotIcon className="text-muted-foreground h-4 w-4" />
                   <p className="text-muted-foreground">{monitorInfo?.url}</p>
