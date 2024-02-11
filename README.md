@@ -6,7 +6,7 @@
 
 ## Features
 
-As a personal finance + wealth management app, Maybe has a lot of features. Here's a brief overview of some of the main ones...
+It needs more features but for now...
 
 -   Monitoring uptime for HTTP(s)
 -   Fancy, Reactive, Fast UI/UX
@@ -24,10 +24,10 @@ And dozens of smaller features to be added.
 
 This is the current state of building the app. Actively working to make this process much more streamlined!
 
-First, copy the `.env.example` file to `.env`:
+First, copy the `.sample.env` file to `.env`:
 
 ```
-cp .env.example .env
+cp .sample.env .env
 ```
 
 ```shell
