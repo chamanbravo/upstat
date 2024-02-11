@@ -14,6 +14,12 @@ As a personal finance + wealth management app, Maybe has a lot of features. Here
 
 And dozens of smaller features to be added.
 
+## Requirements
+
+- Node.js 14 / 16 / 18 / 20.4
+- npm 9
+- Golang 1.21
+
 ## Getting started
 
 This is the current state of building the app. Actively working to make this process much more streamlined!
