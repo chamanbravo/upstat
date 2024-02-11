@@ -4,7 +4,7 @@
     
 > simple and easy-to-use self-hosted status monitoring tool
 
-## Features
+## ⭐ Features
 
 It needs more features but for now...
 
@@ -14,20 +14,26 @@ It needs more features but for now...
 
 And dozens of smaller features to be added.
 
-## Requirements
+## 🔧 How to Install
+
+### 🐳 Docker
+
+```bash
+docker compose up
+```
+
+Upstat is now running on http://localhost
+
+### 💪🏻 Non-Docker
+
+Requirements:
 
 - Node.js 14 / 16 / 18 / 20.4
 - npm 9
 - Golang 1.21
 - Postgres
 
-## Getting started
-
-This is the current state of building the app. Actively working to make this process much more streamlined!
-
-First, copy the `.sample.env` file to `.env`:
-
-```
+```shell
 cp .sample.env .env
 ```
 
