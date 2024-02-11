@@ -19,15 +19,15 @@ const menus = [
   },
   {
     name: "Settings",
-    path: "/app/settings/",
+    path: "/app/settings",
   },
   {
     name: "Account",
-    path: "/app/settings/",
+    path: "/app/settings",
   },
   {
     name: "Password & Security",
-    path: "/app/settings/password-security/",
+    path: "/app/settings/password-security",
   },
 ];
 
