@@ -19,6 +19,7 @@ And dozens of smaller features to be added.
 - Node.js 14 / 16 / 18 / 20.4
 - npm 9
 - Golang 1.21
+- Postgres
 
 ## Getting started
 
