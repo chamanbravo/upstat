@@ -24,7 +24,7 @@ export default function Sidebar() {
           <Activity className="mr-2 h-4 w-4" />
           Monitors
         </Button>
-        <Button
+        {/* <Button
           variant="ghost"
           className="justify-start text-muted-foreground hover:text-foreground"
         >
@@ -37,7 +37,7 @@ export default function Sidebar() {
         >
           <PanelTop className="mr-2 h-4 w-4" />
           Status Pages
-        </Button>
+        </Button> */}
         <Button
           variant="ghost"
           className={`justify-start text-muted-foreground hover:text-foreground ${
