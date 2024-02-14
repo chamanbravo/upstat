@@ -11,6 +11,8 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import Cookies from "js-cookie";
+import useUserStore from "@/store/UserStore";
 
 const menus = [
   {
@@ -29,11 +31,16 @@ const menus = [
     name: "Password & Security",
     path: "/app/settings/password-security",
   },
+  {
+    name: "Logout",
+    path: "/",
+  },
 ];
 
 export default function CommandMenu({ ...props }: DialogProps) {
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
+  const clearUser = useUserStore((state) => state.clearUser);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -75,7 +82,14 @@ export default function CommandMenu({ ...props }: DialogProps) {
               <CommandItem
                 key={i}
                 onSelect={() => {
-                  runCommand(() => navigate(m.path));
+                  runCommand(() => {
+                    navigate(m.path);
+                    if (m.name === "Logout") {
+                      Cookies.remove("access_token");
+                      Cookies.remove("refresh_token");
+                      clearUser();
+                    }
+                  });
                 }}
                 className="cursor-pointer"
               >

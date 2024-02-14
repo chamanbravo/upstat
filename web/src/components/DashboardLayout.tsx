@@ -9,7 +9,7 @@ export default function DashboardLayout({
   return (
     <>
       <Navbar />
-      <div className="flex gap-12">
+      <div className="flex gap-12 px-4">
         <Sidebar />
         <div className="py-6 w-full">{children}</div>
       </div>

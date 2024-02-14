@@ -12,7 +12,7 @@ export default function Sidebar() {
   const clearUser = useUserStore((state) => state.clearUser);
 
   return (
-    <div className="max-w-[200px] h-[calc(100vh-80px)] border-r sticky top-[70px] px-2 pr-4 py-6 flex flex-col justify-between">
+    <div className="max-w-[200px] h-[calc(100vh-80px)] border-r sticky top-[70px] pr-4 py-6 hidden md:flex flex-col justify-between">
       <div className="flex flex-col gap-2">
         <Button
           variant="ghost"
