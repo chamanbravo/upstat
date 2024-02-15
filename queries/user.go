@@ -66,8 +66,8 @@ func FindUserByUsernameAndPassword(username, password string) (*models.User, err
 			return nil, nil
 		}
 		log.Println("Error when trying to find user")
-		log.Println(err)
-		return nil, err
+		log.Println(result)
+		return nil, result
 	}
 	return user, nil
 }
