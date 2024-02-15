@@ -291,7 +291,7 @@ func RetrieveHeartbeat(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
-// @Success 200 {object} serializers.MonitorSummary
+// @Success 200 {object} serializers.MonitorSummaryOut
 // @Success 400 {object} serializers.ErrorResponse
 // @Router /api/monitors/summary/{id} [get]
 func MonitorSummary(c *fiber.Ctx) error {
@@ -332,10 +332,10 @@ func MonitorSummary(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(fiber.Map{
 		"message": "success",
-		"summary": &serializers.MonitorSummary{
-			AverageLatency: averageLatency,
-			DayUptime:      dayUptime,
-			MonthUptime:    monthUptime,
+		"summary": fiber.Map{
+			"averageLatency": averageLatency,
+			"dayUptime":      dayUptime,
+			"monthUptime":    monthUptime,
 		},
 	})
 }

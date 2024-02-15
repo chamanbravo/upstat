@@ -421,7 +421,7 @@ const docTemplate = `
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MonitorSummary"
+                  "$ref": "#/components/schemas/MonitorSummaryOut"
                 }
               }
             }
@@ -783,6 +783,18 @@ const docTemplate = `
           },
           "monthUptime": {
             "type": "number"
+          }
+        }
+      },
+      "MonitorSummaryOut": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "object",
+            "$ref": "#/components/schemas/MonitorSummary"
+          },
+          "message": {
+            "type": "string"
           }
         }
       },

@@ -415,7 +415,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MonitorSummary"
+                  "$ref": "#/components/schemas/MonitorSummaryOut"
                 }
               }
             }
@@ -777,6 +777,18 @@
           },
           "monthUptime": {
             "type": "number"
+          }
+        }
+      },
+      "MonitorSummaryOut": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "object",
+            "$ref": "#/components/schemas/MonitorSummary"
+          },
+          "message": {
+            "type": "string"
           }
         }
       },
