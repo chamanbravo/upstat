@@ -233,6 +233,28 @@ export interface paths {
       };
     };
   };
+  "/api/monitors/summary/{id}": {
+    get: {
+      parameters: {
+        path: {
+          /** Monitor ID */
+          id: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["MonitorSummary"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+    };
+  };
   "/api/monitors/update/{id}": {
     put: {
       parameters: {
@@ -343,6 +365,7 @@ export interface components {
       monitor_id?: number;
       /** Format: date-time */
       timestamp?: string;
+      status_code?: string;
       status?: string;
       latency?: number;
       message?: string;
@@ -375,10 +398,16 @@ export interface components {
         monitor_id?: number;
         /** Format: date-time */
         timestamp?: string;
+        status_code?: string;
         status?: string;
         latency?: number;
         message?: string;
       }[];
+    };
+    MonitorSummary: {
+      averageLatency?: number;
+      dayUptime?: number;
+      monthUptime?: number;
     };
     MonitorsListOut: {
       message?: string;
@@ -393,6 +422,7 @@ export interface components {
           monitor_id?: number;
           /** Format: date-time */
           timestamp?: string;
+          status_code?: string;
           status?: string;
           latency?: number;
           message?: string;

@@ -32,7 +32,7 @@ export const columns: ColumnDef<components["schemas"]["MonitorItem"]>[] = [
             }
           />
           <p
-            className="text-primary font-medium hover:underline cursor-pointer"
+            className="font-medium cursor-pointer text-primary hover:underline"
             onClick={() => navigate("/app/monitors/" + row.original.id)}
           >
             {row.getValue("name")}
@@ -75,20 +75,22 @@ export const columns: ColumnDef<components["schemas"]["MonitorItem"]>[] = [
       }
       const finalHeartbeat = [...fillArray(heartbeat)].reverse();
       return (
-        <div className="flex gap-1 h-full">
+        <div className="flex h-full gap-1">
           {finalHeartbeat.map((h, i) => (
             <div
               key={i}
               className={`h-4 w-1 rounded-[2px] ${
                 h?.status
-                  ? h?.status.includes("200")
+                  ? h?.status === "green"
                     ? "bg-green-400"
                     : "bg-red-400"
                   : "bg-gray-400"
               } ${h && "hover:scale-125"} `}
               title={
                 h?.status && h?.timestamp
-                  ? `${new Date(h?.timestamp).toLocaleString()} - ${h?.status}`
+                  ? `${new Date(h?.timestamp).toLocaleString()} - ${
+                      h?.status_code
+                    }`
                   : ""
               }
             />
@@ -127,9 +129,9 @@ export const columns: ColumnDef<components["schemas"]["MonitorItem"]>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" className="w-8 h-8 p-0">
               <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontal className="w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
