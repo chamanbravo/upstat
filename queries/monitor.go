@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/chamanbravo/upstat/database"
 	"github.com/chamanbravo/upstat/models"
@@ -141,6 +142,38 @@ func UpdateMonitorStatus(id int, status string) error {
 	}
 
 	return nil
+}
+
+func RetrieveAverageLatency(id int, timestamp time.Time) (float64, error) {
+	stmt, err := database.DB.Prepare("SELECT AVG(latency) as average_latency FROM heartbeats WHERE monitor_id = $1 AND timestamp >= $2")
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
+	var averageLatency float64
+	err = stmt.QueryRow(id, timestamp).Scan(&averageLatency)
+	if err != nil {
+		return 0, err
+	}
+
+	return averageLatency, nil
+}
+
+func RetrieveUptime(id int, timestamp time.Time) (float64, error) {
+	stmt, err := database.DB.Prepare("SELECT (COUNT(CASE WHEN status = 'green' THEN 1 END) * 100.0) / COUNT(*) as green_percentage FROM heartbeats WHERE monitor_id = $1 AND timestamp >= $2")
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
+	var averageLatency float64
+	err = stmt.QueryRow(id, timestamp).Scan(&averageLatency)
+	if err != nil {
+		return 0, err
+	}
+
+	return averageLatency, nil
 }
 
 func DeleteMonitorById(id int) error {

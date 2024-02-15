@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"strconv"
+	"time"
 
 	"github.com/chamanbravo/upstat/queries"
 	"github.com/chamanbravo/upstat/serializers"
@@ -284,6 +285,59 @@ func RetrieveHeartbeat(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{"message": "success", "heartbeat": heartbeat})
+}
+
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
+// @Success 200 {object} serializers.MonitorSummary
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/monitors/summary/{id} [get]
+func MonitorSummary(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	if idParam == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "ID parameter is missing",
+		})
+	}
+
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid ID parameter",
+		})
+	}
+
+	averageLatency, err := queries.RetrieveAverageLatency(id, time.Now().Add(-time.Hour*24))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	dayUptime, err := queries.RetrieveUptime(id, time.Now().Add(-time.Hour*24))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	monthUptime, err := queries.RetrieveUptime(id, time.Now().Add(-time.Hour*30*24))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"message": "success",
+		"summary": &serializers.MonitorSummary{
+			AverageLatency: averageLatency,
+			DayUptime:      dayUptime,
+			MonthUptime:    monthUptime,
+		},
+	})
 }
 
 // @Tags Monitors

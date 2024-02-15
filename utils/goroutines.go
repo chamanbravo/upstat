@@ -59,7 +59,8 @@ func StartGoroutine(monitor *models.Monitor) {
 					startTime := time.Now()
 					response, err := http.Get(monitor.Url)
 					if err != nil {
-						heartbeat.Status = "error"
+						heartbeat.Status = "red"
+						heartbeat.StatusCode = "error"
 						heartbeat.Message = "unable to ping"
 						heartbeat.Latency = 0
 						if monitor.Status != "red" {
@@ -69,7 +70,8 @@ func StartGoroutine(monitor *models.Monitor) {
 							}
 						}
 					} else {
-						heartbeat.Status = strings.Split(response.Status, " ")[0]
+						heartbeat.Status = "green"
+						heartbeat.StatusCode = strings.Split(response.Status, " ")[0]
 						heartbeat.Message = strings.Split(response.Status, " ")[1]
 						latency := time.Since(startTime).Milliseconds()
 						heartbeat.Latency = int(latency)

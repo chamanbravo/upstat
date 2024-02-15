@@ -25,6 +25,7 @@ CREATE TABLE heartbeats (
     id SERIAL PRIMARY KEY,
     monitor_id INTEGER REFERENCES monitors(id) ON DELETE CASCADE NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    status_code VARCHAR(50) NOT NULL,
     status VARCHAR(50) NOT NULL,
     latency INTEGER NOT NULL,
     message TEXT NOT NULL

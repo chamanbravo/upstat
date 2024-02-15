@@ -86,3 +86,9 @@ type MonitorInfoOut struct {
 type RetrieveHeartbeatIn struct {
 	StartTime time.Time `query:"startTime"`
 }
+
+type MonitorSummary struct {
+	AverageLatency float64 `json:"averageLatency"`
+	DayUptime      float64 `json:"dayUptime"`
+	MonthUptime    float64 `json:"monthUptime"`
+}
