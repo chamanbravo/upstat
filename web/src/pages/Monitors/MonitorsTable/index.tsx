@@ -1,31 +1,21 @@
-import { useEffect, useState } from "react";
 import { columns } from "./Columns";
 import { DataTable } from "./DataTable";
-import { client } from "@/lib/utils";
+import useApi from "@/hooks/useApi";
 import { components } from "@/lib/api/v1";
 
-const { GET } = client;
-
 export default function MonitorsTable() {
-  const [monitorData, setMonitorData] = useState<
-    components["schemas"]["MonitorsListOut"]["monitors"]
-  >([]);
+  const { data, error, loading } =
+    useApi<components["schemas"]["MonitorsListOut"]>("/api/monitors/list");
 
-  const fetchMonitorsList = async (signal: AbortSignal) => {
-    try {
-      const { response, data } = await GET("/api/monitors/list", {
-        signal,
-      });
-      if (response.ok) {
-        setMonitorData(data?.monitors);
-      }
-    } catch (err) {}
-  };
+  if (error) {
+    return <span className="text-muted-foreground text-center">Something went wrong!</span>;
+  }
 
-  useEffect(() => {
-    const controller = new AbortController();
-    fetchMonitorsList(controller.signal);
-  }, []);
+  if (loading) {
+    return (
+      <span className="text-muted-foreground text-center">Loading...</span>
+    );
+  }
 
-  return <DataTable columns={columns} data={monitorData || []} />;
+  return <DataTable columns={columns} data={data?.monitors || []} />;
 }
