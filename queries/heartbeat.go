@@ -29,7 +29,7 @@ func RetrieveHeartbeats(id int, limit int) ([]*models.Heartbeat, error) {
 
 	for rows.Next() {
 		heartbeat := new(models.Heartbeat)
-		err := rows.Scan(&heartbeat.ID, &heartbeat.MonitorId, &heartbeat.Timestamp, &heartbeat.Status, &heartbeat.Latency, &heartbeat.Message)
+		err := rows.Scan(&heartbeat.ID, &heartbeat.MonitorId, &heartbeat.Timestamp, &heartbeat.StatusCode, &heartbeat.Status, &heartbeat.Latency, &heartbeat.Message)
 		if err != nil {
 			log.Println("Error when trying to scan row")
 			log.Println(err)
@@ -48,7 +48,7 @@ func RetrieveHeartbeats(id int, limit int) ([]*models.Heartbeat, error) {
 }
 
 func SaveHeartbeat(heartbeat *models.Heartbeat) error {
-	stmt, err := database.DB.Prepare("INSERT INTO heartbeats(monitor_id, status, latency, message) VALUES($1, $2, $3, $4)")
+	stmt, err := database.DB.Prepare("INSERT INTO heartbeats(monitor_id, status_code, status, latency, message) VALUES($1, $2, $3, $4, $5)")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
 		log.Println(err)
@@ -56,7 +56,7 @@ func SaveHeartbeat(heartbeat *models.Heartbeat) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(heartbeat.MonitorId, heartbeat.Status, heartbeat.Latency, heartbeat.Message)
+	_, err = stmt.Exec(heartbeat.MonitorId, heartbeat.StatusCode, heartbeat.Status, heartbeat.Latency, heartbeat.Message)
 	if err != nil {
 		log.Println("Error when trying to execute query")
 		log.Println(err)
@@ -87,7 +87,7 @@ func RetrieveHeartbeatsByTime(id int, startTime time.Time) ([]*models.Heartbeat,
 
 	for rows.Next() {
 		heartbeat := new(models.Heartbeat)
-		err := rows.Scan(&heartbeat.ID, &heartbeat.MonitorId, &heartbeat.Timestamp, &heartbeat.Status, &heartbeat.Latency, &heartbeat.Message)
+		err := rows.Scan(&heartbeat.ID, &heartbeat.MonitorId, &heartbeat.Timestamp, &heartbeat.StatusCode, &heartbeat.Status, &heartbeat.Latency, &heartbeat.Message)
 		if err != nil {
 			log.Println("Error when trying to scan row")
 			log.Println(err)

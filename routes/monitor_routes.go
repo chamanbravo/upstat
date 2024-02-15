@@ -18,6 +18,6 @@ func MonitorRoutes(app *fiber.App) {
 	route.Delete("/delete/:id", middleware.Protected, controllers.DeleteMonitor)
 	route.Put("/resume/:id", middleware.Protected, controllers.ResumeMonitor)
 	route.Get("/list", middleware.Protected, controllers.MonitorsList)
-	// route.Get("/summary/:id", middleware.Protected, controllers.MonitorSummary)
+	route.Get("/summary/:id", middleware.Protected, controllers.MonitorSummary)
 	route.Get("/heartbeat/:id", middleware.Protected, controllers.RetrieveHeartbeat)
 }

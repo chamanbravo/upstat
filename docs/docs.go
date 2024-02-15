@@ -413,6 +413,45 @@ const docTemplate = `
         ]
       }
     },
+    "/api/monitors/summary/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitorSummary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Monitor ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Monitor ID"
+            }
+          }
+        ]
+      }
+    },
     "/api/monitors/update/{id}": {
       "put": {
         "responses": {
@@ -617,6 +656,9 @@ const docTemplate = `
             "type": "string",
             "format": "date-time"
           },
+          "status_code": {
+            "type": "string"
+          },
           "status": {
             "type": "string"
           },
@@ -713,6 +755,9 @@ const docTemplate = `
                   "type": "string",
                   "format": "date-time"
                 },
+                "status_code": {
+                  "type": "string"
+                },
                 "status": {
                   "type": "string"
                 },
@@ -724,6 +769,20 @@ const docTemplate = `
                 }
               }
             }
+          }
+        }
+      },
+      "MonitorSummary": {
+        "type": "object",
+        "properties": {
+          "averageLatency": {
+            "type": "number"
+          },
+          "dayUptime": {
+            "type": "number"
+          },
+          "monthUptime": {
+            "type": "number"
           }
         }
       },
@@ -767,6 +826,9 @@ const docTemplate = `
                       "timestamp": {
                         "type": "string",
                         "format": "date-time"
+                      },
+                      "status_code": {
+                        "type": "string"
                       },
                       "status": {
                         "type": "string"
