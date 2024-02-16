@@ -92,3 +92,8 @@ type MonitorSummary struct {
 	DayUptime      float64 `json:"dayUptime"`
 	MonthUptime    float64 `json:"monthUptime"`
 }
+
+type MonitorSummaryOut struct {
+	SuccessResponse
+	Summary MonitorSummary `json:"summary"`
+}

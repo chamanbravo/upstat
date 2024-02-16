@@ -244,7 +244,7 @@ export interface paths {
       responses: {
         200: {
           content: {
-            "application/json": components["schemas"]["MonitorSummary"];
+            "application/json": components["schemas"]["MonitorSummaryOut"];
           };
         };
         400: {
@@ -408,6 +408,10 @@ export interface components {
       averageLatency?: number;
       dayUptime?: number;
       monthUptime?: number;
+    };
+    MonitorSummaryOut: {
+      summary?: components["schemas"]["MonitorSummary"];
+      message?: string;
     };
     MonitorsListOut: {
       message?: string;

@@ -1,28 +1,46 @@
 import { Card, CardTitle } from "@/components/ui/card";
+import useApi from "@/hooks/useApi";
+import { components } from "@/lib/api/v1";
+import { useParams } from "react-router";
 
 export default function Summary() {
+  const { id } = useParams();
+  const { data, loading } = useApi<components["schemas"]["MonitorSummaryOut"]>(
+    `/api/monitors/summary/${id}`
+  );
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card className="px-4 py-5 flex flex-col gap-3">
-        <CardTitle className="text-muted-foreground font-normal">
-          Avg. Response
+      <Card className="flex flex-col gap-3 px-4 py-5">
+        <CardTitle className="font-normal text-muted-foreground">
+          Avg. Response (24 hour)
         </CardTitle>
-        <p className="text-xl font-semibold">230 ms</p>
+        <p className="text-xl font-semibold">
+          {loading
+            ? "Loading..."
+            : data?.summary?.averageLatency?.toFixed(0) + "ms"}
+        </p>
       </Card>
-      <Card className="px-4 py-5 flex flex-col gap-3">
-        <CardTitle className="text-muted-foreground font-normal">
+      <Card className="flex flex-col gap-3 px-4 py-5">
+        <CardTitle className="font-normal text-muted-foreground">
           Uptime (24 hour)
         </CardTitle>
-        <p className="text-xl font-semibold">100%</p>
+        <p className="text-xl font-semibold">
+          {loading ? "Loading..." : data?.summary?.dayUptime?.toFixed(0) + "%"}
+        </p>
       </Card>
-      <Card className="px-4 py-5 flex flex-col gap-3">
-        <CardTitle className="text-muted-foreground font-normal">
+      <Card className="flex flex-col gap-3 px-4 py-5">
+        <CardTitle className="font-normal text-muted-foreground">
           Uptime (30 days)
         </CardTitle>
-        <p className="text-xl font-semibold">Content</p>
+        <p className="text-xl font-semibold">
+          {loading
+            ? "Loading..."
+            : data?.summary?.monthUptime?.toFixed(0) + "%"}
+        </p>
       </Card>
-      <Card className="px-4 py-5 flex flex-col gap-3">
-        <CardTitle className="text-muted-foreground font-normal">
+      <Card className="flex flex-col gap-3 px-4 py-5">
+        <CardTitle className="font-normal text-muted-foreground">
           Cert Exp.
         </CardTitle>
         <p className="text-xl font-semibold">258 days</p>
