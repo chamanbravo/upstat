@@ -97,3 +97,8 @@ type MonitorSummaryOut struct {
 	SuccessResponse
 	Summary MonitorSummary `json:"summary"`
 }
+
+type CertificateExpiryCountDown struct {
+	SuccessResponse
+	DaysUntilExpiration int `json:"daysUntilExpiration"`
+}

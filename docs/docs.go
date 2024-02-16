@@ -146,6 +146,45 @@ const docTemplate = `
         }
       }
     },
+    "/api/monitors/cert-exp-countdown/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateExpiryCountDown"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Monitor ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Monitor ID"
+            }
+          }
+        ]
+      }
+    },
     "/api/monitors/create": {
       "post": {
         "responses": {
@@ -631,6 +670,17 @@ const docTemplate = `
             "type": "integer"
           },
           "method": {
+            "type": "string"
+          }
+        }
+      },
+      "CertificateExpiryCountDown": {
+        "type": "object",
+        "properties": {
+          "daysUntilExpiration": {
+            "type": "integer"
+          },
+          "message": {
             "type": "string"
           }
         }

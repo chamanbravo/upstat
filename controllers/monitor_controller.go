@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"net/http"
 	"strconv"
 	"time"
 
@@ -371,4 +372,51 @@ func DeleteMonitor(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{"message": "success"})
+}
+
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
+// @Success 200 {object} serializers.CertificateExpiryCountDown
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/monitors/cert-exp-countdown/{id} [get]
+func CertificateExpiryCountDown(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	if idParam == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "ID parameter is missing",
+		})
+	}
+
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid ID parameter",
+		})
+	}
+
+	monitor, err := queries.FindMonitorById(id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	response, err := http.Get(monitor.Url)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	tlsInfo := response.TLS
+	cert := tlsInfo.PeerCertificates[0]
+	expirationDate := cert.NotAfter
+	daysUnitlExp := int(expirationDate.Sub(time.Now()).Hours() / 24)
+
+	return c.Status(200).JSON(fiber.Map{
+		"message":             "success",
+		"daysUntilExpiration": daysUnitlExp,
+	})
 }

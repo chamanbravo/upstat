@@ -5,9 +5,20 @@ import { useParams } from "react-router";
 
 export default function Summary() {
   const { id } = useParams();
-  const { data, loading } = useApi<components["schemas"]["MonitorSummaryOut"]>(
-    `/api/monitors/summary/${id}`
+  const { data, error, loading } = useApi<
+    components["schemas"]["MonitorSummaryOut"]
+  >(`/api/monitors/summary/${id}`);
+  const {
+    data: certExpData,
+    error: certError,
+    loading: certLoading,
+  } = useApi<components["schemas"]["CertificateExpiryCountDown"]>(
+    `/api/monitors/cert-exp-countdown/${id}`
   );
+
+  if (error) {
+    return <span>Something went wrong!</span>;
+  }
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -43,7 +54,13 @@ export default function Summary() {
         <CardTitle className="font-normal text-muted-foreground">
           Cert Exp.
         </CardTitle>
-        <p className="text-xl font-semibold">258 days</p>
+        <p className="text-xl font-semibold">
+          {certLoading
+            ? "Loading..."
+            : certError
+            ? "N/A"
+            : certExpData?.daysUntilExpiration + " Days"}
+        </p>
       </Card>
     </div>
   );

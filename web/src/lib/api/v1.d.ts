@@ -82,6 +82,28 @@ export interface paths {
       };
     };
   };
+  "/api/monitors/cert-exp-countdown/{id}": {
+    get: {
+      parameters: {
+        path: {
+          /** Monitor ID */
+          id: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["CertificateExpiryCountDown"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+    };
+  };
   "/api/monitors/create": {
     post: {
       responses: {
@@ -356,6 +378,10 @@ export interface components {
       type?: string;
       frequency?: number;
       method?: string;
+    };
+    CertificateExpiryCountDown: {
+      daysUntilExpiration?: number;
+      message?: string;
     };
     ErrorResponse: {
       message?: string;
