@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import useUserStore from "@/store/UserStore";
 import { api } from "@/lib/api";
+import { refreshAccessToken } from "@/lib/utils";
 
 const accountFormSchema = z.object({
   firstname: z
@@ -67,6 +68,7 @@ export function AccountForm() {
         toast({
           title: "Account updated!",
         });
+        refreshAccessToken();
         setUser(username, formData.firstname, formData.lastname);
       } else {
         const data = await response.json();

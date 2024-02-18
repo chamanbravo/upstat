@@ -55,15 +55,13 @@ func RefreshToken(c *fiber.Ctx) error {
 	}
 
 	accessToken := fiber.Cookie{
-		Name:     "access_token",
-		Value:    tokens.AccessToken,
-		HTTPOnly: true,
+		Name:  "access_token",
+		Value: tokens.AccessToken,
 	}
 
 	newRefreshToken := fiber.Cookie{
-		Name:     "refresh_token",
-		Value:    tokens.RefreshToken,
-		HTTPOnly: true,
+		Name:  "refresh_token",
+		Value: tokens.RefreshToken,
 	}
 	c.Cookie(&accessToken)
 	c.Cookie(&newRefreshToken)

@@ -2,6 +2,7 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { paths } from "./api/v1";
 import createClient from "openapi-fetch";
+import { useNavigate } from "react-router";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -52,3 +53,17 @@ export const isValidToken = (token: string) => {
 export const client = createClient<paths>({
   baseUrl: "/",
 });
+
+export const refreshAccessToken = async () => {
+  const response = await fetch("/api/auth/refresh-token", {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "content-type": "applications/json",
+    },
+  });
+  if (!response.ok) {
+    const navigate = useNavigate();
+    navigate("/");
+  }
+};

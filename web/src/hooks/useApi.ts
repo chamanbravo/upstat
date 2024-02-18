@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { refreshAccessToken } from "@/lib/utils";
 
 const useApi = <T>(url: string, options?: any) => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -37,20 +37,6 @@ const useApi = <T>(url: string, options?: any) => {
   }, []);
 
   return { data, error, loading };
-};
-
-const refreshAccessToken = async () => {
-  const response = await fetch("/api/auth/refresh-token", {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "content-type": "applications/json",
-    },
-  });
-  if (!response.ok) {
-    const navigate = useNavigate();
-    navigate("/");
-  }
 };
 
 export default useApi;
