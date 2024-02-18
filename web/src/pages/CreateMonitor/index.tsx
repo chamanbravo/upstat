@@ -20,6 +20,8 @@ import { api } from "@/lib/api";
 import { ChevronLeft, PauseCircle, Trash2 } from "lucide-react";
 import { client } from "@/lib/utils";
 import { components } from "@/lib/api/v1";
+import HttpMethodDropdown from "./HttpMethodDropdown";
+import FrequencyDropdown, { pingFrequency } from "./FrequencyDropdown";
 
 const { GET } = client;
 
@@ -41,6 +43,11 @@ export default function index() {
   const [monitorInfo, setMonitorInfo] = useState<
     components["schemas"]["MonitorInfoOut"]["monitor"]
   >({});
+  const [method, setMethod] = useState<string>("GET");
+  const [frequency, setFrequency] = useState({
+    label: "1 minute",
+    value: 60,
+  });
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(MonitorFormSchema),
@@ -57,8 +64,8 @@ export default function index() {
           body: JSON.stringify({
             name: formData.name,
             url: formData.url,
-            frequency: 60,
-            method: "get",
+            frequency: frequency.value,
+            method: method,
             type: "http",
           }),
           headers: {
@@ -101,6 +108,13 @@ export default function index() {
         setMonitorInfo(data?.monitor);
         form.setValue("name", data?.monitor?.name || "");
         form.setValue("url", data?.monitor?.url || "");
+        setMethod(data?.monitor?.method?.toUpperCase() || "GET");
+        setFrequency({
+          label: pingFrequency.filter(
+            (f) => f.value === data?.monitor?.frequency
+          )[0].label,
+          value: data?.monitor?.frequency || 60,
+        });
       }
     } catch (error) {}
   };
@@ -175,29 +189,29 @@ export default function index() {
         <title>Add Monitor | Upstat</title>
       </Helmet>
       <DashboardLayout>
-        <div className="flex flex-col gap-8 w-full">
+        <div className="flex flex-col w-full gap-8">
           {id ? (
-            <div className="flex flex-col gap-3 w-full">
+            <div className="flex flex-col w-full gap-3">
               <Button
                 variant="ghost"
-                className="w-fit text-muted-foreground p-2 h-7"
+                className="p-2 w-fit text-muted-foreground h-7"
                 onClick={() => navigate(`/app/monitors/${monitorInfo?.id}`)}
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="w-4 h-4" />
                 Monitor
               </Button>
-              <div className="flex gap-4 items-center">
+              <div className="flex items-center gap-4">
                 <div className="flex flex-col gap-1">
-                  <h1 className="text-2xl font-semibold flex gap-1 items-center">
+                  <h1 className="flex items-center gap-1 text-2xl font-semibold">
                     {monitorInfo?.name}
                   </h1>
                   <p className="text-muted-foreground">Update Monitor</p>
                 </div>
               </div>
-              <div className="flex gap-4 items-centerm mt-4">
+              <div className="flex gap-4 mt-4 items-centerm">
                 <Button
                   variant="ghost"
-                  className="w-fit text-muted-foreground p-2 flex gap-1 h-7"
+                  className="flex gap-1 p-2 w-fit text-muted-foreground h-7"
                   onClick={() => {
                     if (
                       monitorInfo?.status === "green" ||
@@ -209,7 +223,7 @@ export default function index() {
                     }
                   }}
                 >
-                  <PauseCircle className="h-4 w-4" />
+                  <PauseCircle className="w-4 h-4" />
                   {monitorInfo?.status === "green"
                     ? "Pause"
                     : monitorInfo?.status === "yellow"
@@ -219,10 +233,10 @@ export default function index() {
                 </Button>
                 <Button
                   variant="ghost"
-                  className="w-fit text-muted-foreground p-2 flex gap-1 h-7"
+                  className="flex gap-1 p-2 w-fit text-muted-foreground h-7"
                   onClick={deleteMonitor}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="w-4 h-4" />
                   Delete
                 </Button>
               </div>
@@ -237,7 +251,7 @@ export default function index() {
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
             <div className="flex flex-col gap-1">
               <h3 className="font-medium">Endpoint Check</h3>
-              <p className="text-muted-foreground max-w-xs">
+              <p className="max-w-xs text-muted-foreground">
                 Configure the target website you want to monitor.
               </p>
             </div>
@@ -246,7 +260,7 @@ export default function index() {
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-4 w-full"
+                  className="w-full space-y-4"
                 >
                   <FormField
                     control={form.control}
@@ -277,6 +291,27 @@ export default function index() {
                       </FormItem>
                     )}
                   />
+
+                  <div className="flex gap-2">
+                    <div>
+                      <HttpMethodDropdown
+                        method={method}
+                        setMethod={setMethod}
+                      />
+                      <span className="text-xs text-muted-foreground">
+                        HTTP method used to make the request
+                      </span>
+                    </div>
+                    <div>
+                      <FrequencyDropdown
+                        frequency={frequency}
+                        setFrequency={setFrequency}
+                      />
+                      <span className="text-xs text-muted-foreground">
+                        How often to ping your monitor?
+                      </span>
+                    </div>
+                  </div>
 
                   <Button type="submit" disabled={loading}>
                     {loading ? "Loading..." : id ? "Update" : "Create"}

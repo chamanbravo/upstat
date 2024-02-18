@@ -55,7 +55,9 @@ export const columns: ColumnDef<components["schemas"]["MonitorItem"]>[] = [
       <>
         {row.original.frequency && +row.original.frequency <= 60
           ? `${row.getValue("frequency")}s`
-          : `${row.getValue("frequency")}h`}
+          : row.original.frequency && +row.original.frequency < 60 * 60
+          ? row.original.frequency && +row.original.frequency / 60 + "m"
+          : row.original.frequency && +row.original.frequency / (60 * 60) + "h"}
       </>
     ),
   },
