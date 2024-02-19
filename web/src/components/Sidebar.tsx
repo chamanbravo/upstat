@@ -21,21 +21,24 @@ export default function Sidebar() {
           }`}
           onClick={() => navigate("/app/monitors")}
         >
-          <Activity className="mr-2 h-4 w-4" />
+          <Activity className="w-4 h-4 mr-2" />
           Monitors
+        </Button>
+        <Button
+          variant="ghost"
+          className={`justify-start text-muted-foreground hover:text-foreground ${
+            pathname.includes("notifications") && selectedStyle
+          }`}
+          onClick={() => navigate("/app/notifications")}
+        >
+          <BellDot className="w-4 h-4 mr-2" />
+          Notifications
         </Button>
         {/* <Button
           variant="ghost"
           className="justify-start text-muted-foreground hover:text-foreground"
         >
-          <BellDot className="mr-2 h-4 w-4" />
-          Notifications
-        </Button>
-        <Button
-          variant="ghost"
-          className="justify-start text-muted-foreground hover:text-foreground"
-        >
-          <PanelTop className="mr-2 h-4 w-4" />
+          <PanelTop className="w-4 h-4 mr-2" />
           Status Pages
         </Button> */}
         <Button
@@ -45,7 +48,7 @@ export default function Sidebar() {
           }`}
           onClick={() => navigate("/app/settings")}
         >
-          <Cog className="mr-2 h-4 w-4" />
+          <Cog className="w-4 h-4 mr-2" />
           Settings
         </Button>
       </div>
@@ -59,7 +62,7 @@ export default function Sidebar() {
           navigate("/");
         }}
       >
-        <LogOut className="mr-2 h-4 w-4" />
+        <LogOut className="w-4 h-4 mr-2" />
         Logout
       </Button>
     </div>

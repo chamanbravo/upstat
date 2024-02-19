@@ -30,6 +30,19 @@ CREATE TABLE heartbeats (
     latency INTEGER NOT NULL,
     message TEXT NOT NULL
 );
+
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(32) NOT NULL,
+    provider VARCHAR(50) NOT NULL,
+    data json NOT NULL
+)
+
+CREATE TABLE notifications_monitors (
+    monitor_id INTEGER REFERENCES monitors(id) ON DELETE CASCADE NOT NULL,
+    notification_id INTEGER REFERENCES notifications(id) ON DELETE CASCADE NOT NULL,
+    PRIMARY KEY (monitor_id, notification_id)
+)
 -- +goose StatementEnd
 
 -- +goose Down
@@ -37,4 +50,6 @@ CREATE TABLE heartbeats (
 DROP TABLE users;
 DROP TABLE monitors;
 DROP TABLE heartbeats;
+DROP TABLE notifications;
+DROP TABLE notifications_monitors;
 -- +goose StatementEnd
