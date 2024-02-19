@@ -6,8 +6,8 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(32) UNIQUE NOT NULL,
     email VARCHAR(50) UNIQUE NOT NULL,
-    firstname VARCHAR(32),
-    lastname VARCHAR(32),
+    firstname VARCHAR(32) DEFAULT '',
+    lastname VARCHAR(32) DEFAULT '', 
     password text NOT NULL
 );
 

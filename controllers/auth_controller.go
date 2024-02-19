@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"database/sql"
-
 	"github.com/chamanbravo/upstat/queries"
 	"github.com/chamanbravo/upstat/serializers"
 	"github.com/chamanbravo/upstat/utils"
@@ -53,7 +51,7 @@ func SignUp(c *fiber.Ctx) error {
 		})
 	}
 
-	tokens, err := utils.GenerateJWT(user.Username, sql.NullString{}, sql.NullString{})
+	tokens, err := utils.GenerateJWT(user.Username, "", "")
 	if err != nil {
 		return c.Status(500).JSON(fiber.Map{
 			"message": err.Error(),
