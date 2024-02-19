@@ -12,12 +12,8 @@ interface Props {
 
 interface JwtPayload {
   username: string;
-  firstname: {
-    String: string;
-  };
-  lastname: {
-    String: string;
-  };
+  firstname: string;
+  lastname: string;
 }
 
 export default function RedirectOnNoUser({ children }: Props) {
@@ -33,11 +29,7 @@ export default function RedirectOnNoUser({ children }: Props) {
     if (isValidToken(accessToken)) {
       const payload: JwtPayload | null = jwtDecode(accessToken);
       if (payload) {
-        setUser(
-          payload.username,
-          payload.firstname.String,
-          payload.lastname.String
-        );
+        setUser(payload.username, payload.firstname, payload.lastname);
         return setLoading(false);
       }
     } else {
