@@ -38,11 +38,12 @@ type UserSignInOut struct {
 }
 
 type AddMonitorIn struct {
-	Name      string `json:"name" validate:"required"`
-	URL       string `json:"url" validate:"required"`
-	Type      string `json:"type" validate:"required"`
-	Frequency int    `json:"frequency" validate:"required"`
-	Method    string `json:"method" validate:"required"`
+	Name                 string   `json:"name" validate:"required"`
+	URL                  string   `json:"url" validate:"required"`
+	Type                 string   `json:"type" validate:"required"`
+	Frequency            int      `json:"frequency" validate:"required"`
+	Method               string   `json:"method" validate:"required"`
+	NotificationChannels []string `json:"notificationChannels"`
 }
 
 type UpdatePasswordIn struct {
@@ -101,4 +102,30 @@ type MonitorSummaryOut struct {
 type CertificateExpiryCountDown struct {
 	SuccessResponse
 	DaysUntilExpiration int `json:"daysUntilExpiration"`
+}
+
+type NotificationData struct {
+	WebhookUrl string `json:"webhookUrl"`
+}
+
+type NotificationCreateIn struct {
+	Name     string           `json:"name" validate:"required"`
+	Provider string           `json:"provider" validate:"oneof=Discord"`
+	Data     NotificationData `json:"data"`
+}
+
+type NotificationItem struct {
+	ID       string `json:"id"`
+	Name     string `json:"name" validate:"required"`
+	Provider string `json:"provider" validate:"oneof=Discord"`
+}
+
+type NotificationListOut struct {
+	SuccessResponse
+	Notifications []NotificationItem `json:"notifications"`
+}
+
+type NotificationChannelInfo struct {
+	SuccessResponse
+	Notification models.Notification `json:"notification"`
 }

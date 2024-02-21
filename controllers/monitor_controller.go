@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -32,6 +33,13 @@ func CreateMonitor(c *fiber.Ctx) error {
 	}
 
 	monitor, err := queries.CreateMonitor(newMonitor)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	err = queries.NotificationMonitor(monitor.ID, newMonitor.NotificationChannels)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
@@ -116,6 +124,13 @@ func UpdateMonitor(c *fiber.Ctx) error {
 	}
 
 	err = queries.UpdateMonitorById(id, monitor)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	err = queries.UpdateNotificationMonitorById(id, monitor.NotificationChannels)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
@@ -418,5 +433,42 @@ func CertificateExpiryCountDown(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{
 		"message":             "success",
 		"daysUntilExpiration": daysUnitlExp,
+	})
+}
+
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
+// @Success 200 {object} serializers.NotificationListOut
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/monitors/{id}/notifications [get]
+func NotificationChannelListOfMonitor(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	if idParam == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "ID parameter is missing",
+		})
+	}
+
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid ID parameter",
+		})
+	}
+
+	notification, err := queries.FindNotificationChannelsByMonitorId(id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	fmt.Println(notification)
+
+	return c.Status(200).JSON(fiber.Map{
+		"message":       "success",
+		"notifications": notification,
 	})
 }

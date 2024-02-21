@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -18,6 +19,17 @@ var (
 	goroutines    = make(map[int]chan struct{})
 	mutex         sync.Mutex
 )
+
+type DiscordWebhookMessage struct {
+	Username  string `json:"username"`
+	AvatarURL string `json:"avatar_url"`
+	Embeds    []struct {
+		Title       string `json:"title"`
+		Time        string `json:"time"`
+		Description string `json:"description"`
+		Color       int    `json:"color"`
+	} `json:"embeds"`
+}
 
 func StartGoroutine(monitor *models.Monitor) {
 	mutex.Lock()
@@ -55,7 +67,7 @@ func StartGoroutine(monitor *models.Monitor) {
 				heartbeat := new(models.Heartbeat)
 				heartbeat.MonitorId = id
 				if monitor.Status != "yellow" {
-					fmt.Printf("Goroutine with ID %d is running...\n", id)
+					fmt.Printf("Pinging %v at %v \n", monitor.Name, monitor.Url)
 					startTime := time.Now()
 					response, err := http.Get(monitor.Url)
 					if err != nil {
@@ -87,6 +99,61 @@ func StartGoroutine(monitor *models.Monitor) {
 					err = queries.SaveHeartbeat(heartbeat)
 					if err != nil {
 						log.Printf("Error when trying to save heartbeat: %v", err.Error())
+					}
+
+					notificationChannels, err := queries.FindNotificationChannelsByMonitorId(id)
+					var discordMessage DiscordWebhookMessage
+					if heartbeat.Status == "green" {
+						discordMessage = DiscordWebhookMessage{
+							Username:  "Upstat",
+							AvatarURL: "https://w7.pngwing.com/pngs/370/871/png-transparent-san-carlos-upstart-peer-to-peer-lending-loan-lending-club-logos-angle-investment-teal.png", // Upstat avatar
+							Embeds: []struct {
+								Title       string `json:"title"`
+								Time        string `json:"time"`
+								Description string `json:"description"`
+								Color       int    `json:"color"`
+							}{
+								{
+									Title:       fmt.Sprintf("✅ Your monitor %v is UP ✅", monitor.Name),
+									Time:        time.Now().Format("2006-01-02 15:04:05"),
+									Description: fmt.Sprintf("Monitor: **%v** | URL: **%v**\nStatus Code: **%v** | Latency: **%vms**", monitor.Name, monitor.Url, heartbeat.StatusCode, heartbeat.Latency),
+									Color:       65280, // green
+								},
+							},
+						}
+					} else if heartbeat.Status == "red" {
+						discordMessage = DiscordWebhookMessage{
+							Username:  "Upstat",
+							AvatarURL: "https://w7.pngwing.com/pngs/370/871/png-transparent-san-carlos-upstart-peer-to-peer-lending-loan-lending-club-logos-angle-investment-teal.png", // Upstat avatar
+							Embeds: []struct {
+								Title       string `json:"title"`
+								Time        string `json:"time"`
+								Description string `json:"description"`
+								Color       int    `json:"color"`
+							}{
+								{
+									Title:       fmt.Sprintf("❌ Your monitor %v is down ❌", monitor.Name),
+									Time:        time.Now().Format("2006-01-02 15:04:05"),
+									Description: fmt.Sprintf("Monitor: %v | URL: %v ", monitor.Name, monitor.Url),
+									Color:       16711680, // red
+								},
+							},
+						}
+					}
+					if err == nil {
+						for _, v := range notificationChannels {
+							jsonData, err := json.Marshal(discordMessage)
+							if err == nil {
+								_, err := http.Post(v.Data.WebhookUrl, "application/json", strings.NewReader(string(jsonData)))
+								if err != nil {
+									log.Printf("Error when trying to send heartbeat to webhook: %v", err.Error())
+								}
+							} else {
+								log.Printf("Error when trying to convert heartbeat to JSON: %v", err.Error())
+							}
+						}
+					} else {
+						log.Printf("Error retrieving notification channels: %v", err)
 					}
 				}
 				time.Sleep(time.Duration(monitor.Frequency) * time.Second)

@@ -22,6 +22,8 @@ import { client } from "@/lib/utils";
 import { components } from "@/lib/api/v1";
 import HttpMethodDropdown from "./HttpMethodDropdown";
 import FrequencyDropdown, { pingFrequency } from "./FrequencyDropdown";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Link } from "react-router-dom";
 
 const { GET } = client;
 
@@ -32,6 +34,7 @@ const MonitorFormSchema = z.object({
   url: z
     .string({ required_error: "This field may not be blank." })
     .min(1, { message: "This field may not be blank." }),
+  channels: z.array(z.string()),
 });
 
 type LoginFormValues = z.infer<typeof MonitorFormSchema>;
@@ -48,10 +51,13 @@ export default function index() {
     label: "1 minute",
     value: 60,
   });
+  const [notificationChannels, setNotificationChannels] = useState<
+    components["schemas"]["NotificationListOut"]["notifications"]
+  >([]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(MonitorFormSchema),
-    defaultValues: { name: "", url: "" },
+    defaultValues: { name: "", url: "", channels: [] },
   });
 
   async function onSubmit(formData: LoginFormValues) {
@@ -67,6 +73,7 @@ export default function index() {
             frequency: frequency.value,
             method: method,
             type: "http",
+            notificationChannels: formData.channels,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -115,6 +122,40 @@ export default function index() {
           )[0].label,
           value: data?.monitor?.frequency || 60,
         });
+      }
+    } catch (error) {}
+  };
+
+  const fetchNotificationChannels = async (signal: AbortSignal) => {
+    try {
+      const { response, data } = await GET(`/api/notifications/list`, {
+        signal,
+      });
+      if (response.ok) {
+        setNotificationChannels(data?.notifications || []);
+      }
+    } catch (error) {}
+  };
+
+  const fetchMonitorsNotificationChannels = async (signal: AbortSignal) => {
+    if (!id) return;
+    try {
+      const { response, data } = await GET(`/api/monitors/{id}/notifications`, {
+        params: {
+          path: {
+            id: `${id}`,
+          },
+        },
+        signal,
+      });
+      if (response.ok) {
+        if (data?.notifications?.length) {
+          form.setValue("channels", [
+            ...data.notifications
+              .map((i) => i.id)
+              .filter((id): id is string => !!id),
+          ]);
+        }
       }
     } catch (error) {}
   };
@@ -178,6 +219,8 @@ export default function index() {
     const controller = new AbortController();
     const signal = controller.signal;
     fetchMonitorInfo(signal);
+    fetchNotificationChannels(signal);
+    fetchMonitorsNotificationChannels(signal);
     return () => {
       controller.abort();
     };
@@ -248,77 +291,162 @@ export default function index() {
             </div>
           )}
 
-          <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
-            <div className="flex flex-col gap-1">
-              <h3 className="font-medium">Endpoint Check</h3>
-              <p className="max-w-xs text-muted-foreground">
-                Configure the target website you want to monitor.
-              </p>
-            </div>
+          <div className="w-full">
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="flex flex-col w-full gap-12"
+              >
+                <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
+                  <div className="flex flex-col gap-1">
+                    <h3 className="font-medium">Endpoint Check</h3>
+                    <p className="max-w-xs text-muted-foreground">
+                      Configure the target website you want to monitor.
+                    </p>
+                  </div>
+                  <div className="max-w-md space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem className="space-y-1">
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="johnsmith" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="url"
+                      render={({ field }) => (
+                        <FormItem className="space-y-1">
+                          <FormLabel>URL</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="https://johnsmith.com/ping"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-            <div className="w-full max-w-md">
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="w-full space-y-4"
-                >
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem className="space-y-1">
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="johnsmith" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="url"
-                    render={({ field }) => (
-                      <FormItem className="space-y-1">
-                        <FormLabel>URL</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="https://johnsmith.com/ping"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="flex gap-2">
-                    <div>
-                      <HttpMethodDropdown
-                        method={method}
-                        setMethod={setMethod}
-                      />
-                      <span className="text-xs text-muted-foreground">
-                        HTTP method used to make the request
-                      </span>
-                    </div>
-                    <div>
-                      <FrequencyDropdown
-                        frequency={frequency}
-                        setFrequency={setFrequency}
-                      />
-                      <span className="text-xs text-muted-foreground">
-                        How often to ping your monitor?
-                      </span>
+                    <div className="flex gap-2">
+                      <div>
+                        <HttpMethodDropdown
+                          method={method}
+                          setMethod={setMethod}
+                        />
+                        <span className="text-xs text-muted-foreground">
+                          HTTP method used to make the request
+                        </span>
+                      </div>
+                      <div>
+                        <FrequencyDropdown
+                          frequency={frequency}
+                          setFrequency={setFrequency}
+                        />
+                        <span className="text-xs text-muted-foreground">
+                          How often to ping your monitor?
+                        </span>
+                      </div>
                     </div>
                   </div>
+                </div>
 
-                  <Button type="submit" disabled={loading}>
-                    {loading ? "Loading..." : id ? "Update" : "Create"}
-                  </Button>
-                </form>
-              </Form>
-            </div>
+                <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
+                  <div className="flex flex-col gap-1">
+                    <h3 className="font-medium">Notifications</h3>
+                    <p className="max-w-xs text-muted-foreground">
+                      Select the notification channels you want to be informed.
+                    </p>
+                  </div>
+
+                  <div className="w-full max-w-md">
+                    {notificationChannels?.length === 0 ? (
+                      <div className="flex flex-row">
+                        <div>
+                          <h3>No notifications channels</h3>
+                          <p className="text-muted-foreground">
+                            Create your first notification channel
+                          </p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          className="mt-4 ml-auto"
+                          asChild
+                        >
+                          <Link to="/app/notifications/create">Create</Link>
+                        </Button>
+                      </div>
+                    ) : (
+                      <FormField
+                        control={form.control}
+                        name="channels"
+                        render={() => (
+                          <FormItem className="space-y-4">
+                            {notificationChannels?.map((item) => (
+                              <FormField
+                                key={item.id}
+                                control={form.control}
+                                name="channels"
+                                render={({ field }) => {
+                                  return (
+                                    <FormItem
+                                      key={item.id}
+                                      className="flex flex-row items-center p-4 space-x-3 space-y-0 border rounded"
+                                    >
+                                      <FormControl>
+                                        <Checkbox
+                                          checked={
+                                            item.id
+                                              ? field.value?.includes(item.id)
+                                              : false
+                                          }
+                                          onCheckedChange={(checked) => {
+                                            return checked
+                                              ? field.onChange([
+                                                  ...field.value,
+                                                  item.id,
+                                                ])
+                                              : field.onChange(
+                                                  field.value?.filter(
+                                                    (value) => value !== item.id
+                                                  )
+                                                );
+                                          }}
+                                        />
+                                      </FormControl>
+                                      <FormLabel className="flex items-center gap-4 cursor-pointer">
+                                        <span className="text-base font-medium">
+                                          {item.name}
+                                        </span>
+                                        <span className="font-normal text-muted-foreground">
+                                          {item.provider}
+                                        </span>
+                                      </FormLabel>
+                                    </FormItem>
+                                  );
+                                }}
+                              />
+                            ))}
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <Button type="submit" disabled={loading} className="ml-auto">
+                  {loading ? "Loading..." : id ? "Update" : "Create"}
+                </Button>
+              </form>
+            </Form>
           </div>
         </div>
       </DashboardLayout>

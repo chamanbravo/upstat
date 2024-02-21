@@ -37,6 +37,7 @@ func main() {
 	routes.SwaggerRoute(app)
 	routes.MonitorRoutes(app)
 	routes.UserRoutes(app)
+	routes.NotificationRoutes(app)
 
 	app.Listen(":8000")
 }

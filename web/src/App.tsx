@@ -6,6 +6,8 @@ import {
   Monitors,
   PageNotFound,
   Settings,
+  Notifications,
+  CreateNotification,
 } from "./pages";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -28,6 +30,15 @@ function App() {
             <Route
               path="/app/monitors/configure/:id"
               element={<CreateMonitor />}
+            />
+            <Route path="/app/notifications" element={<Notifications />} />
+            <Route
+              path="/app/notifications/create"
+              element={<CreateNotification />}
+            />
+            <Route
+              path="/app/notifications/configure/:id"
+              element={<CreateNotification />}
             />
             <Route path="/app/settings" element={<Settings />} />
             <Route

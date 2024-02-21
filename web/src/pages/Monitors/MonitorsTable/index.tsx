@@ -8,12 +8,16 @@ export default function MonitorsTable() {
     useApi<components["schemas"]["MonitorsListOut"]>("/api/monitors/list");
 
   if (error) {
-    return <span className="text-muted-foreground text-center">Something went wrong!</span>;
+    return (
+      <span className="text-center text-muted-foreground">
+        Something went wrong!
+      </span>
+    );
   }
 
   if (loading) {
     return (
-      <span className="text-muted-foreground text-center">Loading...</span>
+      <span className="text-center text-muted-foreground">Loading...</span>
     );
   }
 

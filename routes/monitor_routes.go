@@ -21,4 +21,5 @@ func MonitorRoutes(app *fiber.App) {
 	route.Get("/summary/:id", middleware.Protected, controllers.MonitorSummary)
 	route.Get("/heartbeat/:id", middleware.Protected, controllers.RetrieveHeartbeat)
 	route.Get("/cert-exp-countdown/:id", controllers.CertificateExpiryCountDown)
+	route.Get("/:id/notifications", controllers.NotificationChannelListOfMonitor)
 }
