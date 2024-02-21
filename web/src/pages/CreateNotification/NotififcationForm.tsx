@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,17 +13,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useState } from "react";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import ProviderDropdown from "./ProviderDropdown";
 import { Link } from "react-router-dom";
+import { client } from "@/lib/utils";
+
+const { GET, POST, PUT } = client;
 
 const NotificationFormSchema = z.object({
   name: z
     .string({ required_error: "This field may not be blank." })
     .min(2, { message: "This field may not be blank." }),
-  webhookUrl: z.string({ required_error: "This field may not be blank." }),
+  webhookUrl: z
+    .string({ required_error: "This field may not be blank." })
+    .min(8, { message: "This field may not be blank." }),
 });
 
 type NotificationFormValues = z.infer<typeof NotificationFormSchema>;
@@ -30,23 +35,103 @@ type NotificationFormValues = z.infer<typeof NotificationFormSchema>;
 export default function CreateNotification() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
   const [provider, setProvider] = useState<string>("Discord");
 
   const form = useForm<NotificationFormValues>({
     resolver: zodResolver(NotificationFormSchema),
-    defaultValues: { name: "" },
+    defaultValues: { name: "", webhookUrl: "" },
   });
 
   async function onSubmit(formData: NotificationFormValues) {
     try {
-      setLoading(true);
+      if (id) {
+        setLoading(true);
+        const { response } = await PUT("/api/notifications/update/{id}", {
+          params: {
+            path: { id: id },
+          },
+          body: {
+            name: formData.name,
+            provider: provider,
+            data: {
+              webhookUrl: formData.webhookUrl,
+            },
+          },
+        });
+
+        if (response.ok) {
+          setLoading(false);
+          navigate("/app/notifications");
+          return toast({
+            title: "Notification updated successfull.",
+          });
+        } else if (response.status === 400) {
+          const data = await response.json();
+          return toast({
+            title: data?.message,
+          });
+        }
+      } else {
+        setLoading(true);
+        const { response } = await POST("/api/notifications/create", {
+          body: {
+            name: formData.name,
+            provider: provider,
+            data: {
+              webhookUrl: formData.webhookUrl,
+            },
+          },
+        });
+
+        if (response.ok) {
+          setLoading(false);
+          navigate("/app/notifications");
+          return toast({
+            title: "Notification created successfull.",
+          });
+        } else if (response.status === 400) {
+          const data = await response.json();
+          return toast({
+            title: data?.message,
+          });
+        }
+      }
     } catch (error) {
       toast({ title: "Something went wrong." });
-    } finally {
-      setLoading(false);
     }
   }
+
+  const fetchNotificationInfo = async (signal: AbortSignal) => {
+    if (!id) return;
+    try {
+      const { response, data } = await GET("/api/notifications/info/{id}", {
+        params: {
+          path: {
+            id,
+          },
+        },
+        signal,
+      });
+
+      if (response.ok && data) {
+        form.setValue("name", data?.notification?.name || "");
+        if (data?.notification?.provider === "Discord")
+          form.setValue(
+            "webhookUrl",
+            data?.notification?.data?.webhookUrl || ""
+          );
+        setProvider(data?.notification?.provider || "");
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetchNotificationInfo(signal);
+  }, []);
 
   return (
     <div className="flex flex-col w-full gap-8">
@@ -105,7 +190,7 @@ export default function CreateNotification() {
                           target="_blank"
                           className="ml-auto cursor-pointer hover:underline"
                         >
-                          How to setup your Slack webhook
+                          How to setup your Discord webhook
                         </Link>
                       </FormDescription>
                       <FormMessage />

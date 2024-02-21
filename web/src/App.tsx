@@ -36,6 +36,10 @@ function App() {
               path="/app/notifications/create"
               element={<CreateNotification />}
             />
+            <Route
+              path="/app/notifications/configure/:id"
+              element={<CreateNotification />}
+            />
             <Route path="/app/settings" element={<Settings />} />
             <Route
               path="/app/settings/password-security"

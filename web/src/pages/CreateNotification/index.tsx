@@ -16,6 +16,7 @@ export default function Monitors() {
               <h1 className="text-2xl font-bold">Notifications</h1>
               <p className="text-muted-foreground">Create your notification</p>
             </div>
+
             <CreateNotification />
           </div>
         </DashboardLayout>

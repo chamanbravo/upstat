@@ -36,13 +36,13 @@ CREATE TABLE notifications (
     name VARCHAR(32) NOT NULL,
     provider VARCHAR(50) NOT NULL,
     data json NOT NULL
-)
+);
 
 CREATE TABLE notifications_monitors (
     monitor_id INTEGER REFERENCES monitors(id) ON DELETE CASCADE NOT NULL,
     notification_id INTEGER REFERENCES notifications(id) ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (monitor_id, notification_id)
-)
+);
 -- +goose StatementEnd
 
 -- +goose Down

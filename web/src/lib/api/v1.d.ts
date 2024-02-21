@@ -304,6 +304,136 @@ export interface paths {
       };
     };
   };
+  "/api/monitors/{id}/notifications": {
+    get: {
+      parameters: {
+        path: {
+          /** Monitor ID */
+          id: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["NotificationListOut"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+    };
+  };
+  "/api/notifications/create": {
+    post: {
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["NotificationCreateIn"];
+        };
+      };
+    };
+  };
+  "/api/notifications/delete/{id}": {
+    delete: {
+      parameters: {
+        path: {
+          /** Notification Channel ID */
+          id: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+    };
+  };
+  "/api/notifications/info/{id}": {
+    get: {
+      parameters: {
+        path: {
+          /** Notification Channel ID */
+          id: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["NotificationChannelInfo"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+    };
+  };
+  "/api/notifications/list": {
+    get: {
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["NotificationListOut"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+    };
+  };
+  "/api/notifications/update/{id}": {
+    put: {
+      parameters: {
+        path: {
+          /** Notification Channel ID */
+          id: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["NotificationCreateIn"];
+        };
+      };
+    };
+  };
   "/api/users/setup": {
     get: {
       responses: {
@@ -378,6 +508,7 @@ export interface components {
       type?: string;
       frequency?: number;
       method?: string;
+      notificationChannels?: string[];
     };
     CertificateExpiryCountDown: {
       daysUntilExpiration?: number;
@@ -462,6 +593,37 @@ export interface components {
     NeedSetup: {
       needSetup?: boolean;
     };
+    Notification: {
+      id?: string;
+      name?: string;
+      provider?: string;
+      data?: components["schemas"]["NotificationData"];
+    };
+    NotificationChannelInfo: {
+      notification?: components["schemas"]["Notification"];
+      message?: string;
+    };
+    NotificationCreateIn: {
+      name?: string;
+      provider?: string;
+      data?: components["schemas"]["NotificationData"];
+    };
+    NotificationData: {
+      webhookUrl?: string;
+    };
+    NotificationItem: {
+      id?: string;
+      name?: string;
+      provider?: string;
+    };
+    NotificationListOut: {
+      notifications?: {
+        id?: string;
+        name?: string;
+        provider?: string;
+      }[];
+      message?: string;
+    };
     SuccessResponse: {
       message?: string;
     };
@@ -498,8 +660,22 @@ export interface components {
       type?: string;
       frequency?: number;
       method?: string;
+      notificationChannels?: string[];
     };
     "serializers.ErrorResponse": {
+      message?: string;
+    };
+    "serializers.NotificationCreateIn": {
+      name?: string;
+      provider?: string;
+      data?: components["schemas"]["NotificationData"];
+    };
+    "serializers.NotificationListOut": {
+      notifications?: {
+        id?: string;
+        name?: string;
+        provider?: string;
+      }[];
       message?: string;
     };
     "serializers.SuccessResponse": {

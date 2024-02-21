@@ -1,4 +1,4 @@
-import { Activity, BellDot, Cog, LogOut, PanelTop } from "lucide-react";
+import { Activity, BellDot, Cog, LogOut } from "lucide-react";
 import { Button } from "./ui/button";
 import { useLocation, useNavigate } from "react-router";
 import Cookies from "js-cookie";
