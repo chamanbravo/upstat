@@ -20,15 +20,17 @@ var (
 	mutex         sync.Mutex
 )
 
+type Embeds struct {
+	Title       string `json:"title"`
+	Time        string `json:"time"`
+	Description string `json:"description"`
+	Color       int    `json:"color"`
+}
+
 type DiscordWebhookMessage struct {
-	Username  string `json:"username"`
-	AvatarURL string `json:"avatar_url"`
-	Embeds    []struct {
-		Title       string `json:"title"`
-		Time        string `json:"time"`
-		Description string `json:"description"`
-		Color       int    `json:"color"`
-	} `json:"embeds"`
+	Username  string   `json:"username"`
+	AvatarURL string   `json:"avatar_url"`
+	Embeds    []Embeds `json:"embeds"`
 }
 
 func StartGoroutine(monitor *models.Monitor) {
@@ -107,12 +109,7 @@ func StartGoroutine(monitor *models.Monitor) {
 						discordMessage = DiscordWebhookMessage{
 							Username:  "Upstat",
 							AvatarURL: "https://w7.pngwing.com/pngs/370/871/png-transparent-san-carlos-upstart-peer-to-peer-lending-loan-lending-club-logos-angle-investment-teal.png", // Upstat avatar
-							Embeds: []struct {
-								Title       string `json:"title"`
-								Time        string `json:"time"`
-								Description string `json:"description"`
-								Color       int    `json:"color"`
-							}{
+							Embeds: []Embeds{
 								{
 									Title:       fmt.Sprintf("✅ Your monitor %v is UP ✅", monitor.Name),
 									Time:        time.Now().Format("2006-01-02 15:04:05"),
@@ -125,12 +122,7 @@ func StartGoroutine(monitor *models.Monitor) {
 						discordMessage = DiscordWebhookMessage{
 							Username:  "Upstat",
 							AvatarURL: "https://w7.pngwing.com/pngs/370/871/png-transparent-san-carlos-upstart-peer-to-peer-lending-loan-lending-club-logos-angle-investment-teal.png", // Upstat avatar
-							Embeds: []struct {
-								Title       string `json:"title"`
-								Time        string `json:"time"`
-								Description string `json:"description"`
-								Color       int    `json:"color"`
-							}{
+							Embeds: []Embeds{
 								{
 									Title:       fmt.Sprintf("❌ Your monitor %v is down ❌", monitor.Name),
 									Time:        time.Now().Format("2006-01-02 15:04:05"),
