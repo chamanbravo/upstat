@@ -3,12 +3,12 @@ package routes
 import (
 	"github.com/chamanbravo/upstat/controllers"
 	"github.com/chamanbravo/upstat/middleware"
+	"github.com/gofiber/fiber/v2"
 )
 
 // @Group Notifications
 func NotificationRoutes(app *fiber.App) {
-	//use auth middleware
-	route := app.Group("/api/notifications", middleware.Protected())
+	route := app.Group("/api/notifications", middleware.Protected)
 
 	route.Post("/create", controllers.CreateNotification)
 	route.Get("/list", controllers.ListNotificationsChannel)
