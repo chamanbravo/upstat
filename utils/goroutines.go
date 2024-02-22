@@ -173,6 +173,8 @@ func StartGoroutineSetup() {
 	}
 
 	for _, v := range monitors {
-		StartGoroutine(v)
+		if v.Status != "yellow" {
+			StartGoroutine(v)
+		}
 	}
 }
