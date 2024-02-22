@@ -9,17 +9,17 @@ import (
 
 // @Group Monitors
 func MonitorRoutes(app *fiber.App) {
-	route := app.Group("/api/monitors")
+	route := app.Group("/api/monitors", middleware.Protected)
 
-	route.Post("/create", middleware.Protected, controllers.CreateMonitor)
-	route.Get("/info/:id", middleware.Protected, controllers.MonitorInfo)
-	route.Put("/pause/:id", middleware.Protected, controllers.PauseMonitor)
-	route.Put("/update/:id", middleware.Protected, controllers.UpdateMonitor)
-	route.Delete("/delete/:id", middleware.Protected, controllers.DeleteMonitor)
-	route.Put("/resume/:id", middleware.Protected, controllers.ResumeMonitor)
-	route.Get("/list", middleware.Protected, controllers.MonitorsList)
-	route.Get("/summary/:id", middleware.Protected, controllers.MonitorSummary)
-	route.Get("/heartbeat/:id", middleware.Protected, controllers.RetrieveHeartbeat)
+	route.Post("/create", controllers.CreateMonitor)
+	route.Get("/info/:id", controllers.MonitorInfo)
+	route.Put("/pause/:id", controllers.PauseMonitor)
+	route.Put("/update/:id", controllers.UpdateMonitor)
+	route.Delete("/delete/:id", controllers.DeleteMonitor)
+	route.Put("/resume/:id", controllers.ResumeMonitor)
+	route.Get("/list", controllers.MonitorsList)
+	route.Get("/summary/:id", controllers.MonitorSummary)
+	route.Get("/heartbeat/:id", controllers.RetrieveHeartbeat)
 	route.Get("/cert-exp-countdown/:id", controllers.CertificateExpiryCountDown)
 	route.Get("/:id/notifications", controllers.NotificationChannelListOfMonitor)
 }
