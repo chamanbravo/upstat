@@ -24,6 +24,7 @@ import HttpMethodDropdown from "./HttpMethodDropdown";
 import FrequencyDropdown, { pingFrequency } from "./FrequencyDropdown";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 
 const { GET } = client;
 
@@ -35,6 +36,7 @@ const MonitorFormSchema = z.object({
     .string({ required_error: "This field may not be blank." })
     .min(1, { message: "This field may not be blank." }),
   channels: z.array(z.string()),
+  statusPages: z.array(z.string()),
 });
 
 type LoginFormValues = z.infer<typeof MonitorFormSchema>;
@@ -54,10 +56,13 @@ export default function index() {
   const [notificationChannels, setNotificationChannels] = useState<
     components["schemas"]["NotificationListOut"]["notifications"]
   >([]);
+  const [statusPages, setStatusPages] = useState<
+    components["schemas"]["ListStatusPagesOut"]["statusPages"]
+  >([]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(MonitorFormSchema),
-    defaultValues: { name: "", url: "", channels: [] },
+    defaultValues: { name: "", url: "", channels: [], statusPages: [] },
   });
 
   async function onSubmit(formData: LoginFormValues) {
@@ -74,6 +79,7 @@ export default function index() {
             method: method,
             type: "http",
             notificationChannels: formData.channels,
+            statusPages: formData.statusPages,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -160,6 +166,38 @@ export default function index() {
     } catch (error) {}
   };
 
+  const fetchStatusPages = async (signal: AbortSignal) => {
+    try {
+      const { response, data } = await GET(`/api/status-pages/list`, {
+        signal,
+      });
+      if (response.ok) {
+        setStatusPages(data?.statusPages || []);
+      }
+    } catch (error) {}
+  };
+
+  const fetchMonitorsStatusPages = async (signal: AbortSignal) => {
+    if (!id) return;
+    try {
+      const { response, data } = await GET(`/api/monitors/{id}/status-pages`, {
+        params: {
+          path: {
+            id: `${id}`,
+          },
+        },
+        signal,
+      });
+      if (response.ok) {
+        if (data?.statusPages?.length) {
+          form.setValue("statusPages", [
+            ...data?.statusPages.map((i) => String(i.id)),
+          ]);
+        }
+      }
+    } catch (error) {}
+  };
+
   const pauseMonitor = async () => {
     try {
       const response = await api(`/api/monitors/pause/${id}`, {
@@ -221,6 +259,8 @@ export default function index() {
     fetchMonitorInfo(signal);
     fetchNotificationChannels(signal);
     fetchMonitorsNotificationChannels(signal);
+    fetchStatusPages(signal);
+    fetchMonitorsStatusPages(signal);
     return () => {
       controller.abort();
     };
@@ -358,6 +398,8 @@ export default function index() {
                   </div>
                 </div>
 
+                <Separator />
+
                 <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
                   <div className="flex flex-col gap-1">
                     <h3 className="font-medium">Notifications</h3>
@@ -427,6 +469,95 @@ export default function index() {
                                         </span>
                                         <span className="font-normal text-muted-foreground">
                                           {item.provider}
+                                        </span>
+                                      </FormLabel>
+                                    </FormItem>
+                                  );
+                                }}
+                              />
+                            ))}
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
+                  <div className="flex flex-col gap-1">
+                    <h3 className="font-medium">Status Pages</h3>
+                    <p className="max-w-xs text-muted-foreground">
+                      Select the pages where you want to display the monitor.
+                    </p>
+                  </div>
+
+                  <div className="w-full max-w-md">
+                    {statusPages?.length === 0 ? (
+                      <div className="flex flex-row">
+                        <div>
+                          <h3>No status pages</h3>
+                          <p className="text-muted-foreground">
+                            Create your first status page.
+                          </p>
+                        </div>
+                        <Button
+                          variant="outline"
+                          className="mt-4 ml-auto"
+                          asChild
+                        >
+                          <Link to="/app/notifications/create">Create</Link>
+                        </Button>
+                      </div>
+                    ) : (
+                      <FormField
+                        control={form.control}
+                        name="channels"
+                        render={() => (
+                          <FormItem className="space-y-4">
+                            {statusPages?.map((item) => (
+                              <FormField
+                                key={item.id}
+                                control={form.control}
+                                name="statusPages"
+                                render={({ field }) => {
+                                  return (
+                                    <FormItem
+                                      key={item.id}
+                                      className="flex flex-row items-center p-4 space-x-3 space-y-0 border rounded"
+                                    >
+                                      <FormControl>
+                                        <Checkbox
+                                          checked={
+                                            item.id
+                                              ? field.value?.includes(
+                                                  String(item.id)
+                                                )
+                                              : false
+                                          }
+                                          onCheckedChange={(checked) => {
+                                            return checked
+                                              ? field.onChange([
+                                                  ...field.value,
+                                                  String(item.id),
+                                                ])
+                                              : field.onChange(
+                                                  field.value?.filter(
+                                                    (value) =>
+                                                      value !== String(item.id)
+                                                  )
+                                                );
+                                          }}
+                                        />
+                                      </FormControl>
+                                      <FormLabel className="flex items-center gap-4 cursor-pointer">
+                                        <span className="text-base font-medium">
+                                          {item.name}
+                                        </span>
+                                        <span className="font-normal text-muted-foreground">
+                                          {item.slug}
                                         </span>
                                       </FormLabel>
                                     </FormItem>

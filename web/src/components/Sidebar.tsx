@@ -1,4 +1,4 @@
-import { Activity, BellDot, Cog, LogOut } from "lucide-react";
+import { Activity, BellDot, Cog, LogOut, PanelTop } from "lucide-react";
 import { Button } from "./ui/button";
 import { useLocation, useNavigate } from "react-router";
 import Cookies from "js-cookie";
@@ -34,13 +34,16 @@ export default function Sidebar() {
           <BellDot className="w-4 h-4 mr-2" />
           Notifications
         </Button>
-        {/* <Button
+        <Button
           variant="ghost"
-          className="justify-start text-muted-foreground hover:text-foreground"
+          className={`justify-start text-muted-foreground hover:text-foreground ${
+            pathname.includes("status-pages") && selectedStyle
+          }`}
+          onClick={() => navigate("/app/status-pages")}
         >
           <PanelTop className="w-4 h-4 mr-2" />
           Status Pages
-        </Button> */}
+        </Button>
         <Button
           variant="ghost"
           className={`justify-start text-muted-foreground hover:text-foreground ${

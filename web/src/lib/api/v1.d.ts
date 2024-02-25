@@ -326,6 +326,28 @@ export interface paths {
       };
     };
   };
+  "/api/monitors/{id}/status-pages": {
+    get: {
+      parameters: {
+        path: {
+          /** Monitor ID */
+          id: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["ListStatusPagesOut"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+    };
+  };
   "/api/notifications/create": {
     post: {
       responses: {
@@ -434,6 +456,114 @@ export interface paths {
       };
     };
   };
+  "/api/status-pages/create": {
+    post: {
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateStatusPageIn"];
+        };
+      };
+    };
+  };
+  "/api/status-pages/delete/{id}": {
+    delete: {
+      parameters: {
+        path: {
+          /** Status Page ID */
+          id: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+    };
+  };
+  "/api/status-pages/info/{id}": {
+    get: {
+      parameters: {
+        path: {
+          /** Status Page ID */
+          id: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["StatusPageInfo"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+    };
+  };
+  "/api/status-pages/list": {
+    get: {
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["ListStatusPagesOut"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+    };
+  };
+  "/api/status-pages/update/{id}": {
+    put: {
+      parameters: {
+        path: {
+          /** Status Page ID */
+          id: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["SuccessResponse"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+      requestBody: {
+        content: {
+          "application/json": components["schemas"]["CreateStatusPageIn"];
+        };
+      };
+    };
+  };
   "/api/users/setup": {
     get: {
       responses: {
@@ -509,10 +639,15 @@ export interface components {
       frequency?: number;
       method?: string;
       notificationChannels?: string[];
+      statusPages?: string[];
     };
     CertificateExpiryCountDown: {
       daysUntilExpiration?: number;
       message?: string;
+    };
+    CreateStatusPageIn: {
+      name?: string;
+      slug?: string;
     };
     ErrorResponse: {
       message?: string;
@@ -530,6 +665,14 @@ export interface components {
     HeartbeatsOut: {
       message?: string;
       heartbeat?: components["schemas"]["Heartbeat"][];
+    };
+    ListStatusPagesOut: {
+      statusPages?: {
+        id?: number;
+        name?: string;
+        slug?: string;
+      }[];
+      message?: string;
     };
     Monitor: {
       id?: number;
@@ -624,6 +767,15 @@ export interface components {
       }[];
       message?: string;
     };
+    StatusPage: {
+      id?: number;
+      name?: string;
+      slug?: string;
+    };
+    StatusPageInfo: {
+      statusPage?: components["schemas"]["StatusPage"];
+      message?: string;
+    };
     SuccessResponse: {
       message?: string;
     };
@@ -654,6 +806,11 @@ export interface components {
       email?: string;
       password?: string;
     };
+    "models.StatusPage": {
+      id?: number;
+      name?: string;
+      slug?: string;
+    };
     "serializers.AddMonitorIn": {
       name?: string;
       url?: string;
@@ -661,8 +818,21 @@ export interface components {
       frequency?: number;
       method?: string;
       notificationChannels?: string[];
+      statusPages?: string[];
+    };
+    "serializers.CreateStatusPageIn": {
+      name?: string;
+      slug?: string;
     };
     "serializers.ErrorResponse": {
+      message?: string;
+    };
+    "serializers.ListStatusPagesOut": {
+      statusPages?: {
+        id?: number;
+        name?: string;
+        slug?: string;
+      }[];
       message?: string;
     };
     "serializers.NotificationCreateIn": {

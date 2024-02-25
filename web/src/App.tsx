@@ -8,6 +8,8 @@ import {
   Settings,
   Notifications,
   CreateNotification,
+  StatusPages,
+  CreateStatusPage,
 } from "./pages";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -39,6 +41,15 @@ function App() {
             <Route
               path="/app/notifications/configure/:id"
               element={<CreateNotification />}
+            />
+            <Route path="/app/status-pages" element={<StatusPages />} />
+            <Route
+              path="/app/status-pages/create"
+              element={<CreateStatusPage />}
+            />
+            <Route
+              path="/app/status-pages/configure/:id"
+              element={<CreateStatusPage />}
             />
             <Route path="/app/settings" element={<Settings />} />
             <Route
