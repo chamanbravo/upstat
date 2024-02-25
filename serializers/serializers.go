@@ -44,6 +44,7 @@ type AddMonitorIn struct {
 	Frequency            int      `json:"frequency" validate:"required"`
 	Method               string   `json:"method" validate:"required"`
 	NotificationChannels []string `json:"notificationChannels"`
+	StatusPages          []string `json:"statusPages"`
 }
 
 type UpdatePasswordIn struct {
@@ -128,4 +129,19 @@ type NotificationListOut struct {
 type NotificationChannelInfo struct {
 	SuccessResponse
 	Notification models.Notification `json:"notification"`
+}
+
+type CreateStatusPageIn struct {
+	Name string `json:"name"`
+	Slug string `json:"slug"`
+}
+
+type StatusPageInfo struct {
+	SuccessResponse
+	StatusPage models.StatusPage `json:"statusPage"`
+}
+
+type ListStatusPagesOut struct {
+	SuccessResponse
+	StatusPages []models.StatusPage `json:"statusPages"`
 }

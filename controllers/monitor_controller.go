@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -40,6 +39,14 @@ func CreateMonitor(c *fiber.Ctx) error {
 	}
 
 	err = queries.NotificationMonitor(monitor.ID, newMonitor.NotificationChannels)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	fmt.Println(newMonitor.StatusPages)
+	err = queries.StatusPageMonitor(monitor.ID, newMonitor.StatusPages)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
@@ -131,6 +138,13 @@ func UpdateMonitor(c *fiber.Ctx) error {
 	}
 
 	err = queries.UpdateNotificationMonitorById(id, monitor.NotificationChannels)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	err = queries.UpdateStatusPageMonitorById(id, monitor.StatusPages)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
@@ -465,10 +479,43 @@ func NotificationChannelListOfMonitor(c *fiber.Ctx) error {
 		})
 	}
 
-	fmt.Println(notification)
-
 	return c.Status(200).JSON(fiber.Map{
 		"message":       "success",
 		"notifications": notification,
+	})
+}
+
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
+// @Success 200 {object} serializers.ListStatusPagesOut
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/monitors/{id}/status-pages [get]
+func StatusPagesListOfMonitor(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	if idParam == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "ID parameter is missing",
+		})
+	}
+
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid ID parameter",
+		})
+	}
+
+	statusPages, err := queries.FindStatusPageByMonitorId(id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"message":     "success",
+		"statusPages": statusPages,
 	})
 }
