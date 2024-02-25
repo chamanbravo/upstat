@@ -38,6 +38,7 @@ func main() {
 	routes.MonitorRoutes(app)
 	routes.UserRoutes(app)
 	routes.NotificationRoutes(app)
+	routes.StatusPagesRoutes(app)
 
 	app.Listen(":8000")
 }

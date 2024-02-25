@@ -579,6 +579,45 @@ const docTemplate = `
         ]
       }
     },
+    "/api/monitors/{id}/status-pages": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListStatusPagesOut"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Monitor ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Monitor ID"
+            }
+          }
+        ]
+      }
+    },
     "/api/notifications/create": {
       "post": {
         "responses": {
@@ -768,6 +807,195 @@ const docTemplate = `
         }
       }
     },
+    "/api/status-pages/create": {
+      "post": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStatusPageIn"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/status-pages/delete/{id}": {
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Status Page ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Status Page ID"
+            }
+          }
+        ]
+      }
+    },
+    "/api/status-pages/info/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusPageInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Status Page ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Status Page ID"
+            }
+          }
+        ]
+      }
+    },
+    "/api/status-pages/list": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListStatusPagesOut"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/status-pages/update/{id}": {
+      "put": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Status Page ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Status Page ID"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStatusPageIn"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
     "/api/users/setup": {
       "get": {
         "responses": {
@@ -905,6 +1133,12 @@ const docTemplate = `
             "items": {
               "type": "string"
             }
+          },
+          "statusPages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -915,6 +1149,17 @@ const docTemplate = `
             "type": "integer"
           },
           "message": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateStatusPageIn": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "slug": {
             "type": "string"
           }
         }
@@ -965,6 +1210,31 @@ const docTemplate = `
             "items": {
               "$ref": "#/components/schemas/Heartbeat"
             }
+          }
+        }
+      },
+      "ListStatusPagesOut": {
+        "type": "object",
+        "properties": {
+          "statusPages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "message": {
+            "type": "string"
           }
         }
       },
@@ -1243,6 +1513,32 @@ const docTemplate = `
           }
         }
       },
+      "StatusPage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        }
+      },
+      "StatusPageInfo": {
+        "type": "object",
+        "properties": {
+          "statusPage": {
+            "type": "object",
+            "$ref": "#/components/schemas/StatusPage"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
       "SuccessResponse": {
         "type": "object",
         "properties": {
@@ -1327,6 +1623,20 @@ const docTemplate = `
           }
         }
       },
+      "models.StatusPage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        }
+      },
       "serializers.AddMonitorIn": {
         "type": "object",
         "properties": {
@@ -1350,12 +1660,54 @@ const docTemplate = `
             "items": {
               "type": "string"
             }
+          },
+          "statusPages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "serializers.CreateStatusPageIn": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
           }
         }
       },
       "serializers.ErrorResponse": {
         "type": "object",
         "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "serializers.ListStatusPagesOut": {
+        "type": "object",
+        "properties": {
+          "statusPages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                }
+              }
+            }
+          },
           "message": {
             "type": "string"
           }

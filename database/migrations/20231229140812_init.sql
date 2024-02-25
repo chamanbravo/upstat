@@ -43,6 +43,18 @@ CREATE TABLE notifications_monitors (
     notification_id INTEGER REFERENCES notifications(id) ON DELETE CASCADE NOT NULL,
     PRIMARY KEY (monitor_id, notification_id)
 );
+
+CREATE TABLE status_pages (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(32) NOT NULL,
+    slug VARCHAR(32) NOT NULL
+);
+
+CREATE TABLE status_pages_monitors (
+    monitor_id INTEGER REFERENCES monitors(id) ON DELETE CASCADE NOT NULL,
+    status_pages_id INTEGER REFERENCES status_pages(id) ON DELETE CASCADE NOT NULL,
+    PRIMARY KEY (monitor_id, status_pages_id)
+);
 -- +goose StatementEnd
 
 -- +goose Down
@@ -52,4 +64,6 @@ DROP TABLE monitors;
 DROP TABLE heartbeats;
 DROP TABLE notifications;
 DROP TABLE notifications_monitors;
+DROP TABLE status_pages;
+DROP TABLE status_pages_monitors;
 -- +goose StatementEnd
