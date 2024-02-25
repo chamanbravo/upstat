@@ -17,13 +17,6 @@ import {
 } from "@/components/ui/table";
 import { useEffect, useRef } from "react";
 
-// this declaration is required for typing in action column cell function
-declare module "@tanstack/react-table" {
-  interface TableMeta<TData extends RowData> {
-    refetchData: () => void;
-  }
-}
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];

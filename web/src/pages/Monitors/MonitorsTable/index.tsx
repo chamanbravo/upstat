@@ -1,17 +1,48 @@
 import { columns } from "./Columns";
 import { DataTable } from "./DataTable";
-import useApi from "@/hooks/useApi";
-import { components } from "@/lib/api/v1";
+import { api } from "@/lib/api";
+import { type components } from "@/lib/api/v1";
+import { useState, useEffect } from "react";
 
 export default function MonitorsTable() {
-  const { data, error, loading } =
-    useApi<components["schemas"]["MonitorsListOut"]>("/api/monitors/list");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [data, setData] = useState<components["schemas"]["MonitorItem"][]>([]);
+
+  const getMonitorData = async (signal: AbortSignal) => {
+    try {
+      const res = await api("/api/monitors/list", {
+        method: "GET",
+        credentials: "include",
+        signal,
+        headers: {
+          "accept": "application/json",
+        },
+      });
+      const jsonRes: components["schemas"]["MonitorsListOut"] = await res.json();
+      setData(jsonRes.monitors as components["schemas"]["MonitorItem"][]);
+      setError("");
+    } catch (err) {
+      setError("Something went wrong.")
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleDeleteRow = (id: number) => {
+    const remainingMonitors = data.filter((d) => +(d.id as string) !== id);
+    setData(remainingMonitors);
+  }
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    getMonitorData(abortController.signal);
+    return () => abortController.abort();
+  }, []);
 
   if (error) {
     return (
-      <span className="text-center text-muted-foreground">
-        Something went wrong!
-      </span>
+      <span className="text-center text-muted-foreground">{error}</span>
     );
   }
 
@@ -21,5 +52,5 @@ export default function MonitorsTable() {
     );
   }
 
-  return <DataTable columns={columns} data={data?.monitors || []} />;
+  return <DataTable columns={columns} data={data || []} onDeleteRow={handleDeleteRow} />;
 }

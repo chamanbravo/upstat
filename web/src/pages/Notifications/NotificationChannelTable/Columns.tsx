@@ -42,7 +42,7 @@ export const columns: ColumnDef<components["schemas"]["Notification"]>[] = [
             toast({
               title: "Notification channel deleted successfully.",
             });
-            table.options.meta?.refetchData();
+            table.options.meta?.refetchData?.();
           }
         } catch (err) {}
       };
