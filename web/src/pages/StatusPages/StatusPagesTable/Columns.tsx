@@ -42,7 +42,7 @@ export const columns: ColumnDef<components["schemas"]["StatusPage"]>[] = [
             toast({
               title: "Status page deleted successfully.",
             });
-            table.options.meta?.refetchData();
+            table.options.meta?.refetchData?.();
           }
         } catch (err) {}
       };

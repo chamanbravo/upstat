@@ -21,11 +21,13 @@ import { useState } from "react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onDeleteRow: (id: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  onDeleteRow,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
@@ -37,6 +39,9 @@ export function DataTable<TData, TValue>({
     state: {
       columnFilters,
     },
+    meta: {
+      deleteRow: onDeleteRow,
+    }
   });
 
   return (

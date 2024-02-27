@@ -103,30 +103,25 @@ export const columns: ColumnDef<components["schemas"]["MonitorItem"]>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const navigate = useNavigate();
       const deleteMonitor = async () => {
         try {
-          const response = await api(
+          await api(
             `/api/monitors/delete/${row.original.id}`,
             {
               method: "DELETE",
-              headers: {
-                "content-type": "application/json",
-              },
             }
           );
-          if (response.ok) {
-            navigate("/app/monitors");
-            return toast({
-              title: "Monitor deleted successfull.",
-            });
-          } else {
-            return toast({
-              title: "Something went wrong.",
-            });
-          }
-        } catch (err) {}
+          table.options.meta?.deleteRow?.(+(row.original.id as string));
+          return toast({
+            title: "Monitor deleted successfull.",
+          });
+        } catch (err) {
+          return toast({
+            title: "Something went wrong.",
+          });
+        }
       };
       return (
         <DropdownMenu>
