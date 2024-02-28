@@ -910,12 +910,12 @@ const docTemplate = `
           {
             "name": "id",
             "in": "path",
-            "description": "Status Page ID",
+            "description": "Status Page Id",
             "required": true,
             "schema": {
               "type": "string",
               "format": "string",
-              "description": "Status Page ID"
+              "description": "Status Page Id"
             }
           }
         ]
@@ -945,6 +945,45 @@ const docTemplate = `
             }
           }
         }
+      }
+    },
+    "/api/status-pages/summary/{slug}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusPageInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "Status Page Slug",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Status Page Slug"
+            }
+          }
+        ]
       }
     },
     "/api/status-pages/update/{id}": {
@@ -1747,6 +1786,18 @@ const docTemplate = `
                 }
               }
             }
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "serializers.StatusPageInfo": {
+        "type": "object",
+        "properties": {
+          "statusPage": {
+            "type": "object",
+            "$ref": "#/components/schemas/StatusPage"
           },
           "message": {
             "type": "string"

@@ -503,7 +503,7 @@ export interface paths {
     get: {
       parameters: {
         path: {
-          /** Status Page ID */
+          /** Status Page Id */
           id: string;
         };
       };
@@ -527,6 +527,28 @@ export interface paths {
         200: {
           content: {
             "application/json": components["schemas"]["ListStatusPagesOut"];
+          };
+        };
+        400: {
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+      };
+    };
+  };
+  "/api/status-pages/summary/{slug}": {
+    get: {
+      parameters: {
+        path: {
+          /** Status Page Slug */
+          slug: string;
+        };
+      };
+      responses: {
+        200: {
+          content: {
+            "application/json": components["schemas"]["StatusPageInfo"];
           };
         };
         400: {
@@ -846,6 +868,10 @@ export interface components {
         name?: string;
         provider?: string;
       }[];
+      message?: string;
+    };
+    "serializers.StatusPageInfo": {
+      statusPage?: components["schemas"]["StatusPage"];
       message?: string;
     };
     "serializers.SuccessResponse": {

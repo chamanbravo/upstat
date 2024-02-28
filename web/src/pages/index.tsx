@@ -7,4 +7,5 @@ export { default as CreateNotification } from "./CreateNotification";
 export { default as Settings } from "./Settings";
 export { default as StatusPages } from "./StatusPages";
 export { default as CreateStatusPage } from "./CreateStatusPage";
+export { default as PublicStatusPage } from "./PublicStatusPage";
 export { default as PageNotFound } from "./PageNotFound";

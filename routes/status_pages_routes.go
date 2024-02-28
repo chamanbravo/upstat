@@ -16,4 +16,5 @@ func StatusPagesRoutes(app *fiber.App) {
 	route.Delete("/delete/:id", controllers.DeleteStatusPage)
 	route.Put("/update/:id", controllers.UpdateStatusPage)
 	route.Get("/info/:id", controllers.StatusPageInfo)
+	route.Get("/summary/:slug", controllers.StatusSummary)
 }

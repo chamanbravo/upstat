@@ -25,6 +25,21 @@ export const columns: ColumnDef<components["schemas"]["StatusPage"]>[] = [
     header: "Slug",
   },
   {
+    id: "link",
+    cell: ({ row }) => {
+      const navigate = useNavigate();
+      return (
+        <Button
+          variant="outline"
+          className="h-[30px] hover:underline"
+          onClick={() => navigate(`/status-pages/${row.original.slug}`)}
+        >
+          Visit
+        </Button>
+      );
+    },
+  },
+  {
     id: "actions",
     cell: ({ row, table }) => {
       const navigate = useNavigate();
@@ -62,6 +77,13 @@ export const columns: ColumnDef<components["schemas"]["StatusPage"]>[] = [
               }}
             >
               Configure
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                navigate(`/status-pages/${row.original?.slug}`);
+              }}
+            >
+              Visit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={deleteNotificationChannel}>

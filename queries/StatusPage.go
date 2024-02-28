@@ -183,7 +183,7 @@ func FindStatusPageByMonitorId(id int) ([]models.StatusPage, error) {
 	stmt, err := database.DB.Prepare(`
 	SELECT
         n.id,
-		n.name AS notification_name,
+		n.name,
         n.slug
 	FROM
 		status_pages_monitors nm
@@ -222,4 +222,70 @@ func FindStatusPageByMonitorId(id int) ([]models.StatusPage, error) {
 	}
 
 	return statusPages, nil
+}
+
+func FindStatusPageBySlug(slug string) (*models.StatusPage, error) {
+	stmt, err := database.DB.Prepare("SELECT * FROM status_pages WHERE slug = $1")
+	if err != nil {
+		log.Println("Error when trying to prepare statement")
+		log.Println(err)
+		return nil, err
+	}
+	defer stmt.Close()
+
+	statusPage := new(models.StatusPage)
+	err = stmt.QueryRow(slug).Scan(&statusPage.ID, &statusPage.Name, &statusPage.Slug)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+		log.Println("Error when trying to find monitor")
+		log.Println(err)
+		return nil, err
+	}
+
+	return statusPage, nil
+}
+
+func RetrieveStatusPageMonitors(slug string) ([]*models.Monitor, error) {
+	stmt, err := database.DB.Prepare(`
+	SELECT DISTINCT
+		spm.monitor_id,
+		m.name	
+	FROM
+		status_pages_monitors spm
+	JOIN
+		monitors m ON spm.monitor_id = m.id
+	LEFT JOIN
+		heartbeats hb ON spm.monitor_id = hb.monitor_id
+	WHERE
+		spm.status_pages_id = (SELECT id FROM status_pages WHERE slug = $1);
+	`)
+	if err != nil {
+		log.Println("Error when trying to prepare statement")
+		log.Println(err)
+		return nil, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query(slug)
+	if err != nil {
+		log.Println("Error when trying to query the database")
+		log.Println(err)
+		return nil, err
+	}
+
+	var monitors []*models.Monitor
+	for rows.Next() {
+		monitor := new(models.Monitor)
+		err = rows.Scan(&monitor.ID, &monitor.Name)
+		if err != nil {
+			log.Println("Error when trying to scan the row")
+			log.Println(err)
+			return nil, err
+		}
+		monitors = append(monitors, monitor)
+	}
+
+	return monitors, nil
 }
