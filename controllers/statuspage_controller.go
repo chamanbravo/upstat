@@ -95,7 +95,7 @@ func DeleteStatusPage(c *fiber.Ctx) error {
 	})
 }
 
-// @Tags Notifications
+// @Tags StatusPages
 // @Accept json
 // @Produce json
 // @Param id path string true "Status Page ID"
@@ -143,10 +143,10 @@ func UpdateStatusPage(c *fiber.Ctx) error {
 
 }
 
-// @Tags Notifications
+// @Tags StatusPages
 // @Accept json
 // @Produce json
-// @Param id path string true "Status Page ID"
+// @Param id path string true "Status Page Id"
 // @Success 200 {object} serializers.StatusPageInfo
 // @Success 400 {object} serializers.ErrorResponse
 // @Router /api/status-pages/info/{id} [get]
@@ -175,5 +175,64 @@ func StatusPageInfo(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{
 		"message":    "success",
 		"statusPage": statusPage,
+	})
+}
+
+// @Tags Notifications
+// @Accept json
+// @Produce json
+// @Param slug path string true "Status Page Slug"
+// @Success 200 {object} serializers.StatusPageInfo
+// @Success 400 {object} serializers.ErrorResponse
+// @Router /api/status-pages/summary/{slug} [get]
+func StatusSummary(c *fiber.Ctx) error {
+	slug := c.Params("slug")
+	if slug == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "ID parameter is missing",
+		})
+	}
+
+	statusPageInfo, err := queries.FindStatusPageBySlug(slug)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	if statusPageInfo == nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message":        "Status page not found",
+			"statusPageInfo": nil,
+		})
+	}
+
+	monitors, err := queries.RetrieveStatusPageMonitors(slug)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	var monitorsList []fiber.Map
+	for _, v := range monitors {
+		heartbeat, err := queries.RetrieveHeartbeats(v.ID, 45)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": err.Error(),
+			})
+		}
+		monitorItem := fiber.Map{
+			"id":        v.ID,
+			"name":      v.Name,
+			"heartbeat": heartbeat,
+		}
+		monitorsList = append(monitorsList, monitorItem)
+	}
+
+	return c.JSON(fiber.Map{
+		"message":        "Status pages list",
+		"statusPageInfo": statusPageInfo,
+		"monitors":       monitorsList,
 	})
 }

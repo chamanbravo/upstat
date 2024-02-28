@@ -45,7 +45,6 @@ func CreateMonitor(c *fiber.Ctx) error {
 		})
 	}
 
-	fmt.Println(newMonitor.StatusPages)
 	err = queries.StatusPageMonitor(monitor.ID, newMonitor.StatusPages)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
