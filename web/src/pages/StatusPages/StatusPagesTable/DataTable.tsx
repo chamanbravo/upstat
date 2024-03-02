@@ -4,7 +4,6 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   useReactTable,
-  RowData,
 } from "@tanstack/react-table";
 
 import {
