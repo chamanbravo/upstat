@@ -1,16 +1,35 @@
-![](./dashboard.png)
+<div align="center" width="100%">
+    <img src="./docs/assets/upstat.png" width="128" alt="" />
+</div>
 
 # Upstat
     
 > simple and easy-to-use self-hosted status monitoring tool
+
+![](./docs/assets/dashboard.png)
+
+## 💻 Live Demo
+
+Try it.
+
+Demo Server (Location: Singapore): [https://demo.upstat.com](http://15.235.193.62)
+
+Username: `demo`
+Password: `demodemo`
 
 ## ⭐ Features
 
 It needs more features but for now...
 
 -   Monitoring uptime for HTTP(s)
--   Fancy, Reactive, Fast UI/UX
 -   Status and Latency Chart
+-   Notifications via Discord
+-   60-second intervals
+-   Fancy, Reactive, Fast UI/UX
+-   Multiple status pages
+-   Map status pages to specific domains
+-   Ping chart
+-   Certificate info
 
 And dozens of smaller features to be added.
 
@@ -61,6 +80,12 @@ Don't forget to give the project a star! Thanks again!
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+## Contributors
+
+<a href="https://github.com/chamanbravo/upstat/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=chamanbravo/upstat" />
+</a>
 
 ## 📄 License
 
