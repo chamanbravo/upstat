@@ -508,7 +508,7 @@ export default function index() {
                           className="mt-4 ml-auto"
                           asChild
                         >
-                          <Link to="/app/notifications/create">Create</Link>
+                          <Link to="/app/status-pages/create">Create</Link>
                         </Button>
                       </div>
                     ) : (
