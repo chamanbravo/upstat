@@ -90,3 +90,23 @@ Don't forget to give the project a star! Thanks again!
 ## 📄 License
 
 This project is licensed under the [MIT License](https://opensource.org/license/mit/).
+
+## 🖼 More Screenshots
+
+Create a Monitor
+
+<img src="./docs/assets/create.png" width="512" alt="" />
+
+Monitor Page
+
+<img src="./docs/assets/chart.png" width="512" alt="" />
+
+Settings Page
+
+<img src="./docs/assets/settings.png" width="512" alt="" />
+
+Notifications
+
+<img src="./docs/assets/notifications.png" width="512" alt="" />
+
+<img src="./docs/assets/discord_notification.png" width="512" alt="" />
