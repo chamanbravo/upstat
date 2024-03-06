@@ -40,5 +40,5 @@ func main() {
 	routes.NotificationRoutes(app)
 	routes.StatusPagesRoutes(app)
 
-	app.Listen(":8000")
+	log.Fatal(app.Listen(":8000"))
 }
