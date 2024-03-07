@@ -20,6 +20,14 @@ const menus = [
     path: "/app/monitors",
   },
   {
+    name: "Notifications",
+    path: "/app/notifications",
+  },
+  {
+    name: "Status Pages",
+    path: "/app/status-pages",
+  },
+  {
     name: "Settings",
     path: "/app/settings",
   },
