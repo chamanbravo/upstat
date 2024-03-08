@@ -71,7 +71,7 @@ export default function CommandMenu({ ...props }: DialogProps) {
     <>
       <Button
         variant="ghost"
-        className="w-9 p-0"
+        className="p-0 w-9"
         onClick={() => setOpen(true)}
         {...props}
       >
@@ -82,7 +82,7 @@ export default function CommandMenu({ ...props }: DialogProps) {
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput placeholder="Search..." />
-        <CommandList>
+        <CommandList className="custom-scrollbar">
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandSeparator />
           <CommandGroup heading="Menus">
