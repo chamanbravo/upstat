@@ -31,6 +31,28 @@ interface Props {
 
 const data: DateItem[] = [
   {
+    value: "6_hour",
+    label: "Last 6 Hours",
+    interval: "hour",
+    count: 6,
+    getStartTimeStamp:
+      new Date() instanceof Date
+        ? subHours(new Date(), 6).toString()
+        : new Date().toISOString(),
+    formatter: formatAsDateHour,
+  },
+  {
+    value: "12_hour",
+    label: "Last 12 Hours",
+    interval: "hour",
+    count: 12,
+    getStartTimeStamp:
+      new Date() instanceof Date
+        ? subHours(new Date(), 12).toString()
+        : new Date().toISOString(),
+    formatter: formatAsDateHour,
+  },
+  {
     value: "24_hour",
     label: "Last 24 Hours",
     interval: "hour",

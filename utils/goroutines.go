@@ -98,6 +98,7 @@ func StartGoroutine(monitor *models.Monitor) {
 							}
 						}
 					}
+					heartbeat.Timestamp = time.Now().UTC()
 					err = queries.SaveHeartbeat(heartbeat)
 					if err != nil {
 						log.Printf("Error when trying to save heartbeat: %v", err.Error())
