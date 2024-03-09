@@ -109,7 +109,7 @@ func StartGoroutine(monitor *models.Monitor) {
 					if heartbeat.Status == "green" {
 						discordMessage = DiscordWebhookMessage{
 							Username:  "Upstat",
-							AvatarURL: "https://w7.pngwing.com/pngs/370/871/png-transparent-san-carlos-upstart-peer-to-peer-lending-loan-lending-club-logos-angle-investment-teal.png", // Upstat avatar
+							AvatarURL: "https://raw.githubusercontent.com/chamanbravo/upstat/main/docs/assets/upstat.png", // Upstat avatar
 							Embeds: []Embeds{
 								{
 									Title:       fmt.Sprintf("✅ Your monitor %v is UP ✅", monitor.Name),
@@ -122,7 +122,7 @@ func StartGoroutine(monitor *models.Monitor) {
 					} else if heartbeat.Status == "red" {
 						discordMessage = DiscordWebhookMessage{
 							Username:  "Upstat",
-							AvatarURL: "https://w7.pngwing.com/pngs/370/871/png-transparent-san-carlos-upstart-peer-to-peer-lending-loan-lending-club-logos-angle-investment-teal.png", // Upstat avatar
+							AvatarURL: "https://raw.githubusercontent.com/chamanbravo/upstat/main/docs/assets/upstat.png", // Upstat avatar
 							Embeds: []Embeds{
 								{
 									Title:       fmt.Sprintf("❌ Your monitor %v is down ❌", monitor.Name),
