@@ -48,7 +48,7 @@ func RetrieveHeartbeats(id int, limit int) ([]*models.Heartbeat, error) {
 }
 
 func SaveHeartbeat(heartbeat *models.Heartbeat) error {
-	stmt, err := database.DB.Prepare("INSERT INTO heartbeats(monitor_id, status_code, status, latency, message) VALUES($1, $2, $3, $4, $5)")
+	stmt, err := database.DB.Prepare("INSERT INTO heartbeats(monitor_id, timestamp, status_code, status, latency, message) VALUES($1, $2, $3, $4, $5, $6)")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
 		log.Println(err)
@@ -56,7 +56,7 @@ func SaveHeartbeat(heartbeat *models.Heartbeat) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(heartbeat.MonitorId, heartbeat.StatusCode, heartbeat.Status, heartbeat.Latency, heartbeat.Message)
+	_, err = stmt.Exec(heartbeat.MonitorId, heartbeat.Timestamp, heartbeat.StatusCode, heartbeat.Status, heartbeat.Latency, heartbeat.Message)
 	if err != nil {
 		log.Println("Error when trying to execute query")
 		log.Println(err)
