@@ -16,9 +16,17 @@ var DB *sql.DB
 var embedMigrations embed.FS
 
 func DBConnect() error {
-	psqlInfo := os.Getenv("POSTGRES_DSN")
+	dbType := os.Getenv("DB_TYPE")
 	var err error
-	DB, err = sql.Open("postgres", psqlInfo)
+
+	switch dbType {
+	case "postgres":
+		DB, err = PostgresConnection()
+	case "sqlite":
+		DB, err = SqliteConnection()
+	default:
+		DB, err = SqliteConnection()
+	}
 
 	if err != nil {
 		return fmt.Errorf("could not connect to database: %v", err)
@@ -30,7 +38,7 @@ func DBConnect() error {
 
 	goose.SetBaseFS(embedMigrations)
 
-	if err := goose.SetDialect("postgres"); err != nil {
+	if err := goose.SetDialect(dbType); err != nil {
 		panic(err)
 	}
 

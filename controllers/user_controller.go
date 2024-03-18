@@ -61,7 +61,7 @@ func UpdatePassword(c *fiber.Ctx) error {
 
 	username := payload.Username
 
-	user, err := queries.FindUserByUsernameAndPassword(username, updatePasswordBody.CurrentPassword)
+	user, err := queries.FindUserByUsername(username)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":   "Internal server error",
@@ -71,11 +71,24 @@ func UpdatePassword(c *fiber.Ctx) error {
 	if user == nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error":   "Not found",
+			"message": "User does not exist",
+		})
+	}
+
+	if err = utils.CheckHash(user.Password, updatePasswordBody.CurrentPassword); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Invalid current password",
 		})
 	}
 
-	err = queries.UpdatePassword(username, updatePasswordBody)
+	hashedNewPassword, err := utils.HashAndSalt(updatePasswordBody.NewPassword)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	err = queries.UpdatePassword(username, hashedNewPassword)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error":   "Internal server error",
