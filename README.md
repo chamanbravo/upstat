@@ -37,8 +37,15 @@ And dozens of smaller features to be added.
 
 ### 🐳 Docker
 
+For default Sqlite users
+
 ```bash
 docker compose up
+```
+
+For Postgres users
+```bash
+docker compose -f docker-compose.postgres.yml up
 ```
 
 Upstat is now running on http://localhost
