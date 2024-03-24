@@ -115,7 +115,7 @@ func UsersCount() (int, error) {
 }
 
 func UpdatePassword(username string, newPassword string) error {
-	stmt, err := database.DB.Prepare("UPDATE users SET password = $2 WHERE username = $1")
+	stmt, err := database.DB.Prepare("UPDATE users SET password = $1 WHERE username = $2")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
 		log.Println(err)
@@ -123,7 +123,7 @@ func UpdatePassword(username string, newPassword string) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(username, newPassword)
+	_, err = stmt.Exec(newPassword, username)
 	if err != nil {
 		log.Println("Error when trying to update password")
 		log.Println(err)
