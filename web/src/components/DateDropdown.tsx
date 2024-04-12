@@ -74,39 +74,6 @@ const data: DateItem[] = [
         : new Date().toISOString(),
     formatter: formatAsDayDateHour,
   },
-  {
-    value: "14_day",
-    label: "Last 14 Days",
-    interval: "day",
-    count: 14,
-    getStartTimeStamp:
-      new Date() instanceof Date
-        ? subDays(new Date(), 14).toString()
-        : new Date().toISOString(),
-    formatter: formatAsDayDateHour,
-  },
-  {
-    value: "30_day",
-    label: "Last 30 Days",
-    interval: "day",
-    count: 30,
-    getStartTimeStamp:
-      new Date() instanceof Date
-        ? subDays(new Date(), 30).toString()
-        : new Date().toISOString(),
-    formatter: formatAsMonthDate,
-  },
-  {
-    value: "12_month",
-    label: "Last 12 Months",
-    interval: "month",
-    count: 12,
-    getStartTimeStamp:
-      new Date() instanceof Date
-        ? subMonths(new Date(), 12).toString()
-        : new Date().toISOString(),
-    formatter: formatAsMonthYear,
-  },
 ];
 
 const dataMap = new Map(data.map((i) => [i.value, i]));
@@ -121,7 +88,7 @@ export function DateDropdown({ date, onChange }: Props) {
           className=" border-2 min-w-[150px] inline-flex items-center whitespace-nowrap"
         >
           <span className="text-sm font-medium truncate">{date.label}</span>
-          <CaretSortIcon className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+          <CaretSortIcon className="w-4 h-4 ml-auto opacity-50 shrink-0" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[150px]">
