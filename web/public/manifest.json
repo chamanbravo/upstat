@@ -1,0 +1,54 @@
+{
+  "id": "/",
+  "dir": "ltr",
+  "lang": "en",
+  "name": "Upstat",
+  "scope": "/",
+  "display": "standalone",
+  "start_url": "/",
+  "short_name": "Upstat",
+  "theme_color": "#853afd",
+  "description": "A simple open-source, self-hosted status monitoring tool.",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "prefer_related_applications": false,
+  "display_override": [
+    "window-controls-overlay"
+  ],
+  "features": [
+    "Monitoring uptime for HTTP(s)",
+    "Status and Latency Chart",
+    "Notifications via Discord",
+    "60-second intervals",
+    "Fancy, Reactive, Fast UI/UX",
+    "Multiple status pages",
+    "Map status pages to specific domains",
+    "Ping chart",
+    "Certificate info",
+    "PWA"
+  ],
+  "screenshots": [
+    {
+      "src": "./screenshot-upstat.jpg",
+      "sizes": "1280x720",
+      "platform": "wide",
+      "label": "A simple open-source, self-hosted status monitoring tool."
+    }
+  ],
+  "icons": [
+    {
+      "src": "icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "edge_side_panel": {}
+}
