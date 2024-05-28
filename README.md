@@ -12,7 +12,7 @@
 
 Try it.
 
-Demo Server (Location: Singapore): [https://demo.upstat.com](http://15.235.193.62)
+Demo Server (Location: Singapore): [https://demo.upstat.com](https://upstat.chamanbudhathoki.com.np/)
 
 Username: `demo`
 Password: `demodemo`
@@ -30,6 +30,7 @@ It needs more features but for now...
 -   Map status pages to specific domains
 -   Ping chart
 -   Certificate info
+-   PWA
 
 And dozens of smaller features to be added.
 
