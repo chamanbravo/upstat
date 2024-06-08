@@ -1,35 +1,21 @@
 version: '3.4'
 services:
-  db:
-    restart: unless-stopped
-    image: postgres:13-alpine
-    env_file:
-      - .env
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
   api:
     restart: unless-stopped
     build:
       context: ./
+      args:
+        DB_TYPE: "sqlite"
+        CGO_ENABLED: 1
     env_file:
       - .env
-    depends_on:
-      db:
-        condition: service_healthy
+    volumes:
+      - sqlite_data:/var/lib/sqlite_data
 
   web:
     restart: unless-stopped
     build:
       context: web
-    depends_on:
-      db:
-        condition: service_healthy
 
   nginx:
     restart: unless-stopped
@@ -38,9 +24,6 @@ services:
       - "$IPADDR:$PORT:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - api
-      - web
 
 volumes:
-  postgres_data:
+  sqlite_data:
