@@ -39,7 +39,7 @@ export default function LoginForm() {
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
-    defaultValues: { username: "", password: "" },
+    defaultValues: { username: "demo", password: "demodemo" },
   });
 
   async function onSubmit(formData: LoginFormValues) {
@@ -73,54 +73,56 @@ export default function LoginForm() {
   }
 
   return (
-    <Card className="w-full md:w-[400px]">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl">Welcome Back!</CardTitle>
-        <CardDescription>Login to your account</CardDescription>
-      </CardHeader>
-      <CardContent className="grid gap-4">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="username"
-                      placeholder="johnsmith"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      autoComplete="current-password"
-                      type="password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Loading..." : "Sign In"}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+    <>
+      <Card className="w-full md:w-[400px]">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl">Welcome Back!</CardTitle>
+          <CardDescription>Login to your account</CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input
+                        autoComplete="username"
+                        placeholder="johnsmith"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        autoComplete="current-password"
+                        type="password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Loading..." : "Sign In"}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </>
   );
 }
