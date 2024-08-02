@@ -266,8 +266,8 @@ func MonitorsList(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{
-		"message": "success",
-		"items":   monitorsList,
+		"message":  "success",
+		"monitors": monitorsList,
 	})
 }
 
@@ -375,7 +375,7 @@ func MonitorSummary(c *fiber.Ctx) error {
 // @Param id path string true "Monitor ID"
 // @Success 200 {object} dto.SuccessResponse
 // @Success 400 {object} dto.ErrorResponse
-// @Router /api/monitors/delete/{id} [delete]
+// @Router /api/monitors/{id} [delete]
 func DeleteMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
