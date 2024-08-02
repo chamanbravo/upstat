@@ -1,16 +1,16 @@
 package controllers
 
 import (
+	"github.com/chamanbravo/upstat/dto"
 	"github.com/chamanbravo/upstat/queries"
-	"github.com/chamanbravo/upstat/serializers"
 	"github.com/chamanbravo/upstat/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
 // @Accept json
 // @Produce json
-// @Success 200 {object} serializers.NeedSetup
-// @Failure 400 {object} serializers.ErrorResponse
+// @Success 200 {object} dto.NeedSetup
+// @Failure 400 {object} dto.ErrorResponse
 // @Router /api/users/setup [get]
 func Setup(c *fiber.Ctx) error {
 	usersCount, err := queries.UsersCount()
@@ -27,12 +27,12 @@ func Setup(c *fiber.Ctx) error {
 
 // @Accept json
 // @Produce json
-// @Param body body serializers.UpdatePasswordIn true "Body"
-// @Success 200 {object} serializers.SuccessResponse
-// @Failure 400 {object} serializers.ErrorResponse
+// @Param body body dto.UpdatePasswordIn true "Body"
+// @Success 200 {object} dto.SuccessResponse
+// @Failure 400 {object} dto.ErrorResponse
 // @Router /api/users/update-password [post]
 func UpdatePassword(c *fiber.Ctx) error {
-	updatePasswordBody := new(serializers.UpdatePasswordIn)
+	updatePasswordBody := new(dto.UpdatePasswordIn)
 	if err := c.BodyParser(updatePasswordBody); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -44,22 +44,7 @@ func UpdatePassword(c *fiber.Ctx) error {
 		return c.Status(400).JSON(errors)
 	}
 
-	token := c.Cookies("access_token")
-	if token == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "token not found",
-		})
-	}
-
-	payload, err := utils.VerifyToken(token)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error":   "Internal server error",
-			"message": err.Error(),
-		})
-	}
-
-	username := payload.Username
+	username := c.Locals("username").(string)
 
 	user, err := queries.FindUserByUsernameAndPassword(username, updatePasswordBody.CurrentPassword)
 	if err != nil {
@@ -91,12 +76,12 @@ func UpdatePassword(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param username path string true "Username"
-// @Param body body serializers.UpdateAccountIn true "Body"
-// @Success 200 {object} serializers.SuccessResponse
-// @Failure 400 {object} serializers.ErrorResponse
-// @Router /api/users/{username} [patch]
+// @Param body body dto.UpdateAccountIn true "Body"
+// @Success 200 {object} dto.SuccessResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Router /api/users/me [patch]
 func UpdateAccount(c *fiber.Ctx) error {
-	username := c.Params("username")
+	username := c.Locals("username").(string)
 	if username == "" {
 		return c.Status(400).JSON(fiber.Map{
 			"error":   "Bad Request",
@@ -104,7 +89,7 @@ func UpdateAccount(c *fiber.Ctx) error {
 		})
 	}
 
-	updateAccountBody := new(serializers.UpdateAccountIn)
+	updateAccountBody := new(dto.UpdateAccountIn)
 	if err := c.BodyParser(updateAccountBody); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),

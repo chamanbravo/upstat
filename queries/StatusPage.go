@@ -6,11 +6,11 @@ import (
 	"log"
 
 	"github.com/chamanbravo/upstat/database"
+	"github.com/chamanbravo/upstat/dto"
 	"github.com/chamanbravo/upstat/models"
-	"github.com/chamanbravo/upstat/serializers"
 )
 
-func CreateStatusPage(u *serializers.CreateStatusPageIn) error {
+func CreateStatusPage(u *dto.CreateStatusPageIn) error {
 	stmt, err := database.DB.Prepare("INSERT INTO status_pages (name, slug) VALUES($1, $2)")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
@@ -68,7 +68,7 @@ func ListStatusPages() ([]*models.StatusPage, error) {
 	return statuspages, nil
 }
 
-func UpdateStatusPage(id int, statusPage *serializers.CreateStatusPageIn) error {
+func UpdateStatusPage(id int, statusPage *dto.CreateStatusPageIn) error {
 	stmt, err := database.DB.Prepare("UPDATE status_pages SET name = $1, slug = $2 WHERE id = $3")
 	if err != nil {
 		return err

@@ -146,7 +146,7 @@ const docTemplate = `
         }
       }
     },
-    "/api/monitors/cert-exp-countdown/{id}": {
+    "/api/monitors": {
       "get": {
         "responses": {
           "200": {
@@ -154,7 +154,7 @@ const docTemplate = `
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CertificateExpiryCountDown"
+                  "$ref": "#/components/schemas/MonitorsListOut"
                 }
               }
             }
@@ -169,23 +169,8 @@ const docTemplate = `
               }
             }
           }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Monitor ID",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "string",
-              "description": "Monitor ID"
-            }
-          }
-        ]
-      }
-    },
-    "/api/monitors/create": {
+        }
+      },
       "post": {
         "responses": {
           "200": {
@@ -221,15 +206,15 @@ const docTemplate = `
         }
       }
     },
-    "/api/monitors/delete/{id}": {
-      "delete": {
+    "/api/monitors/cert-exp-countdown/{id}": {
+      "get": {
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
+                  "$ref": "#/components/schemas/CertificateExpiryCountDown"
                 }
               }
             }
@@ -309,149 +294,6 @@ const docTemplate = `
         ]
       }
     },
-    "/api/monitors/info/{id}": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MonitorInfoOut"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Monitor ID",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "string",
-              "description": "Monitor ID"
-            }
-          }
-        ]
-      }
-    },
-    "/api/monitors/list": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MonitorsListOut"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/monitors/pause/{id}": {
-      "put": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Monitor ID",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "string",
-              "description": "Monitor ID"
-            }
-          }
-        ]
-      }
-    },
-    "/api/monitors/resume/{id}": {
-      "put": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Monitor ID",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "string",
-              "description": "Monitor ID"
-            }
-          }
-        ]
-      }
-    },
     "/api/monitors/summary/{id}": {
       "get": {
         "responses": {
@@ -491,8 +333,45 @@ const docTemplate = `
         ]
       }
     },
-    "/api/monitors/update/{id}": {
-      "put": {
+    "/api/monitors/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitorInfoOut"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Monitor ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Monitor ID"
+            }
+          }
+        ]
+      },
+      "patch": {
         "responses": {
           "200": {
             "description": "",
@@ -538,6 +417,43 @@ const docTemplate = `
           },
           "required": true
         }
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Monitor ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Monitor ID"
+            }
+          }
+        ]
       }
     },
     "/api/monitors/{id}/notifications": {
@@ -549,6 +465,84 @@ const docTemplate = `
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotificationListOut"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Monitor ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Monitor ID"
+            }
+          }
+        ]
+      }
+    },
+    "/api/monitors/{id}/pause": {
+      "patch": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Monitor ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Monitor ID"
+            }
+          }
+        ]
+      }
+    },
+    "/api/monitors/{id}/resume": {
+      "patch": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
                 }
               }
             }
@@ -618,7 +612,31 @@ const docTemplate = `
         ]
       }
     },
-    "/api/notifications/create": {
+    "/api/notifications": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationListOut"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "responses": {
           "200": {
@@ -654,46 +672,7 @@ const docTemplate = `
         }
       }
     },
-    "/api/notifications/delete/{id}": {
-      "delete": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Notification Channel ID",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "string",
-              "description": "Notification Channel ID"
-            }
-          }
-        ]
-      }
-    },
-    "/api/notifications/info/{id}": {
+    "/api/notifications/{id}": {
       "get": {
         "responses": {
           "200": {
@@ -730,36 +709,8 @@ const docTemplate = `
             }
           }
         ]
-      }
-    },
-    "/api/notifications/list": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NotificationListOut"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/notifications/update/{id}": {
-      "put": {
+      },
+      "patch": {
         "responses": {
           "200": {
             "description": "",
@@ -805,9 +756,70 @@ const docTemplate = `
           },
           "required": true
         }
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Notification Channel ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Notification Channel ID"
+            }
+          }
+        ]
       }
     },
-    "/api/status-pages/create": {
+    "/api/status-pages": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListStatusPagesOut"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "responses": {
           "200": {
@@ -840,110 +852,6 @@ const docTemplate = `
             }
           },
           "required": true
-        }
-      }
-    },
-    "/api/status-pages/delete/{id}": {
-      "delete": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Status Page ID",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "string",
-              "description": "Status Page ID"
-            }
-          }
-        ]
-      }
-    },
-    "/api/status-pages/info/{id}": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatusPageInfo"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Status Page Id",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "string",
-              "description": "Status Page Id"
-            }
-          }
-        ]
-      }
-    },
-    "/api/status-pages/list": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListStatusPagesOut"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
         }
       }
     },
@@ -986,8 +894,45 @@ const docTemplate = `
         ]
       }
     },
-    "/api/status-pages/update/{id}": {
-      "put": {
+    "/api/status-pages/{id}": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusPageInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Status Page Id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Status Page Id"
+            }
+          }
+        ]
+      },
+      "patch": {
         "responses": {
           "200": {
             "description": "",
@@ -1028,6 +973,92 @@ const docTemplate = `
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateStatusPageIn"
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "delete": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Status Page ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Status Page ID"
+            }
+          }
+        ]
+      }
+    },
+    "/api/users/me": {
+      "patch": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "Username",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Username"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAccountIn"
               }
             }
           },
@@ -1090,55 +1121,6 @@ const docTemplate = `
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UpdatePasswordIn"
-              }
-            }
-          },
-          "required": true
-        }
-      }
-    },
-    "/api/users/{username}": {
-      "patch": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "description": "Username",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "string",
-              "description": "Username"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateAccountIn"
               }
             }
           },
@@ -1662,21 +1644,7 @@ const docTemplate = `
           }
         }
       },
-      "models.StatusPage": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          }
-        }
-      },
-      "serializers.AddMonitorIn": {
+      "dto.AddMonitorIn": {
         "type": "object",
         "properties": {
           "name": {
@@ -1708,7 +1676,7 @@ const docTemplate = `
           }
         }
       },
-      "serializers.CreateStatusPageIn": {
+      "dto.CreateStatusPageIn": {
         "type": "object",
         "properties": {
           "name": {
@@ -1719,7 +1687,7 @@ const docTemplate = `
           }
         }
       },
-      "serializers.ErrorResponse": {
+      "dto.ErrorResponse": {
         "type": "object",
         "properties": {
           "message": {
@@ -1727,7 +1695,7 @@ const docTemplate = `
           }
         }
       },
-      "serializers.ListStatusPagesOut": {
+      "dto.ListStatusPagesOut": {
         "type": "object",
         "properties": {
           "statusPages": {
@@ -1752,7 +1720,7 @@ const docTemplate = `
           }
         }
       },
-      "serializers.NotificationCreateIn": {
+      "dto.NotificationCreateIn": {
         "type": "object",
         "properties": {
           "name": {
@@ -1767,7 +1735,7 @@ const docTemplate = `
           }
         }
       },
-      "serializers.NotificationListOut": {
+      "dto.NotificationListOut": {
         "type": "object",
         "properties": {
           "notifications": {
@@ -1792,7 +1760,7 @@ const docTemplate = `
           }
         }
       },
-      "serializers.StatusPageInfo": {
+      "dto.StatusPageInfo": {
         "type": "object",
         "properties": {
           "statusPage": {
@@ -1804,7 +1772,7 @@ const docTemplate = `
           }
         }
       },
-      "serializers.SuccessResponse": {
+      "dto.SuccessResponse": {
         "type": "object",
         "properties": {
           "message": {
@@ -1812,13 +1780,43 @@ const docTemplate = `
           }
         }
       },
-      "serializers.UserSignInOut": {
+      "dto.UserSignInOut": {
         "type": "object",
         "properties": {
           "user": {
             "type": "object",
             "$ref": "#/components/schemas/User"
           },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "models.StatusPage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        }
+      },
+      "serializers.ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "serializers.SuccessResponse": {
+        "type": "object",
+        "properties": {
           "message": {
             "type": "string"
           }

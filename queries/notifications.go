@@ -7,11 +7,11 @@ import (
 	"log"
 
 	"github.com/chamanbravo/upstat/database"
+	"github.com/chamanbravo/upstat/dto"
 	"github.com/chamanbravo/upstat/models"
-	"github.com/chamanbravo/upstat/serializers"
 )
 
-func CreateNotificationChannel(nc *serializers.NotificationCreateIn) error {
+func CreateNotificationChannel(nc *dto.NotificationCreateIn) error {
 	stmt, err := database.DB.Prepare("INSERT INTO notifications(name, provider, data) VALUES($1, $2, $3)")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
@@ -37,7 +37,7 @@ func CreateNotificationChannel(nc *serializers.NotificationCreateIn) error {
 	return nil
 }
 
-func ListNotificationChannel() ([]serializers.NotificationItem, error) {
+func ListNotificationChannel() ([]dto.NotificationItem, error) {
 	stmt, err := database.DB.Prepare("SELECT id, name, provider FROM notifications")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
@@ -53,9 +53,9 @@ func ListNotificationChannel() ([]serializers.NotificationItem, error) {
 		return nil, err
 	}
 
-	var notifications []serializers.NotificationItem
+	var notifications []dto.NotificationItem
 	for rows.Next() {
-		var notification serializers.NotificationItem
+		var notification dto.NotificationItem
 		err = rows.Scan(&notification.ID, &notification.Name, &notification.Provider)
 		if err != nil {
 			log.Println("Error when trying to scan the row")
@@ -87,7 +87,7 @@ func DeleteNotificationChannel(id int) error {
 	return nil
 }
 
-func UpdateNotificationById(id int, nc *serializers.NotificationCreateIn) error {
+func UpdateNotificationById(id int, nc *dto.NotificationCreateIn) error {
 	stmt, err := database.DB.Prepare("UPDATE notifications SET name = $1, provider = $2, data = $3 WHERE id = $4")
 	if err != nil {
 		return err
