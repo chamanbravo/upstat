@@ -10,9 +10,9 @@ import (
 func NotificationRoutes(app *fiber.App) {
 	route := app.Group("/api/notifications", middleware.Protected)
 
-	route.Post("/create", controllers.CreateNotification)
-	route.Get("/list", controllers.ListNotificationsChannel)
-	route.Delete("/delete/:id", controllers.DeleteNotificationChannel)
-	route.Put("/update/:id", controllers.UpdateNotificationChannel)
-	route.Get("/info/:id", controllers.NotificationChannelInfo)
+	route.Post("", controllers.CreateNotification)
+	route.Get("", controllers.ListNotificationsChannel)
+	route.Delete("/:id", controllers.DeleteNotificationChannel)
+	route.Patch("/:id", controllers.UpdateNotificationChannel)
+	route.Get("/:id", controllers.NotificationChannelInfo)
 }

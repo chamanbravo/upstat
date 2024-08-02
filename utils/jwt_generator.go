@@ -36,7 +36,7 @@ func generateAccessToken(username string, firstname, lastname string) (string, e
 	claims["username"] = username
 	claims["firstname"] = firstname
 	claims["lastname"] = lastname
-	claims["exp"] = time.Now().Add(time.Hour).Unix()
+	claims["exp"] = time.Now().Add(time.Hour * 3).Unix()
 
 	secretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
 
@@ -55,14 +55,14 @@ func generateNewRefreshToken(username string, firstname, lastname string) (strin
 	claims["username"] = username
 	claims["firstname"] = firstname
 	claims["lastname"] = lastname
-	claims["exp"] = time.Now().Add(time.Hour * 5).Unix()
+	claims["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix()
 
 	secretKey := []byte(os.Getenv("JWT_SECRET_KEY"))
 
-	accessToken, err := token.SignedString(secretKey)
+	refreshToken, err := token.SignedString(secretKey)
 	if err != nil {
 		return "", err
 	}
 
-	return accessToken, nil
+	return refreshToken, nil
 }

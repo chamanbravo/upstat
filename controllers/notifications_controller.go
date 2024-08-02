@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/chamanbravo/upstat/dto"
 	"github.com/chamanbravo/upstat/queries"
-	"github.com/chamanbravo/upstat/serializers"
 	"github.com/chamanbravo/upstat/utils"
 	"github.com/gofiber/fiber/v2"
 )
@@ -13,12 +13,12 @@ import (
 // @Tags Notifications
 // @Accept json
 // @Produce json
-// @Param body body serializers.NotificationCreateIn true "Body"
-// @Success 200 {object} serializers.SuccessResponse
-// @Failure 400 {object} serializers.ErrorResponse
-// @Router /api/notifications/create [post]
+// @Param body body dto.NotificationCreateIn true "Body"
+// @Success 200 {object} dto.SuccessResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Router /api/notifications [post]
 func CreateNotification(c *fiber.Ctx) error {
-	notificationChannel := new(serializers.NotificationCreateIn)
+	notificationChannel := new(dto.NotificationCreateIn)
 	if err := c.BodyParser(notificationChannel); err != nil {
 		fmt.Print(notificationChannel)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -46,9 +46,9 @@ func CreateNotification(c *fiber.Ctx) error {
 // @Tags Notifications
 // @Accept json
 // @Produce json
-// @Success 200 {object} serializers.NotificationListOut
-// @Failure 400 {object} serializers.ErrorResponse
-// @Router /api/notifications/list [get]
+// @Success 200 {object} dto.NotificationListOut
+// @Failure 400 {object} dto.ErrorResponse
+// @Router /api/notifications [get]
 func ListNotificationsChannel(c *fiber.Ctx) error {
 	notifications, err := queries.ListNotificationChannel()
 	if err != nil {
@@ -66,9 +66,9 @@ func ListNotificationsChannel(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Notification Channel ID"
-// @Success 200 {object} serializers.SuccessResponse
-// @Failure 400 {object} serializers.ErrorResponse
-// @Router /api/notifications/delete/{id} [delete]
+// @Success 200 {object} dto.SuccessResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Router /api/notifications/{id} [delete]
 func DeleteNotificationChannel(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -101,10 +101,10 @@ func DeleteNotificationChannel(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Notification Channel ID"
-// @Param body body serializers.NotificationCreateIn true "Body"
-// @Success 200 {object} serializers.SuccessResponse
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/notifications/update/{id} [put]
+// @Param body body dto.NotificationCreateIn true "Body"
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/notifications/{id} [patch]
 func UpdateNotificationChannel(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -113,7 +113,7 @@ func UpdateNotificationChannel(c *fiber.Ctx) error {
 		})
 	}
 
-	notificationChannel := new(serializers.NotificationCreateIn)
+	notificationChannel := new(dto.NotificationCreateIn)
 	if err := c.BodyParser(notificationChannel); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -149,9 +149,9 @@ func UpdateNotificationChannel(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Notification Channel ID"
-// @Success 200 {object} serializers.NotificationChannelInfo
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/notifications/info/{id} [get]
+// @Success 200 {object} dto.NotificationChannelInfo
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/notifications/{id} [get]
 func NotificationChannelInfo(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {

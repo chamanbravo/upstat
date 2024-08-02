@@ -1,14 +1,11 @@
 package controllers
 
 import (
+	"github.com/chamanbravo/upstat/dto"
 	"github.com/chamanbravo/upstat/queries"
-	"github.com/chamanbravo/upstat/serializers"
 	"github.com/chamanbravo/upstat/utils"
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
-
-var validate = validator.New()
 
 // SignUp method to create a new user.
 // @Description Create a new user.
@@ -16,12 +13,12 @@ var validate = validator.New()
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param body body serializers.UserSignUp true "Body"
-// @Success 200 {object} serializers.UserSignInOut
-// @Success 400 {object} serializers.ErrorResponse
+// @Param body body dto.UserSignUp true "Body"
+// @Success 200 {object} dto.UserSignInOut
+// @Success 400 {object} dto.ErrorResponse
 // @Router /api/auth/signup [post]
 func SignUp(c *fiber.Ctx) error {
-	user := new(serializers.UserSignUp)
+	user := new(dto.UserSignUp)
 	if err := c.BodyParser(user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -72,8 +69,10 @@ func SignUp(c *fiber.Ctx) error {
 	return c.Status(200).JSON(fiber.Map{
 		"message": "success",
 		"user": fiber.Map{
-			"username": user.Username,
-			"email":    user.Email,
+			"username":      user.Username,
+			"email":         user.Email,
+			"refresh_token": tokens.RefreshToken,
+			"access_token":  tokens.AccessToken,
 		},
 	})
 }
@@ -84,12 +83,12 @@ func SignUp(c *fiber.Ctx) error {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param body body serializers.UserSignIn true "Body"
-// @Success 200 {object} serializers.UserSignInOut
-// @Success 400 {object} serializers.ErrorResponse
+// @Param body body dto.UserSignIn true "Body"
+// @Success 200 {object} dto.UserSignInOut
+// @Success 400 {object} dto.ErrorResponse
 // @Router /api/auth/signin [post]
 func SignIn(c *fiber.Ctx) error {
-	user := new(serializers.UserSignIn)
+	user := new(dto.UserSignIn)
 	if err := c.BodyParser(user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Invalid body",
@@ -132,8 +131,10 @@ func SignIn(c *fiber.Ctx) error {
 	c.Cookie(&refreshToken)
 
 	return c.JSON(fiber.Map{"message": "success", "user": fiber.Map{
-		"username": existingUser.Username,
-		"email":    existingUser.Email,
+		"username":      existingUser.Username,
+		"email":         existingUser.Email,
+		"refresh_token": tokens.RefreshToken,
+		"access_token":  tokens.AccessToken,
 	}})
 }
 
@@ -144,8 +145,8 @@ func SignIn(c *fiber.Ctx) error {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Success 200 {object} serializers.SuccessResponse
-// @Success 400 {object} serializers.ErrorResponse
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
 // @Router /api/auth/signout [post]
 func SignOut(c *fiber.Ctx) error {
 	c.ClearCookie("access_token")
