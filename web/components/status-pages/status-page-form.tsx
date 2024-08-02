@@ -30,7 +30,7 @@ const StatusPageFormSchema = z.object({
 type StatusPageFormValues = z.infer<typeof StatusPageFormSchema>;
 
 interface Props {
-  defaultValues: any;
+  defaultValues?: any;
 }
 
 export default function StatusPageForm({ defaultValues }: Props) {

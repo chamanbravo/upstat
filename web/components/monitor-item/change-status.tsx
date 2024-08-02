@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 interface Props {
   id: string;
-  status: string;
+  status?: string;
 }
 
 export default function ChangeStatus({ id, status }: Props) {

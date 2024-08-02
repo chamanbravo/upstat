@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import LoginForm from "@/components/login-form";
 import RegisterForm from "@/components/register-form";
 import { fetchNeedSetup } from "@/lib/api/api";
+
+export const metadata: Metadata = {
+  title: "Auth | Upstat",
+  description: "Simple & easy status monitoring.",
+};
 
 export default async function index() {
   const needSetup = await fetchNeedSetup();

@@ -10,7 +10,11 @@ import {
 import FrequencyDropdown from "./frequency-dropdown";
 import HttpMethodDropdown from "./http-method-dropdown";
 
-export default function EndpointForm({ form }) {
+interface Props {
+  form: any;
+}
+
+export default function EndpointForm({ form }: Props) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
       <div className="flex flex-col gap-1">

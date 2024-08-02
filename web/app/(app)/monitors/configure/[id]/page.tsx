@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import ChangeStatus from "@/components/monitor-item/change-status";
 import DeleteMonitor from "@/components/monitor-item/delete-monitor";
 import MonitorsForm from "@/components/monitors/form/monitors-form";
@@ -11,6 +12,11 @@ import { fetchNotifications } from "@/lib/api/notifications";
 import { fetchStatusPages } from "@/lib/api/status-pages";
 import { ChevronLeft, DotIcon } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Configure | Upstat",
+  description: "Simple & easy status monitoring.",
+};
 
 interface PageProps {
   params: {
@@ -27,8 +33,6 @@ export default async function EditMonitor({ params }: PageProps) {
     id
   );
   const monitorStatusPages = await fetchMonitorsStatusPages(id);
-  console.log(monitorNotificationChannels);
-  console.log(monitorStatusPages);
 
   const defaultValues = {
     ...monitorInfo?.monitor,
@@ -60,9 +64,9 @@ export default async function EditMonitor({ params }: PageProps) {
             </p>
             <DotIcon className="text-muted-foreground h-4 w-4" />
             <p className={`text-${monitorInfo?.monitor?.status}-500 text-sm`}>
-              {monitorInfo?.monitor.status === "green"
+              {monitorInfo?.monitor?.status === "green"
                 ? "Up"
-                : monitorInfo?.monitor.status === "red"
+                : monitorInfo?.monitor?.status === "red"
                 ? "Down"
                 : "Paused"}
             </p>

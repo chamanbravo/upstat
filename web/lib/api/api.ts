@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { API_HOST } from "../constants";
 import { headers } from "next/headers";
+import { components } from "./types";
 
 export const isRedirectError = (err: any) => {
   return (
@@ -31,14 +32,18 @@ export const serverFetch = async (url: string, options?: RequestInit) => {
   return response;
 };
 
-export const fetchNeedSetup = async () => {
+export const fetchNeedSetup = async (): Promise<
+  components["schemas"]["NeedSetup"] | null
+> => {
   try {
     const response = await fetch(API_HOST + "/api/users/setup");
     if (response.ok) {
       const data = await response.json();
       return data.needSetup;
     }
+    return null;
   } catch (err) {
     console.error("Error fetching data:", err);
+    return null;
   }
 };

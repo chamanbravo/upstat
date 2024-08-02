@@ -8,7 +8,12 @@ import {
 import EmptyState from "@/components/status-pages/empty-state";
 import { Checkbox } from "@/components/ui/checkbox";
 
-export default function SelectStatusPage({ form, statusPages }) {
+interface Props {
+  form: any;
+  statusPages: any;
+}
+
+export default function SelectStatusPage({ form, statusPages }: Props) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
       <div className="flex flex-col gap-1">
@@ -27,7 +32,7 @@ export default function SelectStatusPage({ form, statusPages }) {
             name="channels"
             render={() => (
               <FormItem className="space-y-4">
-                {statusPages?.map((item) => (
+                {statusPages?.map((item: any) => (
                   <FormField
                     key={item.id}
                     control={form.control}
@@ -51,7 +56,8 @@ export default function SelectStatusPage({ form, statusPages }) {
                                     ])
                                   : field.onChange(
                                       field.value?.filter(
-                                        (value) => value !== String(item.id)
+                                        (value: string) =>
+                                          value !== String(item.id)
                                       )
                                     );
                               }}

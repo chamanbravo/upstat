@@ -8,10 +8,15 @@ import {
 import EmptyState from "@/components/notifications/empty-state";
 import { Checkbox } from "@/components/ui/checkbox";
 
+interface Props {
+  form: any;
+  notificationChannels: any;
+}
+
 export default function SelectNotificationChannel({
   form,
   notificationChannels,
-}) {
+}: Props) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
       <div className="flex flex-col gap-1">
@@ -30,7 +35,7 @@ export default function SelectNotificationChannel({
             name="channels"
             render={() => (
               <FormItem className="space-y-4">
-                {notificationChannels?.map((item) => (
+                {notificationChannels?.map((item: any) => (
                   <FormField
                     key={item.id}
                     control={form.control}
@@ -49,7 +54,7 @@ export default function SelectNotificationChannel({
                                   ? field.onChange([...field.value, item.id])
                                   : field.onChange(
                                       field.value?.filter(
-                                        (value) => value !== item.id
+                                        (value: string) => value !== item.id
                                       )
                                     );
                               }}

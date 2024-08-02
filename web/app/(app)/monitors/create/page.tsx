@@ -1,9 +1,15 @@
+import type { Metadata } from "next";
 import MonitorsForm from "@/components/monitors/form/monitors-form";
 import { Button } from "@/components/ui/button";
 import { fetchNotifications } from "@/lib/api/notifications";
 import { fetchStatusPages } from "@/lib/api/status-pages";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Create | Upstat",
+  description: "Simple & easy status monitoring.",
+};
 
 export default async function CreteMonitor() {
   const notificationChannels = await fetchNotifications();

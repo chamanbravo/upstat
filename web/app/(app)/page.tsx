@@ -21,8 +21,8 @@ export default async function Monitors() {
             <Link href="/monitors/create">Create</Link>
           </Button>
         </div>
-        {data?.items?.length ? (
-          <DataTable data={data?.items} />
+        {data?.monitors?.length ? (
+          <DataTable data={data?.monitors} />
         ) : (
           <EmptyState />
         )}

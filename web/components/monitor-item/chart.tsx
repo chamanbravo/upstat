@@ -1,5 +1,8 @@
 "use client";
 
+import { formatAsDateHour, formatAsDayDateHour } from "@/lib/utils";
+import { differenceInHours } from "date-fns";
+import { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -14,10 +17,6 @@ import {
   NameType,
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
-
-interface Props {
-  heartbeat: any;
-}
 
 const CustomTooltip = ({
   label,
@@ -45,7 +44,26 @@ const CustomTooltip = ({
   return null;
 };
 
-export default function chart({ heartbeat }: Props) {
+interface Props {
+  heartbeat: any;
+  startDate: string;
+}
+
+const formatter = (date: string) => {
+  const hoursDifference = differenceInHours(new Date(), new Date(date));
+
+  if (hoursDifference === 6) {
+    return formatAsDateHour;
+  } else if (hoursDifference === 12) {
+    return formatAsDateHour;
+  } else if (hoursDifference === 24) {
+    return formatAsDateHour;
+  } else {
+    return formatAsDayDateHour;
+  }
+};
+
+export default function Chart({ heartbeat, startDate }: Props) {
   return (
     <div className="flex flex-grow justify-center items-center">
       <ResponsiveContainer width="100%" height="100%">
@@ -55,7 +73,7 @@ export default function chart({ heartbeat }: Props) {
             strokeDasharray="5 5"
           />
           <Tooltip
-            content={<CustomTooltip />}
+            content={<CustomTooltip labelFormatter={formatter(startDate)} />}
             cursor={{
               stroke: "hsl(var(--muted-foreground)/0.4)",
               strokeWidth: 1.5,
@@ -93,6 +111,7 @@ export default function chart({ heartbeat }: Props) {
             tick={{
               fill: "hsl(var(--muted-foreground))",
             }}
+            tickFormatter={formatter(startDate)}
           />
         </LineChart>
       </ResponsiveContainer>

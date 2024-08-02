@@ -1,6 +1,9 @@
 import { serverFetch, isRedirectError } from "./api";
+import { components } from "./types";
 
-export async function fetchMonitorsList() {
+export async function fetchMonitorsList(): Promise<
+  components["schemas"]["MonitorsListOut"] | null
+> {
   try {
     const res = await serverFetch("/api/monitors");
     if (!res.ok) {
@@ -13,7 +16,9 @@ export async function fetchMonitorsList() {
   }
 }
 
-export async function fetchMonitorInfo(id: string) {
+export async function fetchMonitorInfo(
+  id: string
+): Promise<components["schemas"]["MonitorInfoOut"] | null> {
   try {
     const response = await serverFetch(`/api/monitors/${id}`);
     if (response.ok) {
@@ -25,7 +30,9 @@ export async function fetchMonitorInfo(id: string) {
   }
 }
 
-export async function fetchMonitorSummary(id: string) {
+export async function fetchMonitorSummary(
+  id: string
+): Promise<components["schemas"]["MonitorSummaryOut"] | null> {
   try {
     const response = await serverFetch(`/api/monitors/summary/${id}`);
     if (response.ok) {
@@ -37,7 +44,9 @@ export async function fetchMonitorSummary(id: string) {
   }
 }
 
-export async function fetchMonitorCertExpCountdown(id: string) {
+export async function fetchMonitorCertExpCountdown(
+  id: string
+): Promise<components["schemas"]["CertificateExpiryCountDown"] | null> {
   try {
     const response = await serverFetch(
       `/api/monitors/cert-exp-countdown/${id}`
@@ -51,7 +60,10 @@ export async function fetchMonitorCertExpCountdown(id: string) {
   }
 }
 
-export default async function fetchHeartbeat(id: string, startTime: string) {
+export default async function fetchHeartbeat(
+  id: string,
+  startTime: string
+): Promise<components["schemas"]["HeartbeatsOut"] | null> {
   try {
     const response = await serverFetch(
       `/api/monitors/heartbeat/${id}?startTime=${startTime}`
@@ -65,8 +77,10 @@ export default async function fetchHeartbeat(id: string, startTime: string) {
   }
 }
 
-export const fetchMonitorsStatusPages = async (id: string) => {
-  if (!id) return;
+export const fetchMonitorsStatusPages = async (
+  id: string
+): Promise<components["schemas"]["ListStatusPagesOut"] | null> => {
+  if (!id) return null;
   try {
     const response = await serverFetch(`/api/monitors/${id}/status-pages`);
     if (response.ok) {
@@ -78,7 +92,9 @@ export const fetchMonitorsStatusPages = async (id: string) => {
   }
 };
 
-export const fetchMonitorsNotificationChannels = async (id: string) => {
+export const fetchMonitorsNotificationChannels = async (
+  id: string
+): Promise<components["schemas"]["NotificationListOut"] | null> => {
   try {
     const response = await serverFetch(`/api/monitors/${id}/notifications`);
     if (response.ok) {

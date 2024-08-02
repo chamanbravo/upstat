@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { fetchNotifications } from "@/lib/api/notifications";
 import EmptyState from "@/components/notifications/empty-state";
 import DataTable from "@/components/notifications/data-table";
+
+export const metadata: Metadata = {
+  title: "Notifications | Upstat",
+  description: "Simple & easy status monitoring.",
+};
 
 export default async function Notifications() {
   const notifications = await fetchNotifications();

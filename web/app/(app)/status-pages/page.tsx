@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import DataTable from "@/components/status-pages/data-table";
 import EmptyState from "@/components/status-pages/empty-state";
 import { Button } from "@/components/ui/button";
 import { fetchStatusPages } from "@/lib/api/status-pages";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Status Pages | Upstat",
+  description: "Simple & easy status monitoring.",
+};
 
 export default async function StatusPages() {
   const statusPages = await fetchStatusPages();

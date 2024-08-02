@@ -37,3 +37,22 @@ export function getCookie(name: string) {
 export function eraseCookie(name: string) {
   document.cookie = name + "=; Max-Age=-99999999;";
 }
+
+export const formatAsDateHour = (value: string) =>
+  new Date(value).toLocaleString(undefined, {
+    hour: "numeric",
+    minute: "numeric",
+  });
+
+export const formatAsDayDateHour = (value: string) =>
+  new Date(value).toLocaleString(undefined, {
+    day: "2-digit",
+    hour: "numeric",
+    minute: "numeric",
+  });
+
+export const formatAsMonthDate = (value: string) =>
+  new Date(value).toLocaleString(undefined, {
+    month: "short",
+    day: "2-digit",
+  });
