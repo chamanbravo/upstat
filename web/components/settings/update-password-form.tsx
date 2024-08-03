@@ -52,23 +52,10 @@ export function UpdatePasswordForm() {
     }
     try {
       setLoading(true);
-      const response = await clientFetch("/api/users/update-password", {
-        method: "POST",
-        body: JSON.stringify({
-          currentPassword,
-          newPassword,
-        }),
+      toast({
+        title: "Password updated.",
       });
-      if (response.ok) {
-        toast({
-          title: "Password updated.",
-        });
-      } else if (response.status === 400) {
-        const { message } = await response.json();
-        toast({
-          title: message,
-        });
-      }
+      setLoading(false);
       setLoading(false);
     } catch (err) {}
   }

@@ -17,6 +17,10 @@ export default async function index() {
       ) : (
         <LoginForm />
       )}
+
+      <span className="absolute p-2 w-[90%] sm:w-fit text-muted-foreground border text-sm rounded bottom-10 bg-card">
+        This is a demo of upstat dashboard. The database resets periodically.
+      </span>
     </div>
   );
 }
