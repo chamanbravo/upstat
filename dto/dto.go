@@ -145,3 +145,10 @@ type ListStatusPagesOut struct {
 	SuccessResponse
 	StatusPages []models.StatusPage `json:"statusPages"`
 }
+
+type SaveIncident struct {
+	Type        string `json:"type"`
+	Description string `json:"description"`
+	IsPositive  bool   `json:"is_positive"`
+	MonitorId   int    `json:"monitor_id"`
+}
