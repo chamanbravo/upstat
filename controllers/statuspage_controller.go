@@ -3,8 +3,8 @@ package controllers
 import (
 	"strconv"
 
+	"github.com/chamanbravo/upstat/dto"
 	"github.com/chamanbravo/upstat/queries"
-	"github.com/chamanbravo/upstat/serializers"
 	"github.com/chamanbravo/upstat/utils"
 	"github.com/gofiber/fiber/v2"
 )
@@ -12,12 +12,12 @@ import (
 // @Tags StatusPages
 // @Accept json
 // @Produce json
-// @Param body body serializers.CreateStatusPageIn true "Body"
-// @Success 200 {object} serializers.SuccessResponse
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/status-pages/create [post]
+// @Param body body dto.CreateStatusPageIn true "Body"
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/status-pages [post]
 func CreateStatusPage(c *fiber.Ctx) error {
-	statusPage := new(serializers.CreateStatusPageIn)
+	statusPage := new(dto.CreateStatusPageIn)
 	if err := c.BodyParser(statusPage); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -44,9 +44,9 @@ func CreateStatusPage(c *fiber.Ctx) error {
 // @Tags StatusPages
 // @Accept json
 // @Produce json
-// @Success 200 {object} serializers.ListStatusPagesOut
-// @Failure 400 {object} serializers.ErrorResponse
-// @Router /api/status-pages/list [get]
+// @Success 200 {object} dto.ListStatusPagesOut
+// @Failure 400 {object} dto.ErrorResponse
+// @Router /api/status-pages [get]
 func ListStatusPages(c *fiber.Ctx) error {
 	statusPages, err := queries.ListStatusPages()
 	if err != nil {
@@ -64,9 +64,9 @@ func ListStatusPages(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Status Page ID"
-// @Success 200 {object} serializers.SuccessResponse
-// @Failure 400 {object} serializers.ErrorResponse
-// @Router /api/status-pages/delete/{id} [delete]
+// @Success 200 {object} dto.SuccessResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Router /api/status-pages/{id} [delete]
 func DeleteStatusPage(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -99,10 +99,10 @@ func DeleteStatusPage(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Status Page ID"
-// @Param body body serializers.CreateStatusPageIn true "Body"
-// @Success 200 {object} serializers.SuccessResponse
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/status-pages/update/{id} [put]
+// @Param body body dto.CreateStatusPageIn true "Body"
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/status-pages/{id} [patch]
 func UpdateStatusPage(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -111,7 +111,7 @@ func UpdateStatusPage(c *fiber.Ctx) error {
 		})
 	}
 
-	statusPage := new(serializers.CreateStatusPageIn)
+	statusPage := new(dto.CreateStatusPageIn)
 	if err := c.BodyParser(statusPage); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -147,9 +147,9 @@ func UpdateStatusPage(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Status Page Id"
-// @Success 200 {object} serializers.StatusPageInfo
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/status-pages/info/{id} [get]
+// @Success 200 {object} dto.StatusPageInfo
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/status-pages/{id} [get]
 func StatusPageInfo(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -182,8 +182,8 @@ func StatusPageInfo(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param slug path string true "Status Page Slug"
-// @Success 200 {object} serializers.StatusPageInfo
-// @Success 400 {object} serializers.ErrorResponse
+// @Success 200 {object} dto.StatusPageInfo
+// @Success 400 {object} dto.ErrorResponse
 // @Router /api/status-pages/summary/{slug} [get]
 func StatusSummary(c *fiber.Ctx) error {
 	slug := c.Params("slug")
