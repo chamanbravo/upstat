@@ -27,7 +27,7 @@ export default function SelectNotificationChannel({
       </div>
 
       <div className="w-full max-w-md">
-        {notificationChannels?.length === 0 ? (
+        {!notificationChannels ? (
           <EmptyState />
         ) : (
           <FormField

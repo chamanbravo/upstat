@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
+import { clientFetch } from "@/lib/api/clientFetch";
 
 const accountFormSchema = z.object({
   currentPassword: z.string().min(8, {
@@ -51,15 +52,12 @@ export function UpdatePasswordForm() {
     }
     try {
       setLoading(true);
-      const response = await fetch("/api/users/update-password", {
+      const response = await clientFetch("/api/users/update-password", {
         method: "POST",
         body: JSON.stringify({
           currentPassword,
           newPassword,
         }),
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
       if (response.ok) {
         toast({

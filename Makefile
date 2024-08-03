@@ -26,7 +26,8 @@ security:
 	gosec ./...
 
 migrate.create:
-	goose -dir $(MIGRATIONS_DIR) create $(MIGRATION_NAME) sql
+	@read -p "Enter migration name: " name; \
+	goose -dir $(MIGRATIONS_DIR) create $$name sql
 
 migrate.up:
 	goose -dir $(MIGRATIONS_DIR) postgres $(POSTGRES_DSN) up

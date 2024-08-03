@@ -47,7 +47,7 @@ func FindMonitorById(id int) (*models.Monitor, error) {
 	err = stmt.QueryRow(id).Scan(&monitor.ID, &monitor.Name, &monitor.Url, &monitor.Type, &monitor.Method, &monitor.Frequency, &monitor.Status)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("Monitor doesn't exist")
+			return nil, fmt.Errorf("monitor doesn't exist")
 		}
 		log.Println("Error when trying to find monitor")
 		log.Println(err)
@@ -138,7 +138,7 @@ func UpdateMonitorStatus(id int, status string) error {
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("No monitor found with ID %v", id)
+		return fmt.Errorf("no monitor found with ID %v", id)
 	}
 
 	return nil
@@ -194,7 +194,7 @@ func DeleteMonitorById(id int) error {
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("Monitor with ID %d not found", id)
+		return fmt.Errorf("monitor with ID %d not found", id)
 	}
 
 	return nil

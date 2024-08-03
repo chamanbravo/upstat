@@ -125,7 +125,7 @@ func FindNotificationById(id int) (*models.Notification, error) {
 	err = stmt.QueryRow(id).Scan(&notification.ID, &notification.Name, &notification.Provider, &dataStr)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("Notification doesn't exist")
+			return nil, fmt.Errorf("notification doesn't exist")
 		}
 		log.Println("Error when trying to find notification channel:\n", err)
 		return nil, err

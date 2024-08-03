@@ -64,7 +64,7 @@ export default function DataTable({ data }: Props) {
                   : i.frequency / (60 * 60) + "h"}
               </TableCell>
               <TableCell>
-                <HeartbeatSummary heartbeat={i.heartbeat} />
+                <HeartbeatSummary heartbeat={i?.heartbeat} />
               </TableCell>
               <TableCell>
                 <DataTableActions id={i.id} />

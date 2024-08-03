@@ -21,7 +21,7 @@ func Setup(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"needSetup": !(usersCount > 0),
+		"needSetup": usersCount <= 0,
 	})
 }
 
