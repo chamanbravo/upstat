@@ -12,7 +12,7 @@ type Tokens struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
-func GenerateJWT(username string, firstname, lastname string) (*Tokens, error) {
+func GenerateJWT(username, firstname, lastname string) (*Tokens, error) {
 	accessToken, err := generateAccessToken(username, firstname, lastname)
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func GenerateJWT(username string, firstname, lastname string) (*Tokens, error) {
 	}, nil
 }
 
-func generateAccessToken(username string, firstname, lastname string) (string, error) {
+func generateAccessToken(username, firstname, lastname string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
@@ -48,7 +48,7 @@ func generateAccessToken(username string, firstname, lastname string) (string, e
 	return accessToken, nil
 }
 
-func generateNewRefreshToken(username string, firstname, lastname string) (string, error) {
+func generateNewRefreshToken(username, firstname, lastname string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)

@@ -104,7 +104,7 @@ func DeleteStatusPageById(id int) error {
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("Status page with ID %d not found", id)
+		return fmt.Errorf("status page with ID %d not found", id)
 	}
 
 	return nil
@@ -123,7 +123,7 @@ func FindStatusPageById(id int) (*models.StatusPage, error) {
 	err = stmt.QueryRow(id).Scan(&statusPage.ID, &statusPage.Name, &statusPage.Slug)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("Monitor doesn't exist")
+			return nil, fmt.Errorf("monitor doesn't exist")
 		}
 		log.Println("Error when trying to find monitor")
 		log.Println(err)
