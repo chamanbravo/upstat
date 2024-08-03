@@ -24,7 +24,7 @@ export default function SelectStatusPage({ form, statusPages }: Props) {
       </div>
 
       <div className="w-full max-w-md">
-        {statusPages?.length === 0 ? (
+        {!statusPages ? (
           <EmptyState />
         ) : (
           <FormField
