@@ -5,11 +5,11 @@ export default function HeartbeatSummary({ heartbeat }: { heartbeat: any }) {
     }
     return arr;
   }
-  const finalHeartbeat = [...fillArray(heartbeat)].reverse();
+  const finalHeartbeat = fillArray(heartbeat || [])?.reverse();
 
   return (
     <div className="flex h-full gap-1">
-      {finalHeartbeat.map((h, i) => (
+      {finalHeartbeat?.map((h: any, i: number) => (
         <div
           key={i}
           className={`h-4 w-1 rounded-[2px] ${

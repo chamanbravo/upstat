@@ -28,7 +28,7 @@ export default async function Notifications() {
         </Button>
       </div>
 
-      {notifications?.notifications.length === 0 ? (
+      {!notifications?.notifications ? (
         <EmptyState />
       ) : (
         <DataTable data={notifications?.notifications} />

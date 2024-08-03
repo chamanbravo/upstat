@@ -123,7 +123,7 @@ func UpdatePassword(username string, u *dto.UpdatePasswordIn) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(username, u.CurrentPassword, u.NewPassword)
+	_, err = stmt.Exec(username, u.NewPassword, u.CurrentPassword)
 	if err != nil {
 		log.Println("Error when trying to update password")
 		log.Println(err)

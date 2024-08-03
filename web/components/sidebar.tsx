@@ -4,6 +4,7 @@ import { Activity, BellDot, Cog, LogOut, PanelTop } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import LogoutButton from "./logout-button";
 
 const selectedStyle = "bg-secondary text-foreground";
 
@@ -61,13 +62,7 @@ export default function Sidebar() {
           </Link>
         </Button>
       </div>
-      <Button
-        variant="ghost"
-        className="justify-start text-muted-foreground hover:text-foreground"
-      >
-        <LogOut className="w-4 h-4 mr-2" />
-        Logout
-      </Button>
+      <LogoutButton />
     </div>
   );
 }
