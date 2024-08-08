@@ -932,51 +932,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/status-pages/summary/{slug}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path: {
-                    /** @description Status Page Slug */
-                    slug: string;
-                };
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["StatusPageInfo"];
-                    };
-                };
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/status-pages/{id}": {
         parameters: {
             query?: never;
@@ -1082,6 +1037,51 @@ export interface paths {
                 };
             };
         };
+        trace?: never;
+    };
+    "/api/status-pages/{slug}/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Status Page Slug */
+                    slug: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["StatusPageSummary"];
+                    };
+                };
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/users/me": {
@@ -1255,6 +1255,12 @@ export interface components {
             latency?: number;
             message?: string;
         };
+        HeartbeatSummary: {
+            timestamp?: string;
+            total?: number;
+            up?: number;
+            down?: number;
+        };
         HeartbeatsOut: {
             message?: string;
             heartbeat?: components["schemas"]["Heartbeat"][];
@@ -1369,6 +1375,32 @@ export interface components {
             statusPage?: components["schemas"]["StatusPage"];
             message?: string;
         };
+        StatusPageMonitorSummary: {
+            id?: number;
+            name?: string;
+            recent?: components["schemas"]["Heartbeat"][];
+            all?: {
+                timestamp?: string;
+                total?: number;
+                up?: number;
+                down?: number;
+            }[];
+        };
+        StatusPageSummary: {
+            statusPageInfo?: components["schemas"]["StatusPage"];
+            monitors?: {
+                id?: number;
+                name?: string;
+                recent?: components["schemas"]["Heartbeat"][];
+                all?: {
+                    timestamp?: string;
+                    total?: number;
+                    up?: number;
+                    down?: number;
+                }[];
+            }[];
+            message?: string;
+        };
         SuccessResponse: {
             message?: string;
         };
@@ -1434,10 +1466,6 @@ export interface components {
                 name?: string;
                 provider?: string;
             }[];
-            message?: string;
-        };
-        "dto.StatusPageInfo": {
-            statusPage?: components["schemas"]["StatusPage"];
             message?: string;
         };
         "dto.SuccessResponse": {

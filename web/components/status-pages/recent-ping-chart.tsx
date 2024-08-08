@@ -1,7 +1,6 @@
 "use client";
 
-import { formatAsDateHour, formatAsDayDateHour } from "@/lib/utils";
-import { differenceInHours } from "date-fns";
+import { formatAsDateHour, formatAsDateHourMinute } from "@/lib/utils";
 import {
   LineChart,
   Line,
@@ -34,7 +33,11 @@ const CustomTooltip = ({
             key={item.name}
             className="text-[hsl(var(--current-period-stroke))]"
           >
-            {`${item.name}: ${item.value}`}
+            {`${item.name}: ${
+              Number.isNaN(item.value)
+                ? item.value
+                : (Number(item.value) / 60).toFixed(1) + "s"
+            }`}
           </p>
         ))}
       </div>
@@ -45,26 +48,11 @@ const CustomTooltip = ({
 
 interface Props {
   heartbeat: any;
-  startDate: string;
 }
 
-const formatter = (date: string) => {
-  const hoursDifference = differenceInHours(new Date(), new Date(date));
-
-  if (hoursDifference === 6) {
-    return formatAsDateHour;
-  } else if (hoursDifference === 12) {
-    return formatAsDateHour;
-  } else if (hoursDifference === 24) {
-    return formatAsDateHour;
-  } else {
-    return formatAsDayDateHour;
-  }
-};
-
-export default function Chart({ heartbeat, startDate }: Props) {
+export default function RecentPingChart({ heartbeat }: Props) {
   return (
-    <div className="flex flex-grow justify-center items-center">
+    <div className="flex flex-grow justify-center items-center h-40">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={heartbeat} margin={{ top: 8 }}>
           <CartesianGrid
@@ -72,7 +60,7 @@ export default function Chart({ heartbeat, startDate }: Props) {
             strokeDasharray="5 5"
           />
           <Tooltip
-            content={<CustomTooltip labelFormatter={formatter(startDate)} />}
+            content={<CustomTooltip labelFormatter={formatAsDateHourMinute} />}
             cursor={{
               stroke: "hsl(var(--muted-foreground)/0.4)",
               strokeWidth: 1.5,
@@ -93,24 +81,27 @@ export default function Chart({ heartbeat, startDate }: Props) {
           <YAxis
             interval="preserveStartEnd"
             dataKey="latency"
-            fontSize={14}
+            fontSize={12}
             tickLine={false}
             axisLine={false}
+            width={25}
             tick={{
               fill: "hsl(var(--muted-foreground))",
             }}
             tickFormatter={(value) => `${(value / 60).toFixed(0)}s`}
           />
           <XAxis
-            interval="preserveStartEnd"
             dataKey="timestamp"
-            fontSize={14}
+            fontSize={12}
             tickLine={false}
             axisLine={false}
             tick={{
               fill: "hsl(var(--muted-foreground))",
             }}
-            tickFormatter={formatter(startDate)}
+            tickFormatter={formatAsDateHour}
+            dy={4}
+            overflow={"visible"}
+            interval={60}
           />
         </LineChart>
       </ResponsiveContainer>

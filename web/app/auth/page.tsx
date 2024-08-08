@@ -10,13 +10,19 @@ export const metadata: Metadata = {
 
 export default async function index() {
   const needSetup = await fetchNeedSetup();
+  if (needSetup === undefined) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <span className="text-muted-foreground">
+          Serverside error! Make sure application is configured properly.
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className="mt-4 px-4 flex justify-center items-center  md:h-[100vh] md:mt-0 md:px-0">
-      {needSetup === undefined ? null : needSetup ? (
-        <RegisterForm />
-      ) : (
-        <LoginForm />
-      )}
+      {needSetup ? <RegisterForm /> : <LoginForm />}
     </div>
   );
 }
