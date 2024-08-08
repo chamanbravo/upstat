@@ -855,45 +855,6 @@ const docTemplate = `
         }
       }
     },
-    "/api/status-pages/summary/{slug}": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatusPageInfo"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "slug",
-            "in": "path",
-            "description": "Status Page Slug",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "string",
-              "description": "Status Page Slug"
-            }
-          }
-        ]
-      }
-    },
     "/api/status-pages/{id}": {
       "get": {
         "responses": {
@@ -1012,6 +973,45 @@ const docTemplate = `
               "type": "string",
               "format": "string",
               "description": "Status Page ID"
+            }
+          }
+        ]
+      }
+    },
+    "/api/status-pages/{slug}/summary": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusPageSummary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "description": "Status Page Slug",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Status Page Slug"
             }
           }
         ]
@@ -1217,6 +1217,23 @@ const docTemplate = `
           },
           "message": {
             "type": "string"
+          }
+        }
+      },
+      "HeartbeatSummary": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "up": {
+            "type": "integer"
+          },
+          "down": {
+            "type": "integer"
           }
         }
       },
@@ -1560,6 +1577,95 @@ const docTemplate = `
           }
         }
       },
+      "StatusPageMonitorSummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "recent": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Heartbeat"
+            }
+          },
+          "all": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "timestamp": {
+                  "type": "string"
+                },
+                "total": {
+                  "type": "integer"
+                },
+                "up": {
+                  "type": "integer"
+                },
+                "down": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "StatusPageSummary": {
+        "type": "object",
+        "properties": {
+          "statusPageInfo": {
+            "type": "object",
+            "$ref": "#/components/schemas/StatusPage"
+          },
+          "monitors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "recent": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Heartbeat"
+                  }
+                },
+                "all": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "timestamp": {
+                        "type": "string"
+                      },
+                      "total": {
+                        "type": "integer"
+                      },
+                      "up": {
+                        "type": "integer"
+                      },
+                      "down": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
       "SuccessResponse": {
         "type": "object",
         "properties": {
@@ -1754,18 +1860,6 @@ const docTemplate = `
                 }
               }
             }
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      },
-      "dto.StatusPageInfo": {
-        "type": "object",
-        "properties": {
-          "statusPage": {
-            "type": "object",
-            "$ref": "#/components/schemas/StatusPage"
           },
           "message": {
             "type": "string"

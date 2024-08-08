@@ -8,7 +8,7 @@ export default function Navbar() {
         <span className="font-bold">Upstat</span>
 
         <div className="flex items-center gap-2 ml-auto">
-          {/* <CommandMenu /> */}
+          <CommandMenu />
           <ThemeToggle />
         </div>
       </div>

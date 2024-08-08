@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 
 export default async function StatusPages() {
   const statusPages = await fetchStatusPages();
-  console.log(statusPages);
 
   return (
     <div className="flex flex-col w-full gap-8">

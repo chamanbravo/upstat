@@ -67,10 +67,14 @@ export default function CommandMenu() {
 
   return (
     <>
-      <Button variant="ghost" className="p-0 w-9" onClick={() => setOpen(true)}>
-        <kbd className="inline-flex items-center">
-          <span className="text-[1rem]">⌘</span>
-          <span className="text-[1.1rem]">K</span>
+      <Button
+        variant="outline"
+        className="w-full flex justify-between p-0 px-2 min-w-[200px] md:min-w-[400px]"
+        onClick={() => setOpen(true)}
+      >
+        <span className="text-muted-foreground text-sm">Jump to...</span>
+        <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+          <span className="text-xs">⌘</span>K
         </kbd>
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>

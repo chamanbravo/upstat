@@ -39,10 +39,13 @@ And dozens of smaller features to be added.
 ### 🐳 Docker
 
 ```bash
+curl -O https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose.yml
 docker compose up
 ```
 
-Upstat is now running on http://localhost
+Upstat is now running on http://localhost:3000
+
+> 📝 While deploying make sure to edit the environments in docker-compose file
 
 ### 💪🏻 Non-Docker
 

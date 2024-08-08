@@ -152,3 +152,23 @@ type SaveIncident struct {
 	IsPositive  bool   `json:"is_positive"`
 	MonitorId   int    `json:"monitor_id"`
 }
+
+type HeartbeatSummary struct {
+	Timestamp string `json:"timestamp"`
+	Total     int    `json:"total"`
+	Up        int    `json:"up"`
+	Down      int    `json:"down"`
+}
+
+type StatusPageMonitorSummary struct {
+	ID     int                `json:"id"`
+	Name   string             `json:"name"`
+	Recent []models.Heartbeat `json:"recent"`
+	All    []HeartbeatSummary `json:"all"`
+}
+
+type StatusPageSummary struct {
+	SuccessResponse
+	StatusPageInfo models.StatusPage          `json:"statusPageInfo"`
+	Monitors       []StatusPageMonitorSummary `json:"monitors"`
+}

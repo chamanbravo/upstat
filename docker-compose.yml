@@ -3,8 +3,9 @@ services:
   db:
     restart: unless-stopped
     image: postgres:13-alpine
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_DB=upstat
+      - POSTGRES_PASSWORD=postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -17,8 +18,9 @@ services:
     restart: unless-stopped
     build:
       context: ./
-    env_file:
-      - .env
+    environment:
+      - POSTGRES_DSN=postgres://postgres:postgres@db:5432/upstat?sslmode=disable
+      - JWT_SECRET_KEY=asdfjaskljd
     depends_on:
       db:
         condition: service_healthy
@@ -28,10 +30,10 @@ services:
     build:
       context: web
     ports:
-      - "3000:3000"
+      - "5000:3000"
     depends_on:
-      db:
-        condition: service_healthy
+      - api
+      - db
 
 volumes:
   postgres_data:
