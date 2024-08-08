@@ -30,7 +30,7 @@ services:
     build:
       context: web
     ports:
-      - "5000:3000"
+      - "3000:3000"
     depends_on:
       - api
       - db
