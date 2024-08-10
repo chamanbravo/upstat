@@ -1,6 +1,10 @@
 "use client";
 
-import { formatAsDateHour, formatAsDayDateHour } from "@/lib/utils";
+import {
+  formatAsDateHour,
+  formatAsDateHourMinute,
+  formatAsDayDateHour,
+} from "@/lib/utils";
 import { differenceInHours } from "date-fns";
 import {
   LineChart,
@@ -51,15 +55,24 @@ interface Props {
 const formatter = (date: string) => {
   const hoursDifference = differenceInHours(new Date(), new Date(date));
 
+  let format: (date: string) => string;
+  let interval: number;
+
   if (hoursDifference === 6) {
-    return formatAsDateHour;
+    format = formatAsDateHourMinute;
+    interval = 30;
   } else if (hoursDifference === 12) {
-    return formatAsDateHour;
+    format = formatAsDateHourMinute;
+    interval = 60;
   } else if (hoursDifference === 24) {
-    return formatAsDateHour;
+    format = formatAsDateHourMinute;
+    interval = 120;
   } else {
-    return formatAsDayDateHour;
+    format = formatAsDayDateHour;
+    interval = 360;
   }
+
+  return { format, interval };
 };
 
 export default function Chart({ heartbeat, startDate }: Props) {
@@ -72,7 +85,9 @@ export default function Chart({ heartbeat, startDate }: Props) {
             strokeDasharray="5 5"
           />
           <Tooltip
-            content={<CustomTooltip labelFormatter={formatter(startDate)} />}
+            content={
+              <CustomTooltip labelFormatter={formatter(startDate).format} />
+            }
             cursor={{
               stroke: "hsl(var(--muted-foreground)/0.4)",
               strokeWidth: 1.5,
@@ -102,7 +117,6 @@ export default function Chart({ heartbeat, startDate }: Props) {
             tickFormatter={(value) => `${(value / 60).toFixed(0)}s`}
           />
           <XAxis
-            interval="preserveStartEnd"
             dataKey="timestamp"
             fontSize={14}
             tickLine={false}
@@ -110,7 +124,8 @@ export default function Chart({ heartbeat, startDate }: Props) {
             tick={{
               fill: "hsl(var(--muted-foreground))",
             }}
-            tickFormatter={formatter(startDate)}
+            tickFormatter={formatter(startDate).format}
+            interval={formatter(startDate).interval}
           />
         </LineChart>
       </ResponsiveContainer>
