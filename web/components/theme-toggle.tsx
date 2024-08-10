@@ -19,14 +19,15 @@ export default function ThemeToggle() {
 
   return (
     <Button
-      variant="ghost"
+      // variant="ghost"
+      variant="outline"
       className="px-0 flex items-center justify-center"
       onClick={toggleTheme}
     >
       {theme === "light" ? (
-        <Sun className="h-[1.2rem] w-[2.5rem] cursor-pointer" />
+        <Sun className="h-[1.2rem] w-[2.2rem] cursor-pointer" />
       ) : (
-        <Moon className="h-[1.2rem] w-[2.5rem] cursor-pointer" />
+        <Moon className="h-[1.2rem] w-[2.2rem] cursor-pointer" />
       )}
     </Button>
   );
