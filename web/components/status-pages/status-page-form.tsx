@@ -24,7 +24,8 @@ const StatusPageFormSchema = z.object({
     .min(2, { message: "This field may not be blank." }),
   slug: z
     .string({ required_error: "This field may not be blank." })
-    .min(2, { message: "This field may not be blank." }),
+    .min(2, { message: "This field may not be blank." })
+    .refine((s) => !s.includes(" "), "This field may not contain spaces."),
 });
 
 type StatusPageFormValues = z.infer<typeof StatusPageFormSchema>;
