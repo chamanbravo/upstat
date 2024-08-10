@@ -3,6 +3,7 @@ import RecentPingChart from "@/components/status-pages/recent-ping-chart";
 import { fetchStatusPagesSummary } from "@/lib/api/status-pages";
 import { components } from "@/lib/api/types";
 import { calculateUptimePercentage, cn } from "@/lib/utils";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 interface Props {
@@ -80,6 +81,26 @@ export default async function page({ params }: Props) {
             })}
         </div>
       </div>
+
+      <span className="text-muted-foreground text-xs">
+        Open-source monitoring and status page powered by{" "}
+        <Link
+          target="_blank"
+          href="https://github.com/chamanbravo/upstat"
+          className="underline"
+        >
+          Upstat
+        </Link>
+        {", "}
+        made with ❤ by{" "}
+        <Link
+          target="_blank"
+          href="https://github.com/chamanbravo"
+          className="underline"
+        >
+          Chaman Bravo
+        </Link>
+      </span>
     </div>
   );
 }
