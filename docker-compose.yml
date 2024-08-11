@@ -16,8 +16,7 @@ services:
 
   api:
     restart: unless-stopped
-    build:
-      context: ./
+    image: chamanbravo/upstat-api:latest
     environment:
       - POSTGRES_DSN=postgres://postgres:postgres@db:5432/upstat?sslmode=disable
       - JWT_SECRET_KEY=asdfjaskljd
@@ -27,8 +26,7 @@ services:
 
   web:
     restart: unless-stopped
-    build:
-      context: web
+    image: chamanbravo/upstat-web:latest
     ports:
       - "3000:3000"
     depends_on:
