@@ -1,15 +1,16 @@
+# Build Stage
 FROM golang:1.21.3 AS build
 WORKDIR /app
 COPY . .
-RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
-RUN chmod +x ./startup.sh
+RUN go mod download \
+    && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main . \
+    && chmod +x ./startup.sh
 
-FROM alpine:latest as release
+# Release Stage
+FROM alpine:3.18 AS release
 WORKDIR /app
 COPY --from=build /app/main .
-RUN apk -U upgrade \
-    && apk add --no-cache dumb-init ca-certificates \
-    && chmod +x /app/main
+RUN apk --no-cache add dumb-init ca-certificates
 EXPOSE 8000
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["./main"]

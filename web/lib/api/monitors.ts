@@ -34,7 +34,7 @@ export async function fetchMonitorSummary(
   id: string
 ): Promise<components["schemas"]["MonitorSummaryOut"] | null> {
   try {
-    const response = await serverFetch(`/api/monitors/summary/${id}`);
+    const response = await serverFetch(`/api/monitors/${id}/summary`);
     if (response.ok) {
       return await response.json();
     }
@@ -49,7 +49,7 @@ export async function fetchMonitorCertExpCountdown(
 ): Promise<components["schemas"]["CertificateExpiryCountDown"] | null> {
   try {
     const response = await serverFetch(
-      `/api/monitors/cert-exp-countdown/${id}`
+      `/api/monitors/${id}/cert-exp-countdown`
     );
     if (response.ok) {
       return await response.json();
@@ -66,7 +66,7 @@ export default async function fetchHeartbeat(
 ): Promise<components["schemas"]["HeartbeatsOut"] | null> {
   try {
     const response = await serverFetch(
-      `/api/monitors/heartbeat/${id}?startTime=${startTime}`
+      `/api/monitors/${id}/heartbeat?startTime=${startTime}`
     );
     if (response.ok) {
       return await response.json();
