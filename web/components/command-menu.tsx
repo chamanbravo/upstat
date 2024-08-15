@@ -16,31 +16,27 @@ import { useRouter } from "next/navigation";
 const menus = [
   {
     name: "Monitors",
-    path: "/app/monitors",
+    path: "/",
   },
   {
     name: "Notifications",
-    path: "/app/notifications",
+    path: "/notifications",
   },
   {
     name: "Status Pages",
-    path: "/app/status-pages",
+    path: "/status-pages",
   },
   {
     name: "Settings",
-    path: "/app/settings",
+    path: "/settings",
   },
   {
     name: "Account",
-    path: "/app/settings",
+    path: "/settings",
   },
   {
     name: "Password & Security",
-    path: "/app/settings/password-security",
-  },
-  {
-    name: "Logout",
-    path: "/",
+    path: "/settings/password-security",
   },
 ];
 
@@ -89,8 +85,6 @@ export default function CommandMenu() {
                 onSelect={() => {
                   runCommand(() => {
                     router.push(m.path);
-                    if (m.name === "Logout") {
-                    }
                   });
                 }}
                 className="cursor-pointer"
