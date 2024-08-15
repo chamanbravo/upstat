@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 services:
   db:
     restart: unless-stopped
@@ -9,24 +9,24 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
-
   api:
     restart: unless-stopped
-    image: chamanbravo/upstat-api:latest
+    build:
+      context: ./
     environment:
       - POSTGRES_DSN=postgres://postgres:postgres@db:5432/upstat?sslmode=disable
       - JWT_SECRET_KEY=asdfjaskljd
     depends_on:
       db:
         condition: service_healthy
-
   web:
     restart: unless-stopped
-    image: chamanbravo/upstat-web:latest
+    build:
+      context: web
     ports:
       - "3000:3000"
     depends_on:
