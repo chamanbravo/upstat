@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/chamanbravo/upstat/dto"
 	"github.com/chamanbravo/upstat/queries"
-	"github.com/chamanbravo/upstat/serializers"
 	"github.com/chamanbravo/upstat/utils"
 	"github.com/gofiber/fiber/v2"
 )
@@ -14,12 +14,12 @@ import (
 // @Tags Monitors
 // @Accept json
 // @Produce json
-// @Param body body serializers.AddMonitorIn true "Body"
-// @Success 200 {object} serializers.SuccessResponse
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/create [post]
+// @Param body body dto.AddMonitorIn true "Body"
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/monitors [post]
 func CreateMonitor(c *fiber.Ctx) error {
-	newMonitor := new(serializers.AddMonitorIn)
+	newMonitor := new(dto.AddMonitorIn)
 	if err := c.BodyParser(newMonitor); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -63,9 +63,9 @@ func CreateMonitor(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
-// @Success 200 {object} serializers.MonitorInfoOut
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/info/{id} [get]
+// @Success 200 {object} dto.MonitorInfoOut
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/monitors/{id} [get]
 func MonitorInfo(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -98,10 +98,10 @@ func MonitorInfo(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
-// @Param body body serializers.AddMonitorIn true "Body"
-// @Success 200 {object} serializers.SuccessResponse
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/update/{id} [put]
+// @Param body body dto.AddMonitorIn true "Body"
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/monitors/{id} [patch]
 func UpdateMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -110,7 +110,7 @@ func UpdateMonitor(c *fiber.Ctx) error {
 		})
 	}
 
-	monitor := new(serializers.AddMonitorIn)
+	monitor := new(dto.AddMonitorIn)
 	if err := c.BodyParser(monitor); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -160,9 +160,9 @@ func UpdateMonitor(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
-// @Success 200 {object} serializers.SuccessResponse
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/pause/{id} [put]
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/monitors/{id}/pause [patch]
 func PauseMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -195,9 +195,9 @@ func PauseMonitor(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
-// @Success 200 {object} serializers.SuccessResponse
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/resume/{id} [put]
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/monitors/{id}/resume [patch]
 func ResumeMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -235,9 +235,9 @@ func ResumeMonitor(c *fiber.Ctx) error {
 
 // @Accept json
 // @Produce json
-// @Success 200 {object} serializers.MonitorsListOut
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/list [get]
+// @Success 200 {object} dto.MonitorsListOut
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/monitors [get]
 func MonitorsList(c *fiber.Ctx) error {
 	monitors, err := queries.RetrieveMonitors()
 	if err != nil {
@@ -276,8 +276,8 @@ func MonitorsList(c *fiber.Ctx) error {
 // @Produce json
 // @Param id path string true "Monitor ID"
 // @Param startTime query time.Time true "Start Time" format(json)
-// @Success 200 {object} serializers.HeartbeatsOut
-// @Success 400 {object} serializers.ErrorResponse
+// @Success 200 {object} dto.HeartbeatsOut
+// @Success 400 {object} dto.ErrorResponse
 // @Router /api/monitors/heartbeat/{id} [get]
 func RetrieveHeartbeat(c *fiber.Ctx) error {
 	idParam := c.Params("id")
@@ -294,7 +294,7 @@ func RetrieveHeartbeat(c *fiber.Ctx) error {
 		})
 	}
 
-	query := new(serializers.RetrieveHeartbeatIn)
+	query := new(dto.RetrieveHeartbeatIn)
 	if err := c.QueryParser(query); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -320,8 +320,8 @@ func RetrieveHeartbeat(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
-// @Success 200 {object} serializers.MonitorSummaryOut
-// @Success 400 {object} serializers.ErrorResponse
+// @Success 200 {object} dto.MonitorSummaryOut
+// @Success 400 {object} dto.ErrorResponse
 // @Router /api/monitors/summary/{id} [get]
 func MonitorSummary(c *fiber.Ctx) error {
 	idParam := c.Params("id")
@@ -373,9 +373,9 @@ func MonitorSummary(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
-// @Success 200 {object} serializers.SuccessResponse
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/monitors/delete/{id} [delete]
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/monitors/{id} [delete]
 func DeleteMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -406,8 +406,8 @@ func DeleteMonitor(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
-// @Success 200 {object} serializers.CertificateExpiryCountDown
-// @Success 400 {object} serializers.ErrorResponse
+// @Success 200 {object} dto.CertificateExpiryCountDown
+// @Success 400 {object} dto.ErrorResponse
 // @Router /api/monitors/cert-exp-countdown/{id} [get]
 func CertificateExpiryCountDown(c *fiber.Ctx) error {
 	idParam := c.Params("id")
@@ -453,8 +453,8 @@ func CertificateExpiryCountDown(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
-// @Success 200 {object} serializers.NotificationListOut
-// @Success 400 {object} serializers.ErrorResponse
+// @Success 200 {object} dto.NotificationListOut
+// @Success 400 {object} dto.ErrorResponse
 // @Router /api/monitors/{id}/notifications [get]
 func NotificationChannelListOfMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
@@ -488,8 +488,8 @@ func NotificationChannelListOfMonitor(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
-// @Success 200 {object} serializers.ListStatusPagesOut
-// @Success 400 {object} serializers.ErrorResponse
+// @Success 200 {object} dto.ListStatusPagesOut
+// @Success 400 {object} dto.ErrorResponse
 // @Router /api/monitors/{id}/status-pages [get]
 func StatusPagesListOfMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")

@@ -20,6 +20,9 @@ var embedMigrationsPostgres embed.FS
 
 func DBConnect() error {
 	dbType := os.Getenv("DB_TYPE")
+	if dbType == "" {
+		dbType = "sqlite"
+	}
 	var err error
 
 	switch dbType {

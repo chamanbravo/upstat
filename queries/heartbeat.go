@@ -8,7 +8,7 @@ import (
 	"github.com/chamanbravo/upstat/models"
 )
 
-func RetrieveHeartbeats(id int, limit int) ([]*models.Heartbeat, error) {
+func RetrieveHeartbeats(id, limit int) ([]*models.Heartbeat, error) {
 	stmt, err := database.DB.Prepare("SELECT * FROM heartbeats WHERE monitor_id = $1 ORDER BY timestamp DESC limit $2")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")

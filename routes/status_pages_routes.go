@@ -11,10 +11,10 @@ import (
 func StatusPagesRoutes(app *fiber.App) {
 	route := app.Group("/api/status-pages", middleware.Protected)
 
-	route.Post("/create", controllers.CreateStatusPage)
-	route.Get("/list", controllers.ListStatusPages)
-	route.Delete("/delete/:id", controllers.DeleteStatusPage)
-	route.Put("/update/:id", controllers.UpdateStatusPage)
-	route.Get("/info/:id", controllers.StatusPageInfo)
-	route.Get("/summary/:slug", controllers.StatusSummary)
+	route.Post("", controllers.CreateStatusPage)
+	route.Get("", controllers.ListStatusPages)
+	route.Delete("/:id", controllers.DeleteStatusPage)
+	route.Patch("/:id", controllers.UpdateStatusPage)
+	route.Get("/:id", controllers.StatusPageInfo)
+	route.Get("/:slug/summary", controllers.StatusSummary)
 }

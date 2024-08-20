@@ -9,8 +9,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/chamanbravo/upstat/dto"
 	"github.com/chamanbravo/upstat/models"
 	"github.com/chamanbravo/upstat/queries"
+	"github.com/chamanbravo/upstat/utils/alerts"
 )
 
 var (
@@ -19,19 +21,6 @@ var (
 	goroutines    = make(map[int]chan struct{})
 	mutex         sync.Mutex
 )
-
-type Embeds struct {
-	Title       string `json:"title"`
-	Time        string `json:"time"`
-	Description string `json:"description"`
-	Color       int    `json:"color"`
-}
-
-type DiscordWebhookMessage struct {
-	Username  string   `json:"username"`
-	AvatarURL string   `json:"avatar_url"`
-	Embeds    []Embeds `json:"embeds"`
-}
 
 func StartGoroutine(monitor *models.Monitor) {
 	mutex.Lock()
@@ -66,88 +55,53 @@ func StartGoroutine(monitor *models.Monitor) {
 					log.Printf("Error retrieving updated monitor data: %v", err)
 					continue
 				}
-				heartbeat := new(models.Heartbeat)
-				heartbeat.MonitorId = id
 				if monitor.Status != "yellow" {
-					fmt.Printf("Pinging %v at %v \n", monitor.Name, monitor.Url)
-					startTime := time.Now()
-					response, err := http.Get(monitor.Url)
-					if err != nil {
-						heartbeat.Status = "red"
-						heartbeat.StatusCode = "error"
-						heartbeat.Message = "unable to ping"
-						heartbeat.Latency = 0
-						if monitor.Status != "red" {
-							err := queries.UpdateMonitorStatus(monitor.ID, "red")
-							if err != nil {
-								log.Printf("Error when trying to update monitor status: %v", err.Error())
-							}
-						}
-					} else {
-						heartbeat.Status = "green"
-						heartbeat.StatusCode = strings.Split(response.Status, " ")[0]
-						heartbeat.Message = strings.Split(response.Status, " ")[1]
-						latency := time.Since(startTime).Milliseconds()
-						heartbeat.Latency = int(latency)
-						defer response.Body.Close()
+					heartbeat := Ping(monitor)
 
-						if monitor.Status != "green" {
-							err := queries.UpdateMonitorStatus(monitor.ID, "green")
-							if err != nil {
-								log.Printf("Error when trying to update monitor status: %v", err.Error())
-							}
-						}
-					}
-					heartbeat.Timestamp = time.Now().UTC()
-					err = queries.SaveHeartbeat(heartbeat)
+					incidents, err := queries.LatestIncidentByMonitorId(id)
 					if err != nil {
-						log.Printf("Error when trying to save heartbeat: %v", err.Error())
+						log.Printf("Error when trying to retrieve incident: %v", err.Error())
 					}
 
-					notificationChannels, err := queries.FindNotificationChannelsByMonitorId(id)
-					var discordMessage DiscordWebhookMessage
-					if heartbeat.Status == "green" {
-						discordMessage = DiscordWebhookMessage{
-							Username:  "Upstat",
-							AvatarURL: "https://raw.githubusercontent.com/chamanbravo/upstat/main/docs/assets/upstat.png", // Upstat avatar
-							Embeds: []Embeds{
-								{
-									Title:       fmt.Sprintf("✅ Your monitor %v is UP ✅", monitor.Name),
-									Time:        time.Now().Format("2006-01-02 15:04:05"),
-									Description: fmt.Sprintf("Monitor: **%v** | URL: **%v**\nStatus Code: **%v** | Latency: **%vms**", monitor.Name, monitor.Url, heartbeat.StatusCode, heartbeat.Latency),
-									Color:       65280, // green
-								},
-							},
+					if incidents == nil || (incidents.IsPositive != (heartbeat.Status == "green")) {
+						var incidentType string
+						if heartbeat.Status == "green" {
+							incidentType = "UP"
+						} else {
+							incidentType = "DOWN"
 						}
-					} else if heartbeat.Status == "red" {
-						discordMessage = DiscordWebhookMessage{
-							Username:  "Upstat",
-							AvatarURL: "https://raw.githubusercontent.com/chamanbravo/upstat/main/docs/assets/upstat.png", // Upstat avatar
-							Embeds: []Embeds{
-								{
-									Title:       fmt.Sprintf("❌ Your monitor %v is down ❌", monitor.Name),
-									Time:        time.Now().Format("2006-01-02 15:04:05"),
-									Description: fmt.Sprintf("Monitor: %v | URL: %v ", monitor.Name, monitor.Url),
-									Color:       16711680, // red
-								},
-							},
+						newIncident := &dto.SaveIncident{
+							Type: incidentType, Description: heartbeat.Message, IsPositive: heartbeat.Status == "green", MonitorId: id,
 						}
-					}
-					if err == nil {
-						for _, v := range notificationChannels {
-							jsonData, err := json.Marshal(discordMessage)
-							if err == nil {
-								_, err := http.Post(v.Data.WebhookUrl, "application/json", strings.NewReader(string(jsonData)))
-								if err != nil {
-									log.Printf("Error when trying to send heartbeat to webhook: %v", err.Error())
+
+						err = queries.SaveIncident(newIncident)
+						if err != nil {
+							log.Printf("Error when trying to save incident: %v", err.Error())
+						}
+
+						notificationChannels, err := queries.FindNotificationChannelsByMonitorId(id)
+						if err != nil {
+							log.Printf("Error when trying to retrieve notificationChannels: %v", err.Error())
+						}
+
+						discordMessage := alerts.DiscordAlertMessage(heartbeat, monitor)
+						if err == nil {
+							for _, v := range notificationChannels {
+								jsonData, err := json.Marshal(discordMessage)
+								if err == nil {
+									_, err := http.Post(v.Data.WebhookUrl, "application/json", strings.NewReader(string(jsonData)))
+									if err != nil {
+										log.Printf("Error when trying to send heartbeat to webhook: %v", err.Error())
+									}
+								} else {
+									log.Printf("Error when trying to convert heartbeat to JSON: %v", err.Error())
 								}
-							} else {
-								log.Printf("Error when trying to convert heartbeat to JSON: %v", err.Error())
 							}
+						} else {
+							log.Printf("Error retrieving notification channels: %v", err)
 						}
-					} else {
-						log.Printf("Error retrieving notification channels: %v", err)
 					}
+
 				}
 				time.Sleep(time.Duration(monitor.Frequency) * time.Second)
 			}

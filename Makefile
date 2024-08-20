@@ -1,7 +1,13 @@
 include .env
 
 APP_NAME = upstat
-MIGRATIONS_DIR = $(PWD)/database/migrations
+MIGRATIONS_DIR ?= $(PWD)/database/migrations/sqlite
+ifeq ($(DB_type), postgres)
+    MIGRATIONS_DIR = $(PWD)/database/migrations/postgres
+else ifeq ($(DB_type), mysql)
+    MIGRATIONS_DIR = $(PWD)/database/migrations/mysql
+endif
+
 export POSTGRES_DSN
 
 dev:
@@ -26,7 +32,8 @@ security:
 	gosec ./...
 
 migrate.create:
-	goose -dir $(MIGRATIONS_DIR) create $(MIGRATION_NAME) sql
+	@read -p "Enter migration name: " name; \
+	goose -dir $(MIGRATIONS_DIR) create $$name sql
 
 migrate.up:
 	goose -dir $(MIGRATIONS_DIR) postgres $(POSTGRES_DSN) up

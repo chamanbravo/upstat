@@ -1,29 +1,38 @@
-version: '3.4'
+version: "3.4"
 services:
+  db:
+    restart: unless-stopped
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_DB=upstat
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   api:
     restart: unless-stopped
-    build:
-      context: ./
-      args:
-        DB_TYPE: "sqlite"
-        CGO_ENABLED: 1
-    env_file:
-      - .env
-    volumes:
-      - sqlite_data:/var/lib/sqlite_data
+    image: chamanbravo/upstat-api:latest
+    environment:
+      - DB_TYPE=postgres
+      - POSTGRES_DSN=postgres://postgres:postgres@db:5432/upstat?sslmode=disable
+      - JWT_SECRET_KEY=asdfjaskljdaq123#!@810248)_+12
+    depends_on:
+      db:
+        condition: service_healthy
 
   web:
     restart: unless-stopped
-    build:
-      context: web
-
-  nginx:
-    restart: unless-stopped
-    image: nginx:1.21.1-alpine
+    image: chamanbravo/upstat-web:latest
     ports:
-      - "$IPADDR:$PORT:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - "3000:3000"
+    depends_on:
+      - api
+      - db
 
 volumes:
-  sqlite_data:
+  postgres_data:

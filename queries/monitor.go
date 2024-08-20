@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/chamanbravo/upstat/database"
+	"github.com/chamanbravo/upstat/dto"
 	"github.com/chamanbravo/upstat/models"
-	"github.com/chamanbravo/upstat/serializers"
 )
 
-func CreateMonitor(u *serializers.AddMonitorIn) (*models.Monitor, error) {
+func CreateMonitor(u *dto.AddMonitorIn) (*models.Monitor, error) {
 	stmt, err := database.DB.Prepare("INSERT INTO monitors(name, url, type, frequency, method, status) VALUES($1, $2, $3, $4, $5, $6) RETURNING id, frequency, url")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
@@ -47,7 +47,7 @@ func FindMonitorById(id int) (*models.Monitor, error) {
 	err = stmt.QueryRow(id).Scan(&monitor.ID, &monitor.Name, &monitor.Url, &monitor.Type, &monitor.Method, &monitor.Frequency, &monitor.Status)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("Monitor doesn't exist")
+			return nil, fmt.Errorf("monitor doesn't exist")
 		}
 		log.Println("Error when trying to find monitor")
 		log.Println(err)
@@ -57,7 +57,7 @@ func FindMonitorById(id int) (*models.Monitor, error) {
 	return monitor, nil
 }
 
-func UpdateMonitorById(id int, monitor *serializers.AddMonitorIn) error {
+func UpdateMonitorById(id int, monitor *dto.AddMonitorIn) error {
 	stmt, err := database.DB.Prepare("UPDATE monitors SET name = $1, url = $2, type = $3, method = $4, frequency = $5  WHERE id = $6")
 	if err != nil {
 		return err
@@ -138,7 +138,7 @@ func UpdateMonitorStatus(id int, status string) error {
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("No monitor found with ID %v", id)
+		return fmt.Errorf("no monitor found with ID %v", id)
 	}
 
 	return nil
@@ -194,7 +194,7 @@ func DeleteMonitorById(id int) error {
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("Monitor with ID %d not found", id)
+		return fmt.Errorf("monitor with ID %d not found", id)
 	}
 
 	return nil

@@ -2,9 +2,11 @@ package controllers
 
 import (
 	"strconv"
+	"time"
 
+	"github.com/chamanbravo/upstat/dto"
+	"github.com/chamanbravo/upstat/models"
 	"github.com/chamanbravo/upstat/queries"
-	"github.com/chamanbravo/upstat/serializers"
 	"github.com/chamanbravo/upstat/utils"
 	"github.com/gofiber/fiber/v2"
 )
@@ -12,12 +14,12 @@ import (
 // @Tags StatusPages
 // @Accept json
 // @Produce json
-// @Param body body serializers.CreateStatusPageIn true "Body"
-// @Success 200 {object} serializers.SuccessResponse
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/status-pages/create [post]
+// @Param body body dto.CreateStatusPageIn true "Body"
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/status-pages [post]
 func CreateStatusPage(c *fiber.Ctx) error {
-	statusPage := new(serializers.CreateStatusPageIn)
+	statusPage := new(dto.CreateStatusPageIn)
 	if err := c.BodyParser(statusPage); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -44,9 +46,9 @@ func CreateStatusPage(c *fiber.Ctx) error {
 // @Tags StatusPages
 // @Accept json
 // @Produce json
-// @Success 200 {object} serializers.ListStatusPagesOut
-// @Failure 400 {object} serializers.ErrorResponse
-// @Router /api/status-pages/list [get]
+// @Success 200 {object} dto.ListStatusPagesOut
+// @Failure 400 {object} dto.ErrorResponse
+// @Router /api/status-pages [get]
 func ListStatusPages(c *fiber.Ctx) error {
 	statusPages, err := queries.ListStatusPages()
 	if err != nil {
@@ -64,9 +66,9 @@ func ListStatusPages(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Status Page ID"
-// @Success 200 {object} serializers.SuccessResponse
-// @Failure 400 {object} serializers.ErrorResponse
-// @Router /api/status-pages/delete/{id} [delete]
+// @Success 200 {object} dto.SuccessResponse
+// @Failure 400 {object} dto.ErrorResponse
+// @Router /api/status-pages/{id} [delete]
 func DeleteStatusPage(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -99,10 +101,10 @@ func DeleteStatusPage(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Status Page ID"
-// @Param body body serializers.CreateStatusPageIn true "Body"
-// @Success 200 {object} serializers.SuccessResponse
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/status-pages/update/{id} [put]
+// @Param body body dto.CreateStatusPageIn true "Body"
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/status-pages/{id} [patch]
 func UpdateStatusPage(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -111,7 +113,7 @@ func UpdateStatusPage(c *fiber.Ctx) error {
 		})
 	}
 
-	statusPage := new(serializers.CreateStatusPageIn)
+	statusPage := new(dto.CreateStatusPageIn)
 	if err := c.BodyParser(statusPage); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": err.Error(),
@@ -147,9 +149,9 @@ func UpdateStatusPage(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Status Page Id"
-// @Success 200 {object} serializers.StatusPageInfo
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/status-pages/info/{id} [get]
+// @Success 200 {object} dto.StatusPageInfo
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/status-pages/{id} [get]
 func StatusPageInfo(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -182,9 +184,9 @@ func StatusPageInfo(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param slug path string true "Status Page Slug"
-// @Success 200 {object} serializers.StatusPageInfo
-// @Success 400 {object} serializers.ErrorResponse
-// @Router /api/status-pages/summary/{slug} [get]
+// @Success 200 {object} dto.StatusPageSummary
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/status-pages/{slug}/summary [get]
 func StatusSummary(c *fiber.Ctx) error {
 	slug := c.Params("slug")
 	if slug == "" {
@@ -215,17 +217,47 @@ func StatusSummary(c *fiber.Ctx) error {
 	}
 
 	var monitorsList []fiber.Map
+	startTime := time.Now().Add(time.Duration(-45) * time.Hour * 24)
+	heartbeatMap := make(map[string]dto.HeartbeatSummary)
 	for _, v := range monitors {
-		heartbeat, err := queries.RetrieveHeartbeats(v.ID, 45)
+		heartbeat, err := queries.RetrieveHeartbeatsByTime(v.ID, startTime)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"message": err.Error(),
 			})
 		}
+		for _, v := range heartbeat {
+			dateKey := v.Timestamp.Format("2006-01-02")
+			value := heartbeatMap[dateKey]
+
+			value.Total++
+			value.Timestamp = dateKey
+			if v.Status == "green" {
+				value.Up++
+			} else {
+				value.Down++
+			}
+
+			heartbeatMap[dateKey] = value
+		}
+
+		allHeartbeats := []dto.HeartbeatSummary{}
+		for _, v := range heartbeatMap {
+			allHeartbeats = append(allHeartbeats, v)
+		}
+
+		recentHeartbeats := []models.Heartbeat{}
+		for _, hb := range heartbeat {
+			if hb.Timestamp.After(time.Now().Add(-12 * time.Hour)) {
+				recentHeartbeats = append(recentHeartbeats, *hb)
+			}
+		}
+
 		monitorItem := fiber.Map{
-			"id":        v.ID,
-			"name":      v.Name,
-			"heartbeat": heartbeat,
+			"id":     v.ID,
+			"name":   v.Name,
+			"recent": recentHeartbeats,
+			"all":    allHeartbeats,
 		}
 		monitorsList = append(monitorsList, monitorItem)
 	}

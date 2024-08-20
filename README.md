@@ -12,7 +12,7 @@
 
 Try it.
 
-Demo Server (Location: Singapore): [https://demo.upstat.com](http://15.235.193.62)
+Demo Server (Location: Singapore): [https://demo.upstat.com](https://upstat.chamanbudhathoki.com.np/)
 
 Username: `demo`
 Password: `demodemo`
@@ -30,6 +30,8 @@ It needs more features but for now...
 -   Map status pages to specific domains
 -   Ping chart
 -   Certificate info
+-   PWA
+-   Sqlite & Postgres database support
 
 And dozens of smaller features to be added.
 
@@ -37,15 +39,17 @@ And dozens of smaller features to be added.
 
 ### 🐳 Docker
 
-For default Sqlite users
+For Sqlite
 
 ```bash
+curl -O https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose-sqlite.yml
 docker compose up
 ```
 
-For Postgres users
+For Postgres
 ```bash
-docker compose -f docker-compose.postgres.yml up
+curl -O https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose.yml
+docker compose up
 ```
 
 Upstat is now running on http://localhost

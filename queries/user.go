@@ -5,11 +5,11 @@ import (
 	"log"
 
 	"github.com/chamanbravo/upstat/database"
+	"github.com/chamanbravo/upstat/dto"
 	"github.com/chamanbravo/upstat/models"
-	"github.com/chamanbravo/upstat/serializers"
 )
 
-func SaveUser(u *serializers.UserSignUp) error {
+func SaveUser(u *dto.UserSignUp) error {
 	stmt, err := database.DB.Prepare("INSERT INTO users(username, email, password) VALUES($1, $2, $3)")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
@@ -28,7 +28,7 @@ func SaveUser(u *serializers.UserSignUp) error {
 	return nil
 }
 
-func FindUserByUsernameAndEmail(u *serializers.UserSignUp) (*models.User, error) {
+func FindUserByUsernameAndEmail(u *dto.UserSignUp) (*models.User, error) {
 	stmt, err := database.DB.Prepare("SELECT id, username, email FROM users WHERE username = $1 OR email = $2")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
@@ -133,7 +133,7 @@ func UpdatePassword(username string, newPassword string) error {
 	return nil
 }
 
-func UpdateAccount(username string, u *serializers.UpdateAccountIn) error {
+func UpdateAccount(username string, u *dto.UpdateAccountIn) error {
 	stmt, err := database.DB.Prepare("UPDATE users SET firstname = $1, lastname = $2 WHERE username = $3")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
