@@ -51,7 +51,7 @@ export default function RegisterForm() {
   async function onSubmit(formData: RegisterFormValues) {
     try {
       setLoading(true);
-      const response = await fetch("/api/auth/signup/", {
+      const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

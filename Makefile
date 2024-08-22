@@ -1,7 +1,13 @@
 include .env
 
 APP_NAME = upstat
-MIGRATIONS_DIR = $(PWD)/database/migrations
+MIGRATIONS_DIR ?= $(PWD)/database/migrations/sqlite
+ifeq ($(DB_type), postgres)
+    MIGRATIONS_DIR = $(PWD)/database/migrations/postgres
+else ifeq ($(DB_type), sqlite)
+    MIGRATIONS_DIR = $(PWD)/database/migrations/sqlite
+endif
+
 export POSTGRES_DSN
 
 dev:

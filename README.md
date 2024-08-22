@@ -31,6 +31,7 @@ It needs more features but for now...
 -   Ping chart
 -   Certificate info
 -   PWA
+-   Sqlite & Postgres database support
 
 And dozens of smaller features to be added.
 
@@ -38,14 +39,20 @@ And dozens of smaller features to be added.
 
 ### 🐳 Docker
 
+For Sqlite
+
+```bash
+curl -O https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose-sqlite.yml
+docker compose up
+```
+
+For Postgres
 ```bash
 curl -O https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose.yml
 docker compose up
 ```
 
-Upstat is now running on http://localhost:3000
-
-> 📝 While deploying make sure to edit the environments in docker-compose file
+Upstat is now running on http://localhost
 
 ### 💪🏻 Non-Docker
 
