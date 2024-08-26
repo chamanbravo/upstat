@@ -206,133 +206,6 @@ const docTemplate = `
         }
       }
     },
-    "/api/monitors/cert-exp-countdown/{id}": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CertificateExpiryCountDown"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Monitor ID",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "string",
-              "description": "Monitor ID"
-            }
-          }
-        ]
-      }
-    },
-    "/api/monitors/heartbeat/{id}": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HeartbeatsOut"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Monitor ID",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "string",
-              "description": "Monitor ID"
-            }
-          },
-          {
-            "name": "startTime",
-            "in": "query",
-            "description": "Start Time",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          }
-        ]
-      }
-    },
-    "/api/monitors/summary/{id}": {
-      "get": {
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MonitorSummaryOut"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Monitor ID",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "string",
-              "description": "Monitor ID"
-            }
-          }
-        ]
-      }
-    },
     "/api/monitors/{id}": {
       "get": {
         "responses": {
@@ -451,6 +324,94 @@ const docTemplate = `
               "type": "string",
               "format": "string",
               "description": "Monitor ID"
+            }
+          }
+        ]
+      }
+    },
+    "/api/monitors/{id}/cert-exp-countdown": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CertificateExpiryCountDown"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Monitor ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Monitor ID"
+            }
+          }
+        ]
+      }
+    },
+    "/api/monitors/{id}/heartbeat": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HeartbeatsOut"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Monitor ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Monitor ID"
+            }
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "description": "Start Time",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
             }
           }
         ]
@@ -582,6 +543,45 @@ const docTemplate = `
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ListStatusPagesOut"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Monitor ID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "string",
+              "description": "Monitor ID"
+            }
+          }
+        ]
+      }
+    },
+    "/api/monitors/{id}/summary": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonitorSummaryOut"
                 }
               }
             }
@@ -1335,31 +1335,7 @@ const docTemplate = `
           "heartbeat": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "integer"
-                },
-                "monitor_id": {
-                  "type": "integer"
-                },
-                "timestamp": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "status_code": {
-                  "type": "string"
-                },
-                "status": {
-                  "type": "string"
-                },
-                "latency": {
-                  "type": "integer"
-                },
-                "message": {
-                  "type": "string"
-                }
-              }
+              "$ref": "#/components/schemas/Heartbeat"
             }
           }
         }
@@ -1419,31 +1395,7 @@ const docTemplate = `
                 "heartbeat": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer"
-                      },
-                      "monitor_id": {
-                        "type": "integer"
-                      },
-                      "timestamp": {
-                        "type": "string",
-                        "format": "date-time"
-                      },
-                      "status_code": {
-                        "type": "string"
-                      },
-                      "status": {
-                        "type": "string"
-                      },
-                      "latency": {
-                        "type": "integer"
-                      },
-                      "message": {
-                        "type": "string"
-                      }
-                    }
+                    "$ref": "#/components/schemas/Heartbeat"
                   }
                 }
               }
@@ -1589,7 +1541,31 @@ const docTemplate = `
           "recent": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Heartbeat"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "monitor_id": {
+                  "type": "integer"
+                },
+                "timestamp": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "status_code": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "latency": {
+                  "type": "integer"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
             }
           },
           "all": {
@@ -1635,7 +1611,31 @@ const docTemplate = `
                 "recent": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Heartbeat"
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "monitor_id": {
+                        "type": "integer"
+                      },
+                      "timestamp": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "status_code": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "latency": {
+                        "type": "integer"
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    }
                   }
                 },
                 "all": {

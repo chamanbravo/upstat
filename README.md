@@ -42,7 +42,7 @@ And dozens of smaller features to be added.
 For Sqlite
 
 ```bash
-curl -O https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose-sqlite.yml
+curl https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose-sqlite.yml -o docker-compose.yml
 docker compose up
 ```
 
@@ -52,7 +52,10 @@ curl -O https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose
 docker compose up
 ```
 
-Upstat is now running on http://localhost
+Upstat is now running on http://localhost:3000
+
+> [!IMPORTANT]
+> Make sure to change the enviornment values before deploying.
 
 ### 💪🏻 Non-Docker
 
@@ -60,8 +63,8 @@ Requirements:
 
 - Node.js 14 / 16 / 18 / 20.4
 - npm 9
-- Golang 1.21
-- Postgres
+- Golang 1.21+
+- Postgres (Optional)
 
 ```shell
 cp .sample.env .env
@@ -77,7 +80,7 @@ cd web && npm run dev
 -   React
 -   Shadcn
 -   Golang
--   Postgres
+-   Postgres/Sqlite
 
 ## 🙌 Contributing
 

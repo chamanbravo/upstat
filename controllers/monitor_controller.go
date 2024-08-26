@@ -278,7 +278,7 @@ func MonitorsList(c *fiber.Ctx) error {
 // @Param startTime query time.Time true "Start Time" format(json)
 // @Success 200 {object} dto.HeartbeatsOut
 // @Success 400 {object} dto.ErrorResponse
-// @Router /api/monitors/heartbeat/{id} [get]
+// @Router /api/monitors/{id}/heartbeat [get]
 func RetrieveHeartbeat(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -322,7 +322,7 @@ func RetrieveHeartbeat(c *fiber.Ctx) error {
 // @Param id path string true "Monitor ID"
 // @Success 200 {object} dto.MonitorSummaryOut
 // @Success 400 {object} dto.ErrorResponse
-// @Router /api/monitors/summary/{id} [get]
+// @Router /api/monitors/{id}/summary [get]
 func MonitorSummary(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
@@ -408,7 +408,7 @@ func DeleteMonitor(c *fiber.Ctx) error {
 // @Param id path string true "Monitor ID"
 // @Success 200 {object} dto.CertificateExpiryCountDown
 // @Success 400 {object} dto.ErrorResponse
-// @Router /api/monitors/cert-exp-countdown/{id} [get]
+// @Router /api/monitors/{id}/cert-exp-countdown [get]
 func CertificateExpiryCountDown(c *fiber.Ctx) error {
 	idParam := c.Params("id")
 	if idParam == "" {
