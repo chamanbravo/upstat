@@ -80,6 +80,10 @@ export default function EndpointForm({ form }: Props) {
               )}
             />
           </div>
+
+          <span className="text-xs text-muted-foreground">
+            2xx status code is checked to validate the response.
+          </span>
         </div>
       </div>
     </div>
