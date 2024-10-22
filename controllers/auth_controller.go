@@ -42,6 +42,14 @@ func SignUp(c *fiber.Ctx) error {
 		})
 	}
 
+	hashedPassword, err := utils.HashAndSalt(user.Password)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	user.Password = hashedPassword
 	if err := queries.SaveUser(user); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
@@ -100,13 +108,19 @@ func SignIn(c *fiber.Ctx) error {
 		return c.Status(400).JSON(errors)
 	}
 
-	existingUser, err := queries.FindUserByUsernameAndPassword(user.Username, user.Password)
+	existingUser, err := queries.FindUserByUsername(user.Username)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
 	if existingUser == nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid username or password",
+		})
+	}
+
+	if err = utils.CheckHash(existingUser.Password, user.Password); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Invalid username or password",
 		})

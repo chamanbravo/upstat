@@ -1,7 +1,5 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE EXTENSION pgcrypto;
-
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(32) UNIQUE NOT NULL,

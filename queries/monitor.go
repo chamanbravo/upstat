@@ -64,7 +64,7 @@ func UpdateMonitorById(id int, monitor *dto.AddMonitorIn) error {
 	}
 	defer stmt.Close()
 
-	result := stmt.QueryRow(monitor.Name, monitor.URL, monitor.Type, monitor.Method, monitor.Frequency, id)
+	result, err := stmt.Exec(monitor.Name, monitor.URL, monitor.Type, monitor.Method, monitor.Frequency, id)
 	if result != nil {
 		if err == sql.ErrNoRows {
 			return nil

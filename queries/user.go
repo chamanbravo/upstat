@@ -10,7 +10,7 @@ import (
 )
 
 func SaveUser(u *dto.UserSignUp) error {
-	stmt, err := database.DB.Prepare("INSERT INTO users(username, email, password) VALUES($1, $2, crypt($3, gen_salt('bf')))")
+	stmt, err := database.DB.Prepare("INSERT INTO users(username, email, password) VALUES($1, $2, $3)")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
 		log.Println(err)
@@ -51,7 +51,7 @@ func FindUserByUsernameAndEmail(u *dto.UserSignUp) (*models.User, error) {
 }
 
 func FindUserByUsernameAndPassword(username, password string) (*models.User, error) {
-	stmt, err := database.DB.Prepare("SELECT id, username, email, firstname, lastname FROM users WHERE username = $1 AND password = crypt($2, password)")
+	stmt, err := database.DB.Prepare("SELECT id, username, email, firstname, lastname FROM users WHERE username = $1 AND password = $2")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
 		log.Println(err)
@@ -73,7 +73,7 @@ func FindUserByUsernameAndPassword(username, password string) (*models.User, err
 }
 
 func FindUserByUsername(username string) (*models.User, error) {
-	stmt, err := database.DB.Prepare("SELECT id, username, email, firstname, lastname FROM users WHERE username = $1")
+	stmt, err := database.DB.Prepare("SELECT id, username, email, firstname, lastname, password FROM users WHERE username = $1")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
 		log.Println(err)
@@ -82,7 +82,7 @@ func FindUserByUsername(username string) (*models.User, error) {
 	defer stmt.Close()
 
 	user := new(models.User)
-	result := stmt.QueryRow(username).Scan(&user.ID, &user.Username, &user.Email, &user.Firstname, &user.Lastname)
+	result := stmt.QueryRow(username).Scan(&user.ID, &user.Username, &user.Email, &user.Firstname, &user.Lastname, &user.Password)
 	if result != nil {
 		if result == sql.ErrNoRows {
 			return nil, nil
@@ -114,8 +114,8 @@ func UsersCount() (int, error) {
 	return count, nil
 }
 
-func UpdatePassword(username string, u *dto.UpdatePasswordIn) error {
-	stmt, err := database.DB.Prepare("UPDATE users SET password = crypt($2, gen_salt('bf')) WHERE username = $1 AND password = crypt($3, password)")
+func UpdatePassword(username string, newPassword string) error {
+	stmt, err := database.DB.Prepare("UPDATE users SET password = $1 WHERE username = $2")
 	if err != nil {
 		log.Println("Error when trying to prepare statement")
 		log.Println(err)
@@ -123,7 +123,7 @@ func UpdatePassword(username string, u *dto.UpdatePasswordIn) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(username, u.NewPassword, u.CurrentPassword)
+	_, err = stmt.Exec(newPassword, username)
 	if err != nil {
 		log.Println("Error when trying to update password")
 		log.Println(err)

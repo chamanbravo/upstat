@@ -24,7 +24,7 @@ const CustomTooltip = ({
 }: TooltipProps<ValueType, NameType>) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-card p-2 border border-border rounded-sm">
+      <div className="p-2 border rounded-sm bg-card border-border">
         <p className="text-card-foreground">
           {labelFormatter ? labelFormatter(label, payload) : label}
         </p>
@@ -52,7 +52,7 @@ interface Props {
 
 export default function RecentPingChart({ heartbeat }: Props) {
   return (
-    <div className="flex flex-grow justify-center items-center h-40">
+    <div className="flex items-center justify-center flex-grow h-40">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={heartbeat} margin={{ top: 8 }}>
           <CartesianGrid
@@ -84,7 +84,7 @@ export default function RecentPingChart({ heartbeat }: Props) {
             fontSize={12}
             tickLine={false}
             axisLine={false}
-            width={25}
+            width={30}
             tick={{
               fill: "hsl(var(--muted-foreground))",
             }}

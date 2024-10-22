@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 
-const providers = ["Discord"];
+const providers = ["Discord", "Slack"];
 
 interface Props {
   provider: string;

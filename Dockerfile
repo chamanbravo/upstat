@@ -3,8 +3,7 @@ FROM golang:1.21.3 AS build
 WORKDIR /app
 COPY . .
 RUN go mod download \
-    && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main . \
-    && chmod +x ./startup.sh
+    && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 # Release Stage
 FROM alpine:3.18 AS release

@@ -18,8 +18,9 @@ services:
     build:
       context: ./
     environment:
+      - DB_TYPE=postgres
       - POSTGRES_DSN=postgres://postgres:postgres@db:5432/upstat?sslmode=disable
-      - JWT_SECRET_KEY=asdfjaskljd
+      - JWT_SECRET_KEY=asdfjaskljdaq123#!@810248)_+12
     depends_on:
       db:
         condition: service_healthy

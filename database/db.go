@@ -12,13 +12,27 @@ import (
 
 var DB *sql.DB
 
-//go:embed migrations/*.sql
-var embedMigrations embed.FS
+//go:embed migrations/sqlite/*.sql
+var embedMigrationsSqlite embed.FS
+
+//go:embed migrations/postgres/*.sql
+var embedMigrationsPostgres embed.FS
 
 func DBConnect() error {
-	psqlInfo := os.Getenv("POSTGRES_DSN")
+	dbType := os.Getenv("DB_TYPE")
+	if dbType == "" {
+		dbType = "sqlite"
+	}
 	var err error
-	DB, err = sql.Open("postgres", psqlInfo)
+
+	switch dbType {
+	case "postgres":
+		DB, err = PostgresConnection()
+	case "sqlite":
+		DB, err = SqliteConnection()
+	default:
+		DB, err = SqliteConnection()
+	}
 
 	if err != nil {
 		return fmt.Errorf("could not connect to database: %v", err)
@@ -28,13 +42,21 @@ func DBConnect() error {
 		panic(err)
 	}
 
-	goose.SetBaseFS(embedMigrations)
+	switch dbType {
+	case "postgres":
+		goose.SetBaseFS(embedMigrationsPostgres)
+	case "sqlite":
+		goose.SetBaseFS(embedMigrationsSqlite)
+	default:
+		goose.SetBaseFS(embedMigrationsSqlite)
+	}
 
-	if err := goose.SetDialect("postgres"); err != nil {
+	if err := goose.SetDialect(dbType); err != nil {
 		panic(err)
 	}
 
-	if err := goose.Up(DB, "migrations"); err != nil {
+	dbMigrationDir := fmt.Sprintf("migrations/%s", dbType)
+	if err := goose.Up(DB, dbMigrationDir); err != nil {
 		panic(err)
 	}
 

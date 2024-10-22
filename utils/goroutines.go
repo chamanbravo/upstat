@@ -84,17 +84,31 @@ func StartGoroutine(monitor *models.Monitor) {
 							log.Printf("Error when trying to retrieve notificationChannels: %v", err.Error())
 						}
 
-						discordMessage := alerts.DiscordAlertMessage(heartbeat, monitor)
 						if err == nil {
 							for _, v := range notificationChannels {
-								jsonData, err := json.Marshal(discordMessage)
-								if err == nil {
-									_, err := http.Post(v.Data.WebhookUrl, "application/json", strings.NewReader(string(jsonData)))
-									if err != nil {
-										log.Printf("Error when trying to send heartbeat to webhook: %v", err.Error())
+								if v.Provider == "Discord" {
+									discordMessage := alerts.DiscordAlertMessage(heartbeat, monitor)
+									jsonData, err := json.Marshal(discordMessage)
+									if err == nil {
+										_, err := http.Post(v.Data.WebhookUrl, "application/json", strings.NewReader(string(jsonData)))
+										if err != nil {
+											log.Printf("Error when trying to send heartbeat to webhook: %v", err.Error())
+										}
+									} else {
+										log.Printf("Error when trying to convert heartbeat to JSON: %v", err.Error())
 									}
-								} else {
-									log.Printf("Error when trying to convert heartbeat to JSON: %v", err.Error())
+								}
+								if v.Provider == "Slack" {
+									slackMessage := alerts.SlackAlertMessage(heartbeat, monitor)
+									jsonData, err := json.Marshal(slackMessage)
+									if err == nil {
+										_, err := http.Post(v.Data.WebhookUrl, "application/json", strings.NewReader(string(jsonData)))
+										if err != nil {
+											log.Printf("Error when trying to send heartbeat to webhook: %v", err.Error())
+										}
+									} else {
+										log.Printf("Error when trying to convert heartbeat to JSON: %v", err.Error())
+									}
 								}
 							}
 						} else {
