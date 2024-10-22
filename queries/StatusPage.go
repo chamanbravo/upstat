@@ -75,7 +75,7 @@ func UpdateStatusPage(id int, statusPage *dto.CreateStatusPageIn) error {
 	}
 	defer stmt.Close()
 
-	result := stmt.QueryRow(statusPage.Name, statusPage.Slug, id)
+	result, err := stmt.Exec(statusPage.Name, statusPage.Slug, id)
 	if result != nil {
 		if err == sql.ErrNoRows {
 			return nil

@@ -101,7 +101,7 @@ func UpdateNotificationById(id int, nc *dto.NotificationCreateIn) error {
 		return err
 	}
 
-	result := stmt.QueryRow(nc.Name, nc.Provider, dataJson, id)
+	result, err := stmt.Exec(nc.Name, nc.Provider, dataJson, id)
 	if result != nil {
 		if err == sql.ErrNoRows {
 			return nil
@@ -113,7 +113,7 @@ func UpdateNotificationById(id int, nc *dto.NotificationCreateIn) error {
 }
 
 func FindNotificationById(id int) (*models.Notification, error) {
-	stmt, err := database.DB.Prepare("SELECT id, name, provider, data::text FROM notifications WHERE id = $1")
+	stmt, err := database.DB.Prepare("SELECT id, name, provider, data FROM notifications WHERE id = $1")
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func FindNotificationChannelsByMonitorId(id int) ([]models.Notification, error) 
         n.id,
 		n.name AS notification_name,
 		n.provider,
-		n.data::text
+		n.data
 	FROM
 		notifications_monitors nm
 	JOIN
