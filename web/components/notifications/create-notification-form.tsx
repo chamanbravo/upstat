@@ -146,6 +146,34 @@ export default function CreateNotificationForm({ defaultValues }: Props) {
             />
           )}
 
+          {provider === "Slack" && (
+            <FormField
+              control={form.control}
+              name="webhookUrl"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel>Webhook URL</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="https://discord.com/api/webhooks/..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    <Link
+                      href="https://api.slack.com/messaging/webhooks"
+                      target="_blank"
+                      className="ml-auto cursor-pointer hover:underline"
+                    >
+                      How to setup your Slack webhook
+                    </Link>
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
           <Button type="submit" disabled={loading}>
             {loading ? "Loading..." : "Submit"}
           </Button>
