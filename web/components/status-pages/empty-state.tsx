@@ -1,16 +1,24 @@
-import { BellDotIcon } from "lucide-react";
-import { Button } from "../ui/button";
-import Link from "next/link";
+import { ReactNode } from "react";
 
-export default function EmptyState() {
+interface Props {
+  icon: ReactNode;
+  title: string;
+  description: string;
+  action?: ReactNode;
+}
+
+export default function EmptyState({
+  icon,
+  title,
+  description,
+  action,
+}: Props) {
   return (
-    <div className="flex flex-col items-center py-4 border">
-      <BellDotIcon />
-      <h3>No status pages</h3>
-      <p className="text-muted-foreground">Create your first status page.</p>
-      <Button className="mt-4" asChild>
-        <Link href="/status-pages/create">Create</Link>
-      </Button>
+    <div className="flex flex-col items-center py-4 border rounded-md">
+      {icon}
+      <h3>{title}</h3>
+      <p className="text-muted-foreground">{description}</p>
+      {action ? <>{action}</> : null}
     </div>
   );
 }
