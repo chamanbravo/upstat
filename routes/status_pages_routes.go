@@ -9,12 +9,13 @@ import (
 
 // @Group StatusPages
 func StatusPagesRoutes(app *fiber.App) {
-	route := app.Group("/api/status-pages", middleware.Protected)
-
-	route.Post("", controllers.CreateStatusPage)
-	route.Get("", controllers.ListStatusPages)
-	route.Delete("/:id", controllers.DeleteStatusPage)
-	route.Patch("/:id", controllers.UpdateStatusPage)
-	route.Get("/:id", controllers.StatusPageInfo)
+	route := app.Group("/api/status-pages")
 	route.Get("/:slug/summary", controllers.StatusSummary)
+
+	protectedRoutes := route.Group("", middleware.Protected)
+	protectedRoutes.Post("", controllers.CreateStatusPage)
+	protectedRoutes.Get("", controllers.ListStatusPages)
+	protectedRoutes.Delete("/:id", controllers.DeleteStatusPage)
+	protectedRoutes.Patch("/:id", controllers.UpdateStatusPage)
+	protectedRoutes.Get("/:id", controllers.StatusPageInfo)
 }
