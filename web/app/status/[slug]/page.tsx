@@ -1,8 +1,11 @@
 import DetailBar from "@/components/status-pages/detail-bar";
+import EmptyState from "@/components/status-pages/empty-state";
 import RecentPingChart from "@/components/status-pages/recent-ping-chart";
+import { Button } from "@/components/ui/button";
 import { fetchStatusPagesSummary } from "@/lib/api/status-pages";
 import { components } from "@/lib/api/types";
 import { calculateUptimePercentage, cn } from "@/lib/utils";
+import { Activity } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -21,20 +24,29 @@ export default async function page({ params }: Props) {
   const { monitors, statusPageInfo } = data;
 
   return (
-    <div className="flex flex-col w-full gap-8 items-center p-2 py-8">
+    <div className="flex flex-col items-center w-full gap-8 p-2 py-8">
       <div className="flex flex-col gap-1 align-center">
         <h1 className="text-2xl font-bold text-center">
           {statusPageInfo?.name}
         </h1>
       </div>
-      <div className="w-full py-4 border rounded-md max-w-[650px] bg-card">
-        <div className="w-full text-center">
-          <h3 className="text-lg font-medium">Status Check</h3>
-        </div>
 
-        <div className="flex flex-col w-full gap-4 mt-8 align-center">
-          {monitors?.length &&
-            monitors.map((m, i) => {
+      {!monitors?.length ? (
+        <div className="w-full rounded-md max-w-[650px] bg-card">
+          <EmptyState
+            icon={<Activity />}
+            title="No monitors"
+            description="The status page has no connected monitors."
+          />
+        </div>
+      ) : (
+        <div className="w-full py-4 border rounded-md max-w-[650px] bg-card">
+          <div className="w-full text-center">
+            <h3 className="text-lg font-medium">Status Check</h3>
+          </div>
+
+          <div className="flex flex-col w-full gap-4 mt-8 align-center">
+            {monitors.map((m, i) => {
               m?.all?.sort(
                 // @ts-ignore
                 (a, b) => new Date(b?.timestamp) - new Date(a?.timestamp)
@@ -79,10 +91,11 @@ export default async function page({ params }: Props) {
                 </div>
               );
             })}
+          </div>
         </div>
-      </div>
+      )}
 
-      <span className="text-muted-foreground text-xs">
+      <span className="text-xs text-muted-foreground">
         Open-source monitoring and status page powered by{" "}
         <Link
           target="_blank"
@@ -91,15 +104,7 @@ export default async function page({ params }: Props) {
         >
           Upstat
         </Link>
-        {", "}
-        made with ❤ by{" "}
-        <Link
-          target="_blank"
-          href="https://github.com/chamanbravo"
-          className="underline"
-        >
-          Chaman Bravo
-        </Link>
+        .
       </span>
     </div>
   );
