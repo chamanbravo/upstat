@@ -5,10 +5,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import EmptyState from "@/components/status-pages/empty-state";
 import { Checkbox } from "@/components/ui/checkbox";
-import { BellDotIcon, Link } from "lucide-react";
+import { PanelTop } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import EmptyState from "@/components/empty-state";
+import Link from "next/link";
 
 interface Props {
   form: any;
@@ -28,7 +29,7 @@ export default function SelectStatusPage({ form, statusPages }: Props) {
       <div className="w-full max-w-md">
         {!statusPages ? (
           <EmptyState
-            icon={<BellDotIcon />}
+            icon={<PanelTop />}
             title="No status pages"
             description="Create your first status page."
             action={

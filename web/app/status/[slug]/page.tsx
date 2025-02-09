@@ -1,7 +1,6 @@
+import EmptyState from "@/components/empty-state";
 import DetailBar from "@/components/status-pages/detail-bar";
-import EmptyState from "@/components/status-pages/empty-state";
 import RecentPingChart from "@/components/status-pages/recent-ping-chart";
-import { Button } from "@/components/ui/button";
 import { fetchStatusPagesSummary } from "@/lib/api/status-pages";
 import { components } from "@/lib/api/types";
 import { calculateUptimePercentage, cn } from "@/lib/utils";

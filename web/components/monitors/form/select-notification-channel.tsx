@@ -5,8 +5,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import EmptyState from "@/components/notifications/empty-state";
 import { Checkbox } from "@/components/ui/checkbox";
+import EmptyState from "@/components/empty-state";
+import { BellDotIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface Props {
   form: any;
@@ -28,7 +31,16 @@ export default function SelectNotificationChannel({
 
       <div className="w-full max-w-md">
         {!notificationChannels ? (
-          <EmptyState />
+          <EmptyState
+            icon={<BellDotIcon />}
+            title="No notifications channels"
+            description="Create your first notification channel"
+            action={
+              <Button className="mt-4" asChild>
+                <Link href="/notifications/create">Create</Link>
+              </Button>
+            }
+          />
         ) : (
           <FormField
             control={form.control}

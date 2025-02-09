@@ -1,8 +1,9 @@
+import EmptyState from "@/components/empty-state";
 import DataTable from "@/components/monitors/data-table";
-import EmptyState from "@/components/monitors/empty-state";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { fetchMonitorsList } from "@/lib/api/monitors";
+import { Activity } from "lucide-react";
 import Link from "next/link";
 
 export default async function Monitors() {
@@ -24,7 +25,16 @@ export default async function Monitors() {
         {data?.monitors?.length ? (
           <DataTable data={data?.monitors} />
         ) : (
-          <EmptyState />
+          <EmptyState
+            icon=<Activity />
+            title="No monitors"
+            description="Create your first monitor."
+            action={
+              <Button className="mt-4" asChild>
+                <Link href="/monitors/create">Create</Link>
+              </Button>
+            }
+          />
         )}
       </div>
     </div>

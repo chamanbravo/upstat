@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import DataTable from "@/components/status-pages/data-table";
-import EmptyState from "@/components/status-pages/empty-state";
 import { Button } from "@/components/ui/button";
 import { fetchStatusPages } from "@/lib/api/status-pages";
 import Link from "next/link";
-import { BellDotIcon } from "lucide-react";
+import { PanelTop } from "lucide-react";
+import EmptyState from "@/components/empty-state";
 
 export const metadata: Metadata = {
   title: "Status Pages | Upstat",
@@ -31,7 +31,7 @@ export default async function StatusPages() {
 
       {!statusPages?.statusPages ? (
         <EmptyState
-          icon={<BellDotIcon />}
+          icon={<PanelTop />}
           title="No status pages"
           description="Create your first status page."
           action={

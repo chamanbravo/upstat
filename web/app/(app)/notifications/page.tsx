@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { fetchNotifications } from "@/lib/api/notifications";
-import EmptyState from "@/components/notifications/empty-state";
 import DataTable from "@/components/notifications/data-table";
+import EmptyState from "@/components/empty-state";
+import { BellDotIcon } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Notifications | Upstat",
@@ -29,7 +30,16 @@ export default async function Notifications() {
       </div>
 
       {!notifications?.notifications ? (
-        <EmptyState />
+        <EmptyState
+          icon={<BellDotIcon />}
+          title="No notifications channels"
+          description="Create your first notification channel"
+          action={
+            <Button className="mt-4" asChild>
+              <Link href="/notifications/create">Create</Link>
+            </Button>
+          }
+        />
       ) : (
         <DataTable data={notifications?.notifications} />
       )}
