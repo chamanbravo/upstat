@@ -1,126 +1,84 @@
-<div align="center" width="100%">
-    <img src="./docs/assets/upstat.png" width="128" alt="" />
-</div>
+# Turborepo starter
 
-# Upstat
-    
-> simple and easy-to-use self-hosted status monitoring tool
+This Turborepo starter is maintained by the Turborepo core team.
 
-![](./docs/assets/dashboard.png)
+## Using this example
 
-## 💻 Live Demo
+Run the following command:
 
-Try it.
-
-Demo Server (Location: Singapore): [https://demo.upstat.com](https://upstat.chamanbudhathoki.com.np/)
-
-Username: `demo`
-Password: `demodemo`
-
-## ⭐ Features
-
-It needs more features but for now...
-
--   Monitoring uptime for HTTP(s)
--   Status and Latency Chart
--   Notifications via Discord
--   60-second intervals
--   Fancy, Reactive, Fast UI/UX
--   Multiple status pages
--   Map status pages to specific domains
--   Ping chart
--   Certificate info
--   PWA
--   Sqlite & Postgres database support
-
-And dozens of smaller features to be added.
-
-## 🔧 How to Install
-
-### 🐳 Docker
-
-For Sqlite
-
-```bash
-curl https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose-sqlite.yml -o docker-compose.yml
-docker compose up
+```sh
+npx create-turbo@latest
 ```
 
-For Postgres
-```bash
-curl -O https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose.yml
-docker compose up
+## What's inside?
+
+This Turborepo includes the following packages/apps:
+
+### Apps and Packages
+
+- `docs`: a [Next.js](https://nextjs.org/) app
+- `web`: another [Next.js](https://nextjs.org/) app
+- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
+- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+
+Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+
+### Utilities
+
+This Turborepo has some additional tools already setup for you:
+
+- [TypeScript](https://www.typescriptlang.org/) for static type checking
+- [ESLint](https://eslint.org/) for code linting
+- [Prettier](https://prettier.io) for code formatting
+
+### Build
+
+To build all apps and packages, run the following command:
+
+```
+cd my-turborepo
+pnpm build
 ```
 
-Upstat is now running on http://localhost:3000
+### Develop
 
-> [!IMPORTANT]
-> Make sure to change the enviornment values before deploying.
+To develop all apps and packages, run the following command:
 
-### 💪🏻 Non-Docker
-
-Requirements:
-
-- Node.js 14 / 16 / 18 / 20.4
-- npm 9
-- Golang 1.21+
-- Postgres (Optional)
-
-```shell
-cp .sample.env .env
+```
+cd my-turborepo
+pnpm dev
 ```
 
-```shell
-air
-cd web && npm run dev
+### Remote Caching
+
+> [!TIP]
+> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+
+Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+
+By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+
+```
+cd my-turborepo
+npx turbo login
 ```
 
-## Tech stack
+This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
 
--   React
--   Shadcn
--   Golang
--   Postgres/Sqlite
+Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
 
-## 🙌 Contributing
+```
+npx turbo link
+```
 
-I welcome contributions! Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+## Useful Links
 
-If you have a suggestion that would make this better, please fork the repo, make changes and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+Learn more about the power of Turborepo:
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## Contributors
-
-<a href="https://github.com/chamanbravo/upstat/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=chamanbravo/upstat" />
-</a>
-
-## 📄 License
-
-This project is licensed under the [MIT License](https://opensource.org/license/mit/).
-
-## 🖼 More Screenshots
-
-Create a Monitor
-
-<img src="./docs/assets/create.png" width="512" alt="" />
-
-Monitor Page
-
-<img src="./docs/assets/chart.png" width="512" alt="" />
-
-Settings Page
-
-<img src="./docs/assets/settings.png" width="512" alt="" />
-
-Notifications
-
-<img src="./docs/assets/notifications.png" width="512" alt="" />
-
-<img src="./docs/assets/discord_notification.png" width="512" alt="" />
+- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
+- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
+- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
+- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
+- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
+- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
