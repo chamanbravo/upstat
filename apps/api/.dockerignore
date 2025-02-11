@@ -1,0 +1,9 @@
+web
+tmp
+vendor
+.env
+*.exe
+server
+node_modules
+build
+dist

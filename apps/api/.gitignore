@@ -1,0 +1,10 @@
+vendor
+.env
+*.exe
+tmp
+server
+node_modules
+build
+dist
+taskfile.yml
+*.db

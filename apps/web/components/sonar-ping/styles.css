@@ -1,0 +1,43 @@
+.pulse {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.small-pulse {
+  animation: smallPulse 3s ease-out infinite;
+}
+
+.large-pulse {
+  animation: largePulse 3s ease-out infinite;
+}
+
+@keyframes smallPulse {
+  from {
+    transform: scale(0.75);
+    opacity: 1;
+  }
+
+  95%,
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes largePulse {
+  from {
+    transform: scale(0.75);
+    opacity: 1;
+  }
+
+  to {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
