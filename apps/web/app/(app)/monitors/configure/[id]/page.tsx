@@ -19,19 +19,16 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function EditMonitor({ params }: PageProps) {
-  const { id } = params;
+  const id = (await params).id;
   const notificationChannels = await fetchNotifications();
   const statusPages = await fetchStatusPages();
   const monitorInfo = await fetchMonitorInfo(id);
-  const monitorNotificationChannels = await fetchMonitorsNotificationChannels(
-    id
-  );
+  const monitorNotificationChannels =
+    await fetchMonitorsNotificationChannels(id);
   const monitorStatusPages = await fetchMonitorsStatusPages(id);
 
   const defaultValues = {
@@ -67,8 +64,8 @@ export default async function EditMonitor({ params }: PageProps) {
               {monitorInfo?.monitor?.status === "green"
                 ? "Up"
                 : monitorInfo?.monitor?.status === "red"
-                ? "Down"
-                : "Paused"}
+                  ? "Down"
+                  : "Paused"}
             </p>
           </div>
         </div>

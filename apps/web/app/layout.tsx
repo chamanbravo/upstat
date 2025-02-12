@@ -11,13 +11,13 @@ export const metadata: Metadata = {
   description: "A simple open-source, self-hosted status monitoring tool.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const cookieStore = cookies();
-  const theme = cookieStore.get("upstat.theme");
+  const theme = (await cookieStore).get("upstat.theme");
 
   return (
     <html lang="en" className={theme?.value || "dark"}>

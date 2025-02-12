@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { DateDropdown } from "./date-dropdown";
 
-const DynamicChart = dynamic(() => import("./chart"), { ssr: false });
+const DynamicChart = dynamic(() => import("./chart"));
 
 interface Props {
   id: string;
