@@ -7,6 +7,7 @@ const protectedRoutes = [
   "/monitors/",
   "/notifications/",
   "/status-pages/",
+  "/settings/",
 ];
 
 export async function middleware(request: NextRequest) {

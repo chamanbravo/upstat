@@ -1,0 +1,22 @@
+{
+  "title": "Upstat",
+  "description": "",
+  "root": true,
+  "pages": [
+    "---Getting Started---",
+    "index",
+    "---Monitoring---",
+    "monitoring-overview",
+    "check-types",
+    "monitor-customizations",
+    "---Status Pages---",
+    "status-pages-overview",
+    "public-status-widget",
+    "---Incidents---",
+    "incidents-overview",
+    "work-with-incidents",
+    "---Alerting---",
+    "alerting-overview",
+    "notifications-channels"
+  ]
+}

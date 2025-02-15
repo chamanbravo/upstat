@@ -2,13 +2,11 @@ import StatusPageForm from "@/components/status-pages/status-page-form";
 import { fetchStatusPageItem } from "@/lib/api/status-pages";
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function CreateStatusPage({ params }: PageProps) {
-  const { id } = params;
+  const id = (await params).id;
   const statusPage = await fetchStatusPageItem(id);
 
   return (
