@@ -2,7 +2,10 @@
 @import "fumadocs-ui/css/dusk.css";
 @import "fumadocs-ui/css/preset.css";
 
+/* for monorepo build */
 @source '../../../node_modules/fumadocs-ui/dist/**/*.js';
+/* for standalone build */
+@source '../node_modules/fumadocs-ui/dist/**/*.js';
 
 .title-text {
   -webkit-background-clip: text;
