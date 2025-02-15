@@ -3,94 +3,53 @@ title: Introduction
 description: Upstat is a simple, open-source, and self-hosted status monitoring tool with uptime tracking, latency charts, notifications, and more.
 ---
 
-## 💻 Live Demo
+## Get Started
 
-Try it.
+Explore our documentation to get started with Upstat and start monitoring your services.
 
-Demo Server (Location: Singapore): [https://demo.upstat.com](https://upstat.chamanbudhathoki.com.np/)
+<Cards>
+  <Card
+    href="/docs/monitoring-overview"
+    title="Monitoring"
+    description="Set up and manage monitors to track the health and performance of your services."
+  />
+  <Card
+    href="/docs/status-pages-overview"
+    title="Status Pages"
+    description="Create and configure public status pages to keep users informed about service availability."
+  />
+  <Card
+    href="/docs/incidents-overview"
+    title="Incidents"
+    description="Track, manage, and resolve incidents efficiently to minimize downtime."
+  />
+  <Card
+    href="/docs/alerting-overview"
+    title="Alerting"
+    description="Set up alerts to receive notifications about issues before they impact users."
+  />
+  <Card
+    href="/docs/deployment"
+    title="Deployment"
+    description="Learn how to deploy Upstat for reliable and efficient service monitoring."
+  />
+</Cards>
 
-Username: `demo`
-Password: `demodemo`
+## Contribute
 
-## ⭐ Features
-
-It needs more features but for now...
-
--   Monitoring uptime for HTTP(s)
--   Status and Latency Chart
--   Notifications via Discord
--   60-second intervals
--   Fancy, Reactive, Fast UI/UX
--   Multiple status pages
--   Map status pages to specific domains
--   Ping chart
--   Certificate info
--   PWA
--   Sqlite & Postgres database support
-
-And dozens of smaller features to be added.
-
-## 🔧 How to Install
-
-### 🐳 Docker
-
-For Sqlite
-
-```bash
-curl https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose-sqlite.yml -o docker-compose.yml
-docker compose up
-```
-
-For Postgres
-```bash
-curl -O https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose.yml
-docker compose up
-```
-
-Upstat is now running on http://localhost:3000
-
-> [!IMPORTANT]
-> Make sure to change the enviornment values before deploying.
-
-### 💪🏻 Non-Docker
-
-Requirements:
-
-- Node.js 14 / 16 / 18 / 20.4
-- npm 9
-- Golang 1.21+
-- Postgres (Optional)
-
-```shell
-cp .sample.env .env
-```
-
-```shell
-air
-cd web && npm run dev
-```
-
-## Tech stack
-
--   React
--   Shadcn
--   Golang
--   Postgres/Sqlite
-
-## 🙌 Contributing
-
-I welcome contributions! Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo, make changes and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+<Cards>
+  <Card
+    href="/docs/contributing"
+    title="Get Started"
+    description="Contribute to Upstat by submitting a pull request with your improvements or fixes."
+  />
+  <Card
+    href="https://github.com/chamanbravo/upstat/issues/new"
+    title="Create Issues"
+    description="Get involved in Upstat’s development by reporting issues or suggesting features"
+  />
+</Cards>
 
 
-## 📄 License
 
-This project is licensed under the [MIT License](https://opensource.org/license/mit/).
+Show your support! Star us on [Github](https://github.com/chamanbravo/upstat) ⭐

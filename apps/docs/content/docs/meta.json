@@ -17,6 +17,9 @@
     "work-with-incidents",
     "---Alerting---",
     "alerting-overview",
-    "notifications-channels"
+    "notifications-channels",
+    "------",
+    "deployment",
+    "contributing"
   ]
 }
