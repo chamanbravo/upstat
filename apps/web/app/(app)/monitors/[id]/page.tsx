@@ -21,18 +21,14 @@ const statusColor: Record<string, string> = {
 };
 
 interface PageProps {
-  params: {
-    id: string;
-  };
-  searchParams?: {
-    startDate?: string;
-  };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }
 
 export default async function MonitorItem({ params, searchParams }: PageProps) {
-  const { id } = params;
+  const id = (await params).id;
   const startDate =
-    searchParams?.startDate || subHours(new Date(), 6).toISOString();
+    (await searchParams)?.startDate || subHours(new Date(), 6).toISOString();
   const monitorInfo = await fetchMonitorInfo(id);
 
   return (
@@ -59,8 +55,8 @@ export default async function MonitorItem({ params, searchParams }: PageProps) {
                 {monitorInfo?.monitor?.status === "green"
                   ? "Up"
                   : monitorInfo?.monitor?.status === "red"
-                  ? "Down"
-                  : "Paused"}
+                    ? "Down"
+                    : "Paused"}
               </p>
               <DotIcon className="text-muted-foreground h-4 w-4" />
               <p className="text-muted-foreground">

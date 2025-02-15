@@ -8,14 +8,13 @@ import { Activity } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-interface Props {
-  params: {
-    slug?: string;
-  };
+interface PageProps {
+  params: Promise<{ slug: string }>;
 }
 
-export default async function page({ params }: Props) {
-  const { slug } = params;
+export default async function page({ params }: PageProps) {
+  const slug = (await params).slug;
+
   if (!slug) return redirect("/");
 
   const data = await fetchStatusPagesSummary(slug);

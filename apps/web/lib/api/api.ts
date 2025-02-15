@@ -15,7 +15,7 @@ export const isRedirectError = (err: any) => {
 
 export const serverFetch = async (url: string, options?: RequestInit) => {
   const headerList = headers();
-  const accessToken = headerList.get("x-access-token");
+  const accessToken = (await headerList).get("x-access-token");
 
   const response = await fetch(API_HOST + url, {
     headers: {

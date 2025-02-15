@@ -2,13 +2,11 @@ import CreateNotificationForm from "@/components/notifications/create-notificati
 import { fetchNotificationItem } from "@/lib/api/notifications";
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function EditNotification({ params }: PageProps) {
-  const { id } = params;
+  const id = (await params).id;
   const notification = await fetchNotificationItem(id);
 
   return (
