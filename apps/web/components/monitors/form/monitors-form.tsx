@@ -77,13 +77,17 @@ export default function MonitorsForm({
         }
       );
       if (response.ok) {
-        toast({ title: "Monitor created successfully." });
+        toast({
+          title: defaultValues
+            ? "Monitor saved successfully."
+            : "Monitor created successfully.",
+        });
       }
       setLoading(false);
       router.push("/");
       router.refresh();
     } catch (err) {
-      toast({ title: "Monitor created successfully." });
+      toast({ title: "Something went wrong." });
       setLoading(false);
     }
   }

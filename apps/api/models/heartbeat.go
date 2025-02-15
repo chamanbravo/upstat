@@ -8,6 +8,6 @@ type Heartbeat struct {
 	Timestamp  time.Time `json:"timestamp"`
 	StatusCode string    `json:"status_code"`
 	Status     string    `json:"status"`
-	Latency    int       `json:"latency"`
+	Latency    int       `json:"latency"` // time in milliseconds
 	Message    string    `json:"message"`
 }

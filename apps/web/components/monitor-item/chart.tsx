@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  formatAsDateHour,
-  formatAsDateHourMinute,
-  formatAsDayDateHour,
-} from "@/lib/utils";
+import { formatAsDateHourMinute, formatAsDayDateHour } from "@/lib/utils";
 import { differenceInHours } from "date-fns";
 import {
   LineChart,
@@ -38,7 +34,10 @@ const CustomTooltip = ({
             key={item.name}
             className="text-[hsl(var(--current-period-stroke))]"
           >
-            {`${item.name}: ${item.value}`}
+            {item.name}:{" "}
+            {+item.value! < 1000
+              ? item.value + "ms"
+              : +item.value! / 1000 + "s"}
           </p>
         ))}
       </div>
@@ -114,7 +113,7 @@ export default function Chart({ heartbeat, startDate }: Props) {
             tick={{
               fill: "hsl(var(--muted-foreground))",
             }}
-            tickFormatter={(value) => `${(value / 60).toFixed(0)}s`}
+            tickFormatter={(value) => `${(value / 1000).toFixed(0)}s`}
           />
           <XAxis
             dataKey="timestamp"

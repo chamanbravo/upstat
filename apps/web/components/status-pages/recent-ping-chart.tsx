@@ -33,11 +33,10 @@ const CustomTooltip = ({
             key={item.name}
             className="text-[hsl(var(--current-period-stroke))]"
           >
-            {`${item.name}: ${
-              Number.isNaN(item.value)
-                ? item.value
-                : (Number(item.value) / 60).toFixed(1) + "s"
-            }`}
+            {item.name}:{" "}
+            {+item.value! < 1000
+              ? item.value + "ms"
+              : +item.value! / 1000 + "s"}
           </p>
         ))}
       </div>
@@ -88,7 +87,7 @@ export default function RecentPingChart({ heartbeat }: Props) {
             tick={{
               fill: "hsl(var(--muted-foreground))",
             }}
-            tickFormatter={(value) => `${(value / 60).toFixed(0)}s`}
+            tickFormatter={(value) => `${(value / 1000).toFixed(0)}s`}
           />
           <XAxis
             dataKey="timestamp"
