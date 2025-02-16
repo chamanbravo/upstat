@@ -1,0 +1,22 @@
+@import "tailwindcss";
+@import "fumadocs-ui/css/dusk.css";
+@import "fumadocs-ui/css/preset.css";
+
+/* for monorepo build */
+@source '../../../node_modules/fumadocs-ui/dist/**/*.js';
+/* for standalone build */
+@source '../node_modules/fumadocs-ui/dist/**/*.js';
+
+.title-text {
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image:
+    linear-gradient(165deg, #ffffff 10.57%, #939db8 142.07%),
+    linear-gradient(174.93deg, #ffffff 34.13%, rgba(255, 255, 255, 0) 232.51%);
+  color: transparent;
+}
+
+:root {
+  --color-fd-background: #04050c;
+  --color-fd-primary: #a9f;
+}

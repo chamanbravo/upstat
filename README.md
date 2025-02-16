@@ -3,7 +3,7 @@
 </div>
 
 # Upstat
-    
+
 > simple and easy-to-use self-hosted status monitoring tool
 
 ![](./docs/assets/dashboard.png)
@@ -21,17 +21,17 @@ Password: `demodemo`
 
 It needs more features but for now...
 
--   Monitoring uptime for HTTP(s)
--   Status and Latency Chart
--   Notifications via Discord
--   60-second intervals
--   Fancy, Reactive, Fast UI/UX
--   Multiple status pages
--   Map status pages to specific domains
--   Ping chart
--   Certificate info
--   PWA
--   Sqlite & Postgres database support
+- Monitoring uptime for HTTP(s)
+- Status and Latency Chart
+- Notifications via Discord
+- 60-second intervals
+- Fancy, Reactive, Fast UI/UX
+- Multiple status pages
+- Map status pages to specific domains
+- Ping chart
+- Certificate info
+- PWA
+- Sqlite & Postgres database support
 
 And dozens of smaller features to be added.
 
@@ -47,6 +47,7 @@ docker compose up
 ```
 
 For Postgres
+
 ```bash
 curl -O https://raw.githubusercontent.com/chamanbravo/upstat/main/docker-compose.yml
 docker compose up
@@ -77,10 +78,10 @@ cd web && npm run dev
 
 ## Tech stack
 
--   React
--   Shadcn
--   Golang
--   Postgres/Sqlite
+- React
+- Shadcn
+- Golang
+- Postgres/Sqlite
 
 ## 🙌 Contributing
 
