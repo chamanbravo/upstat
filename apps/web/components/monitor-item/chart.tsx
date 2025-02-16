@@ -78,55 +78,64 @@ export default function Chart({ heartbeat, startDate }: Props) {
   return (
     <div className="flex flex-grow justify-center items-center">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={heartbeat} margin={{ top: 8 }}>
-          <CartesianGrid
-            stroke="hsl(var(--muted-foreground)/0.2)"
-            strokeDasharray="5 5"
-          />
-          <Tooltip
-            content={
-              <CustomTooltip labelFormatter={formatter(startDate).format} />
-            }
-            cursor={{
-              stroke: "hsl(var(--muted-foreground)/0.4)",
-              strokeWidth: 1.5,
-            }}
-          />
-          <Line
-            type="monotone"
-            dataKey="latency"
-            name="Latency"
-            stroke="hsl(var(--current-period-stroke))"
-            strokeWidth={2}
-            dot={false}
-            activeDot={{
-              stroke: "hsl(var(--background))",
-            }}
-            isAnimationActive={false}
-          />
-          <YAxis
-            interval="preserveStartEnd"
-            dataKey="latency"
-            fontSize={14}
-            tickLine={false}
-            axisLine={false}
-            tick={{
-              fill: "hsl(var(--muted-foreground))",
-            }}
-            tickFormatter={(value) => `${(value / 1000).toFixed(0)}s`}
-          />
-          <XAxis
-            dataKey="timestamp"
-            fontSize={14}
-            tickLine={false}
-            axisLine={false}
-            tick={{
-              fill: "hsl(var(--muted-foreground))",
-            }}
-            tickFormatter={formatter(startDate).format}
-            interval={formatter(startDate).interval}
-          />
-        </LineChart>
+        {!heartbeat.length ? (
+          <span className="text-muted-foreground items-center justify-center w-full h-full flex">
+            No recent ping data.
+          </span>
+        ) : (
+          <LineChart data={heartbeat} margin={{ top: 8 }}>
+            <CartesianGrid
+              stroke="hsl(var(--muted-foreground)/0.2)"
+              strokeDasharray="5 5"
+            />
+            <Tooltip
+              content={
+                <CustomTooltip labelFormatter={formatter(startDate).format} />
+              }
+              cursor={{
+                stroke: "hsl(var(--muted-foreground)/0.4)",
+                strokeWidth: 1.5,
+              }}
+            />
+            <Line
+              type="monotone"
+              dataKey="latency"
+              name="Latency"
+              stroke="hsl(var(--current-period-stroke))"
+              strokeWidth={2}
+              dot={false}
+              activeDot={{
+                stroke: "hsl(var(--background))",
+              }}
+              isAnimationActive={false}
+            />
+            <YAxis
+              interval="preserveStartEnd"
+              dataKey="latency"
+              fontSize={14}
+              tickLine={false}
+              axisLine={false}
+              tick={{
+                fill: "hsl(var(--muted-foreground))",
+              }}
+              tickFormatter={(value) =>
+                value < 1000 ? value + "ms" : (value / 1000).toFixed(1) + "s"
+              }
+            />
+            <XAxis
+              dataKey="timestamp"
+              fontSize={14}
+              tickLine={false}
+              axisLine={false}
+              dy={8}
+              tick={{
+                fill: "hsl(var(--muted-foreground))",
+              }}
+              tickFormatter={formatter(startDate).format}
+              interval={formatter(startDate).interval}
+            />
+          </LineChart>
+        )}
       </ResponsiveContainer>
     </div>
   );
