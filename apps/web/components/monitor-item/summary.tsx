@@ -21,7 +21,7 @@ export default async function Summary({ id }: Props) {
           Avg. Response (24 hour)
         </CardTitle>
         <p className="text-xl font-semibold">
-          {summary?.summary?.averageLatency?.toFixed(0) + "ms"}
+          {summary ? summary?.summary?.averageLatency?.toFixed(0) + "ms" : "~"}
         </p>
       </Card>
       <Card className="flex flex-col gap-3 px-4 py-5">
@@ -29,7 +29,7 @@ export default async function Summary({ id }: Props) {
           Uptime (24 hour)
         </CardTitle>
         <p className="text-xl font-semibold">
-          {summary?.summary?.dayUptime?.toFixed(0) + "%"}
+          {summary ? summary?.summary?.dayUptime?.toFixed(0) + "%" : "~"}
         </p>
       </Card>
       <Card className="flex flex-col gap-3 px-4 py-5">
@@ -37,7 +37,7 @@ export default async function Summary({ id }: Props) {
           Uptime (30 days)
         </CardTitle>
         <p className="text-xl font-semibold">
-          {summary?.summary?.monthUptime?.toFixed(0) + "%"}
+          {summary ? summary?.summary?.monthUptime?.toFixed(0) + "%" : "~"}
         </p>
       </Card>
       <Card className="flex flex-col gap-3 px-4 py-5">

@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, BellDot, Cog, LogOut, PanelTop } from "lucide-react";
+import { Activity, BellDot, Bug, Cog, PanelTop } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -62,7 +62,25 @@ export default function Sidebar() {
           </Link>
         </Button>
       </div>
-      <LogoutButton />
+
+      <div className="w-full flex flex-col gap-2">
+        <Button
+          variant="ghost"
+          className={`w-full justify-start text-muted-foreground hover:text-foreground ${
+            pathname?.includes("settings") && selectedStyle
+          }`}
+          asChild
+        >
+          <Link
+            href="https://github.com/chamanbravo/upstat/issues/new"
+            target="_blank"
+          >
+            <Bug className="w-4 h-4 mr-2" />
+            Report an Issue
+          </Link>
+        </Button>
+        <LogoutButton />
+      </div>
     </div>
   );
 }
