@@ -110,6 +110,14 @@ func StartGoroutine(monitor *models.Monitor) {
 										log.Printf("Error when trying to convert heartbeat to JSON: %v", err.Error())
 									}
 								}
+
+								if v.Provider == "Telegram" {
+									telegramMessage := alerts.NewTelegramAlert(heartbeat, monitor)
+									_, err := http.Get(fmt.Sprintf("%s&text=%s&parse_mode=%s", v.Data.WebhookUrl, telegramMessage.Text, telegramMessage.ParseMode)) // supports get and post methods, used query params for simplicity of handling user url input
+									if err != nil {
+										log.Printf("Error when trying to send telegram notification: %v", err.Error())
+									}
+								}
 							}
 						} else {
 							log.Printf("Error retrieving notification channels: %v", err)
