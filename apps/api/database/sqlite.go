@@ -7,7 +7,7 @@ import (
 )
 
 func SqliteConnection() (*sql.DB, error) {
-	sqliteDSN := "upstat.db"
+	sqliteDSN := "file:upstat.db?_pragma=journal_mode(WAL)&_pragma=synchronous(NORMAL)&_pragma=cache_size(-64000)&_pragma=temp_store(MEMORY)"
 	db, err := sql.Open("sqlite3", sqliteDSN)
 	return db, err
 }
