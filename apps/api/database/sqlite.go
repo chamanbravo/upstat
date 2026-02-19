@@ -12,7 +12,7 @@ func SqliteConnection() (*sql.DB, error) {
 
 	ddl := "PRAGMA journal_mode = WAL;" +
 		"PRAGMA synchronous = NORMAL;" +
-		"PRAGMA cache_size = 2000;" +
+		"PRAGMA cache_size = -64000;" +
 		"PRAGMA mmap_size = 134217728;" +
 		"PRAGMA journal_size_limit = 27103364;" +
 		"PRAGMA temp_store = MEMORY;" +
