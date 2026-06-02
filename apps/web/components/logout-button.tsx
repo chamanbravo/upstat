@@ -10,7 +10,7 @@ export default function LogoutButton() {
   return (
     <Button
       variant="ghost"
-      className="justify-start text-muted-foreground hover:text-foreground"
+      className="justify-start text-muted-foreground hover:text-foreground w-full"
       onClick={() => {
         document.cookie =
           "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

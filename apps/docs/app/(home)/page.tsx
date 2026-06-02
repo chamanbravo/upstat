@@ -142,7 +142,7 @@ export default function HomePage() {
         </span>
         <span className="text-sm">
           <a
-            href="mailto:chamanpro9@gmail.com"
+            href="mailto:hello@chamanbudhathoki.com.np"
             target="_blank"
             className="text-sm underline"
           >

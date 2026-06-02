@@ -16,7 +16,7 @@ import (
 // @title Upstat API
 // @version 1.0
 // @description This is an auto-generated API Docs for Upstat API.
-// @contact.email chamanpro9@gmail.com
+// @contact.email hello@chamanbudhathoki.com.np
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 // @BasePath /api

@@ -2,4 +2,33 @@
 title: Customizations
 ---
 
-🚧 docs wip 🚧
+<img
+  alt="Upstat monitors"
+  src="/assertions.png"
+  width="800"
+  height="800"
+/>
+
+### Assertions
+By default we expect the endpoint to return a `200` status code. If you want to check for a different status code you can go to to the Assertions tab and add a new assertion.
+We support status code, header and body string assertions.
+
+### Frequency
+By default, Upstat will check your service every 1 minute.<br/>
+We support the following frequencies:
+- Every 1 minute
+- Every 5 minutes
+- Every 15 minutes
+- Every 30 minutes
+- Every 1 hour
+
+### Notifications
+If you want to receive notifications when your monitor fails, you can connect it to a notification channel.<br/>
+You will have the list of available notification channels. You can connect your monitor to one or multiple notification channels.<br/>
+You need to create a notification channel before connecting your monitor to it.
+
+<Card
+href="/docs/deployment"
+title="Notifications"
+description="Set up alerts to receive notifications about issues before they impact users."
+/>

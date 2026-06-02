@@ -111,7 +111,7 @@ type NotificationData struct {
 
 type NotificationCreateIn struct {
 	Name     string           `json:"name" validate:"required"`
-	Provider string           `json:"provider" validate:"oneof=Discord Slack"`
+	Provider string           `json:"provider" validate:"oneof=Discord Slack Telegram"`
 	Data     NotificationData `json:"data"`
 }
 

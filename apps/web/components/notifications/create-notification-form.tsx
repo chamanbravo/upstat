@@ -173,6 +173,33 @@ export default function CreateNotificationForm({ defaultValues }: Props) {
               )}
             />
           )}
+            {provider === "Telegram" && (
+                <FormField
+                    control={form.control}
+                    name="webhookUrl"
+                    render={({ field }) => (
+                        <FormItem className="space-y-1">
+                            <FormLabel>Webhook URL</FormLabel>
+                            <FormControl>
+                                <Input
+                                    placeholder="https://api.telegram.org/bot{token}/sendMessage?chat_id={id}"
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormDescription>
+                                <Link
+                                    href="https://core.telegram.org/bots/api#sendmessage"
+                                    target="_blank"
+                                    className="ml-auto cursor-pointer hover:underline"
+                                >
+                                    How to setup your Telegram webhook
+                                </Link>
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            )}
 
           <Button type="submit" disabled={loading}>
             {loading ? "Loading..." : "Submit"}
