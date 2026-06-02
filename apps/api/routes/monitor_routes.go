@@ -21,6 +21,7 @@ func MonitorRoutes(app *fiber.App) {
 	route.Get("/:id/summary", controllers.MonitorSummary)
 	route.Get("/:id/availability", controllers.MonitorAvailability)
 	route.Get("/:id/heartbeat", controllers.RetrieveHeartbeat)
+	route.Delete("/:id/heartbeats", controllers.ClearMonitorHeartbeats)
 	route.Get("/:id/cert-exp-countdown", controllers.CertificateExpiryCountDown)
 	route.Get("/:id/notifications", controllers.NotificationChannelListOfMonitor)
 	route.Get("/:id/status-pages", controllers.StatusPagesListOfMonitor)

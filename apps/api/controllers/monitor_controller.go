@@ -439,6 +439,42 @@ func MonitorAvailability(c *fiber.Ctx) error {
 // @Param id path string true "Monitor ID"
 // @Success 200 {object} dto.SuccessResponse
 // @Success 400 {object} dto.ErrorResponse
+// @Router /api/monitors/{id}/heartbeats [delete]
+func ClearMonitorHeartbeats(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	if idParam == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "ID parameter is missing",
+		})
+	}
+
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid ID parameter",
+		})
+	}
+
+	cutoff := time.Now().Add(-30 * 24 * time.Hour)
+	deleted, err := queries.DeleteHeartbeatsOlderThan(id, cutoff)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"message": "success",
+		"deleted": deleted,
+	})
+}
+
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
 // @Router /api/monitors/{id} [delete]
 func DeleteMonitor(c *fiber.Ctx) error {
 	idParam := c.Params("id")
