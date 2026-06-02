@@ -391,49 +391,44 @@ func MonitorAvailability(c *fiber.Ctx) error {
 		})
 	}
 
-	monitor, err := queries.FindMonitorById(id)
+	now := time.Now()
+	startOfToday := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
+	w7 := now.Add(-7 * 24 * time.Hour)
+	d30 := now.Add(-30 * 24 * time.Hour)
+	d365 := now.Add(-365 * 24 * time.Hour)
+
+	stats, err := queries.RetrieveAvailabilityStats(id, startOfToday, w7, d30, d365)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
 
-	now := time.Now()
-	startOfToday := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
-
-	// RetrieveUptime returns an error when the window has zero heartbeats
-	// (NULL → float64 scan). Treat that as 0% so a new monitor still renders.
-	uptime := func(since time.Time) float64 {
-		v, err := queries.RetrieveUptime(id, since)
-		if err != nil {
+	uptimePct := func(w queries.AvailabilityWindowCounts) float64 {
+		if w.Total == 0 {
 			return 0
 		}
-		return v
+		return float64(w.Green) * 100.0 / float64(w.Total)
 	}
-
-	// Approximate downtime as (count of non-green heartbeats) * monitor.Frequency.
+	// Approximate downtime as (count of non-green heartbeats) × frequency.
 	// Granularity is one check interval; close enough for a summary row.
-	downtimeSeconds := func(since time.Time) int {
-		count, err := queries.RetrieveDownHeartbeatCount(id, since)
-		if err != nil {
-			return 0
-		}
-		return count * monitor.Frequency
+	downtimeSeconds := func(w queries.AvailabilityWindowCounts) int {
+		return (w.Total - w.Green) * stats.Frequency
 	}
 
 	return c.Status(200).JSON(fiber.Map{
 		"message": "success",
 		"availability": fiber.Map{
-			"today":       uptime(startOfToday),
-			"last7Days":   uptime(now.Add(-7 * 24 * time.Hour)),
-			"last30Days":  uptime(now.Add(-30 * 24 * time.Hour)),
-			"last365Days": uptime(now.Add(-365 * 24 * time.Hour)),
+			"today":       uptimePct(stats.Today),
+			"last7Days":   uptimePct(stats.Last7),
+			"last30Days":  uptimePct(stats.Last30),
+			"last365Days": uptimePct(stats.Last365),
 		},
 		"downtime": fiber.Map{
-			"today":       downtimeSeconds(startOfToday),
-			"last7Days":   downtimeSeconds(now.Add(-7 * 24 * time.Hour)),
-			"last30Days":  downtimeSeconds(now.Add(-30 * 24 * time.Hour)),
-			"last365Days": downtimeSeconds(now.Add(-365 * 24 * time.Hour)),
+			"today":       downtimeSeconds(stats.Today),
+			"last7Days":   downtimeSeconds(stats.Last7),
+			"last30Days":  downtimeSeconds(stats.Last30),
+			"last365Days": downtimeSeconds(stats.Last365),
 		},
 	})
 }

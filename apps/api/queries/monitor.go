@@ -176,20 +176,58 @@ func RetrieveUptime(id int, timestamp time.Time) (float64, error) {
 	return averageLatency, nil
 }
 
-func RetrieveDownHeartbeatCount(id int, timestamp time.Time) (int, error) {
-	stmt, err := database.DB.Prepare("SELECT COUNT(*) FROM heartbeats WHERE monitor_id = $1 AND timestamp >= $2 AND status != 'green'")
+type AvailabilityWindowCounts struct {
+	Total int
+	Green int
+}
+
+type MonitorAvailabilityStats struct {
+	Frequency int
+	Today     AvailabilityWindowCounts
+	Last7     AvailabilityWindowCounts
+	Last30    AvailabilityWindowCounts
+	Last365   AvailabilityWindowCounts
+}
+
+// RetrieveAvailabilityStats returns the heartbeat counts for the four windows
+// (today / 7d / 30d / 365d) plus the monitor's frequency in a single round-trip.
+// The 365-day filter on the outer WHERE is the largest window — every shorter
+// bucket is computed via conditional aggregation over the same scan.
+func RetrieveAvailabilityStats(id int, today, w7, d30, d365 time.Time) (*MonitorAvailabilityStats, error) {
+	stmt, err := database.DB.Prepare(`
+		SELECT
+			(SELECT frequency FROM monitors WHERE id = $1) AS frequency,
+			COUNT(CASE WHEN timestamp >= $2 THEN 1 END) AS today_total,
+			COUNT(CASE WHEN timestamp >= $2 AND status = 'green' THEN 1 END) AS today_green,
+			COUNT(CASE WHEN timestamp >= $3 THEN 1 END) AS w7_total,
+			COUNT(CASE WHEN timestamp >= $3 AND status = 'green' THEN 1 END) AS w7_green,
+			COUNT(CASE WHEN timestamp >= $4 THEN 1 END) AS d30_total,
+			COUNT(CASE WHEN timestamp >= $4 AND status = 'green' THEN 1 END) AS d30_green,
+			COUNT(*) AS d365_total,
+			COUNT(CASE WHEN status = 'green' THEN 1 END) AS d365_green
+		FROM heartbeats
+		WHERE monitor_id = $1 AND timestamp >= $5
+	`)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 	defer stmt.Close()
 
-	var count int
-	err = stmt.QueryRow(id, timestamp).Scan(&count)
+	var stats MonitorAvailabilityStats
+	var frequency sql.NullInt64
+	err = stmt.QueryRow(id, today, w7, d30, d365).Scan(
+		&frequency,
+		&stats.Today.Total, &stats.Today.Green,
+		&stats.Last7.Total, &stats.Last7.Green,
+		&stats.Last30.Total, &stats.Last30.Green,
+		&stats.Last365.Total, &stats.Last365.Green,
+	)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
+	stats.Frequency = int(frequency.Int64)
 
-	return count, nil
+	return &stats, nil
 }
 
 func DeleteMonitorById(id int) error {
