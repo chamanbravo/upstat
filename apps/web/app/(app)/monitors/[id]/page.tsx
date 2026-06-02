@@ -6,6 +6,7 @@ import { fetchMonitorInfo } from "@/lib/api/monitors";
 import SonarPing from "@/components/sonar-ping/sonar-ping";
 import Summary from "@/components/monitor-item/summary";
 import GenericLineChart from "@/components/monitor-item/line-chart";
+import AvailabilityTable from "@/components/monitor-item/availability-table";
 import ChangeStatus from "@/components/monitor-item/change-status";
 import { subHours } from "date-fns";
 
@@ -93,6 +94,7 @@ export default async function MonitorItem({ params, searchParams }: PageProps) {
           <div className="flex flex-col gap-8">
             <Summary id={id} />
             <GenericLineChart id={id} startDate={startDate} />
+            <AvailabilityTable id={id} />
           </div>
         </div>
       </div>

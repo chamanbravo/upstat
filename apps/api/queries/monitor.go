@@ -176,6 +176,22 @@ func RetrieveUptime(id int, timestamp time.Time) (float64, error) {
 	return averageLatency, nil
 }
 
+func RetrieveDownHeartbeatCount(id int, timestamp time.Time) (int, error) {
+	stmt, err := database.DB.Prepare("SELECT COUNT(*) FROM heartbeats WHERE monitor_id = $1 AND timestamp >= $2 AND status != 'green'")
+	if err != nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
+	var count int
+	err = stmt.QueryRow(id, timestamp).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
 func DeleteMonitorById(id int) error {
 	stmt, err := database.DB.Prepare("DELETE FROM monitors WHERE id = $1")
 	if err != nil {

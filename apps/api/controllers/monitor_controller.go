@@ -373,6 +373,75 @@ func MonitorSummary(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
+// @Success 200 {object} dto.MonitorAvailabilityOut
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/monitors/{id}/availability [get]
+func MonitorAvailability(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	if idParam == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "ID parameter is missing",
+		})
+	}
+
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid ID parameter",
+		})
+	}
+
+	monitor, err := queries.FindMonitorById(id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	now := time.Now()
+	startOfToday := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
+
+	// RetrieveUptime returns an error when the window has zero heartbeats
+	// (NULL → float64 scan). Treat that as 0% so a new monitor still renders.
+	uptime := func(since time.Time) float64 {
+		v, err := queries.RetrieveUptime(id, since)
+		if err != nil {
+			return 0
+		}
+		return v
+	}
+
+	// Approximate downtime as (count of non-green heartbeats) * monitor.Frequency.
+	// Granularity is one check interval; close enough for a summary row.
+	downtimeSeconds := func(since time.Time) int {
+		count, err := queries.RetrieveDownHeartbeatCount(id, since)
+		if err != nil {
+			return 0
+		}
+		return count * monitor.Frequency
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"message": "success",
+		"availability": fiber.Map{
+			"today":       uptime(startOfToday),
+			"last7Days":   uptime(now.Add(-7 * 24 * time.Hour)),
+			"last30Days":  uptime(now.Add(-30 * 24 * time.Hour)),
+			"last365Days": uptime(now.Add(-365 * 24 * time.Hour)),
+		},
+		"downtime": fiber.Map{
+			"today":       downtimeSeconds(startOfToday),
+			"last7Days":   downtimeSeconds(now.Add(-7 * 24 * time.Hour)),
+			"last30Days":  downtimeSeconds(now.Add(-30 * 24 * time.Hour)),
+			"last365Days": downtimeSeconds(now.Add(-365 * 24 * time.Hour)),
+		},
+	})
+}
+
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
 // @Success 200 {object} dto.SuccessResponse
 // @Success 400 {object} dto.ErrorResponse
 // @Router /api/monitors/{id} [delete]

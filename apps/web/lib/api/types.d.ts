@@ -1312,6 +1312,23 @@ export interface components {
             summary?: components["schemas"]["MonitorSummary"];
             message?: string;
         };
+        MonitorAvailability: {
+            today?: number;
+            last7Days?: number;
+            last30Days?: number;
+            last365Days?: number;
+        };
+        MonitorDowntime: {
+            today?: number;
+            last7Days?: number;
+            last30Days?: number;
+            last365Days?: number;
+        };
+        MonitorAvailabilityOut: {
+            availability?: components["schemas"]["MonitorAvailability"];
+            downtime?: components["schemas"]["MonitorDowntime"];
+            message?: string;
+        };
         MonitorsListOut: {
             message?: string;
             monitors?: {

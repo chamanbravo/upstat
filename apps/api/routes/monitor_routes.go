@@ -19,6 +19,7 @@ func MonitorRoutes(app *fiber.App) {
 	route.Patch(":id/pause", controllers.PauseMonitor)
 	route.Patch(":id/resume", controllers.ResumeMonitor)
 	route.Get("/:id/summary", controllers.MonitorSummary)
+	route.Get("/:id/availability", controllers.MonitorAvailability)
 	route.Get("/:id/heartbeat", controllers.RetrieveHeartbeat)
 	route.Get("/:id/cert-exp-countdown", controllers.CertificateExpiryCountDown)
 	route.Get("/:id/notifications", controllers.NotificationChannelListOfMonitor)
