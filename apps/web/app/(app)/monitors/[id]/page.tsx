@@ -6,7 +6,9 @@ import { fetchMonitorInfo } from "@/lib/api/monitors";
 import SonarPing from "@/components/sonar-ping/sonar-ping";
 import Summary from "@/components/monitor-item/summary";
 import GenericLineChart from "@/components/monitor-item/line-chart";
+import AvailabilityTable from "@/components/monitor-item/availability-table";
 import ChangeStatus from "@/components/monitor-item/change-status";
+import ClearHeartbeats from "@/components/monitor-item/clear-heartbeats";
 import { subHours } from "date-fns";
 
 export const metadata: Metadata = {
@@ -89,10 +91,12 @@ export default async function MonitorItem({ params, searchParams }: PageProps) {
                 Configure
               </Link>
             </Button>
+            <ClearHeartbeats id={id} />
           </div>
           <div className="flex flex-col gap-8">
             <Summary id={id} />
             <GenericLineChart id={id} startDate={startDate} />
+            <AvailabilityTable id={id} />
           </div>
         </div>
       </div>

@@ -47,6 +47,30 @@ func RetrieveHeartbeats(id, limit int) ([]*models.Heartbeat, error) {
 	return heartbeats, nil
 }
 
+func DeleteHeartbeatsOlderThan(monitorID int, before time.Time) (int64, error) {
+	stmt, err := database.DB.Prepare("DELETE FROM heartbeats WHERE monitor_id = $1 AND timestamp < $2")
+	if err != nil {
+		log.Println("Error when trying to prepare statement")
+		log.Println(err)
+		return 0, err
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(monitorID, before)
+	if err != nil {
+		log.Println("Error when trying to execute query")
+		log.Println(err)
+		return 0, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return rowsAffected, nil
+}
+
 func SaveHeartbeat(heartbeat *models.Heartbeat) error {
 	stmt, err := database.DB.Prepare("INSERT INTO heartbeats(monitor_id, timestamp, status_code, status, latency, message) VALUES($1, $2, $3, $4, $5, $6)")
 	if err != nil {

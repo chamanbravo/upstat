@@ -373,6 +373,106 @@ func MonitorSummary(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param id path string true "Monitor ID"
+// @Success 200 {object} dto.MonitorAvailabilityOut
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/monitors/{id}/availability [get]
+func MonitorAvailability(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	if idParam == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "ID parameter is missing",
+		})
+	}
+
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid ID parameter",
+		})
+	}
+
+	now := time.Now()
+	startOfToday := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
+	w7 := now.Add(-7 * 24 * time.Hour)
+	d30 := now.Add(-30 * 24 * time.Hour)
+	d365 := now.Add(-365 * 24 * time.Hour)
+
+	stats, err := queries.RetrieveAvailabilityStats(id, startOfToday, w7, d30, d365)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	uptimePct := func(w queries.AvailabilityWindowCounts) float64 {
+		if w.Total == 0 {
+			return 0
+		}
+		return float64(w.Green) * 100.0 / float64(w.Total)
+	}
+	// Approximate downtime as (count of non-green heartbeats) × frequency.
+	// Granularity is one check interval; close enough for a summary row.
+	downtimeSeconds := func(w queries.AvailabilityWindowCounts) int {
+		return (w.Total - w.Green) * stats.Frequency
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"message": "success",
+		"availability": fiber.Map{
+			"today":       uptimePct(stats.Today),
+			"last7Days":   uptimePct(stats.Last7),
+			"last30Days":  uptimePct(stats.Last30),
+			"last365Days": uptimePct(stats.Last365),
+		},
+		"downtime": fiber.Map{
+			"today":       downtimeSeconds(stats.Today),
+			"last7Days":   downtimeSeconds(stats.Last7),
+			"last30Days":  downtimeSeconds(stats.Last30),
+			"last365Days": downtimeSeconds(stats.Last365),
+		},
+	})
+}
+
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
+// @Success 200 {object} dto.SuccessResponse
+// @Success 400 {object} dto.ErrorResponse
+// @Router /api/monitors/{id}/heartbeats [delete]
+func ClearMonitorHeartbeats(c *fiber.Ctx) error {
+	idParam := c.Params("id")
+	if idParam == "" {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "ID parameter is missing",
+		})
+	}
+
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return c.Status(400).JSON(fiber.Map{
+			"message": "Invalid ID parameter",
+		})
+	}
+
+	cutoff := time.Now().Add(-30 * 24 * time.Hour)
+	deleted, err := queries.DeleteHeartbeatsOlderThan(id, cutoff)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(200).JSON(fiber.Map{
+		"message": "success",
+		"deleted": deleted,
+	})
+}
+
+// @Tags Monitors
+// @Accept json
+// @Produce json
+// @Param id path string true "Monitor ID"
 // @Success 200 {object} dto.SuccessResponse
 // @Success 400 {object} dto.ErrorResponse
 // @Router /api/monitors/{id} [delete]

@@ -100,6 +100,26 @@ type MonitorSummaryOut struct {
 	Summary MonitorSummary `json:"summary"`
 }
 
+type MonitorAvailability struct {
+	Today      float64 `json:"today"`
+	Last7Days  float64 `json:"last7Days"`
+	Last30Days float64 `json:"last30Days"`
+	Last365Days float64 `json:"last365Days"`
+}
+
+type MonitorDowntime struct {
+	Today       int `json:"today"`
+	Last7Days   int `json:"last7Days"`
+	Last30Days  int `json:"last30Days"`
+	Last365Days int `json:"last365Days"`
+}
+
+type MonitorAvailabilityOut struct {
+	SuccessResponse
+	Availability MonitorAvailability `json:"availability"`
+	Downtime     MonitorDowntime     `json:"downtime"`
+}
+
 type CertificateExpiryCountDown struct {
 	SuccessResponse
 	DaysUntilExpiration int `json:"daysUntilExpiration"`

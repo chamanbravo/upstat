@@ -17,7 +17,7 @@ export async function fetchMonitorsList(): Promise<
 }
 
 export async function fetchMonitorInfo(
-  id: string
+  id: string,
 ): Promise<components["schemas"]["MonitorInfoOut"] | null> {
   try {
     const response = await serverFetch(`/api/monitors/${id}`);
@@ -31,7 +31,7 @@ export async function fetchMonitorInfo(
 }
 
 export async function fetchMonitorSummary(
-  id: string
+  id: string,
 ): Promise<components["schemas"]["MonitorSummaryOut"] | null> {
   try {
     const response = await serverFetch(`/api/monitors/${id}/summary`);
@@ -44,12 +44,26 @@ export async function fetchMonitorSummary(
   }
 }
 
+export async function fetchMonitorAvailability(
+  id: string,
+): Promise<components["schemas"]["MonitorAvailabilityOut"] | null> {
+  try {
+    const response = await serverFetch(`/api/monitors/${id}/availability`);
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } catch (error) {
+    return null;
+  }
+}
+
 export async function fetchMonitorCertExpCountdown(
-  id: string
+  id: string,
 ): Promise<components["schemas"]["CertificateExpiryCountDown"] | null> {
   try {
     const response = await serverFetch(
-      `/api/monitors/${id}/cert-exp-countdown`
+      `/api/monitors/${id}/cert-exp-countdown`,
     );
     if (response.ok) {
       return await response.json();
@@ -62,11 +76,11 @@ export async function fetchMonitorCertExpCountdown(
 
 export default async function fetchHeartbeat(
   id: string,
-  startTime: string
+  startTime: string,
 ): Promise<components["schemas"]["HeartbeatsOut"] | null> {
   try {
     const response = await serverFetch(
-      `/api/monitors/${id}/heartbeat?startTime=${startTime}`
+      `/api/monitors/${id}/heartbeat?startTime=${startTime}`,
     );
     if (response.ok) {
       return await response.json();
@@ -78,7 +92,7 @@ export default async function fetchHeartbeat(
 }
 
 export const fetchMonitorsStatusPages = async (
-  id: string
+  id: string,
 ): Promise<components["schemas"]["ListStatusPagesOut"] | null> => {
   if (!id) return null;
   try {
@@ -93,7 +107,7 @@ export const fetchMonitorsStatusPages = async (
 };
 
 export const fetchMonitorsNotificationChannels = async (
-  id: string
+  id: string,
 ): Promise<components["schemas"]["NotificationListOut"] | null> => {
   try {
     const response = await serverFetch(`/api/monitors/${id}/notifications`);
