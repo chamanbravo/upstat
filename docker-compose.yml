@@ -13,10 +13,10 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
   api:
     restart: unless-stopped
-    image: chamanbravo/upstat-api:latest
+    build:
+      context: ./
     environment:
       - DB_TYPE=postgres
       - POSTGRES_DSN=postgres://postgres:postgres@db:5432/upstat?sslmode=disable
@@ -24,10 +24,10 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
   web:
     restart: unless-stopped
-    image: chamanbravo/upstat-web:latest
+    build:
+      context: web
     ports:
       - "3000:3000"
     depends_on:
