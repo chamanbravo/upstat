@@ -53,6 +53,7 @@ export function AccountForm() {
 
   async function onSubmit(formData: AccountFormValues) {
     try {
+      setLoading(true);
       const response = await clientFetch(`/api/users/me`, {
         method: "PATCH",
         body: JSON.stringify(formData),
