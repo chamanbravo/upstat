@@ -26,12 +26,13 @@ export default async function Monitors() {
           <DataTable data={data?.monitors} />
         ) : (
           <EmptyState
-            icon=<Activity />
-            title="No monitors"
-            description="Create your first monitor."
+            icon={<Activity />}
+            illustration="monitors"
+            title="No monitors yet"
+            description="Add your first monitor to start tracking uptime and performance."
             action={
               <Button className="mt-4" asChild>
-                <Link href="/monitors/create">Create</Link>
+                <Link href="/monitors/create">Add Monitor</Link>
               </Button>
             }
           />

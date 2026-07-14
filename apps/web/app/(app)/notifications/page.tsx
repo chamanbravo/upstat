@@ -32,11 +32,12 @@ export default async function Notifications() {
       {!notifications?.notifications ? (
         <EmptyState
           icon={<BellDotIcon />}
-          title="No notifications channels"
-          description="Create your first notification channel"
+          illustration="notifications"
+          title="No notification channels"
+          description="Set up your first notification channel to receive alerts when monitors go down."
           action={
             <Button className="mt-4" asChild>
-              <Link href="/notifications/create">Create</Link>
+              <Link href="/notifications/create">Create Channel</Link>
             </Button>
           }
         />
