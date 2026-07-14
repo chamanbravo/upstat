@@ -45,7 +45,7 @@ export default async function Summary({ id }: Props) {
           Cert Exp.
         </CardTitle>
         <p className="text-xl font-semibold">
-          {certExpData?.daysUntilExpiration + " Days"}
+          {certExpData?.daysUntilExpiration != null ? certExpData.daysUntilExpiration + " Days" : "~"}
         </p>
       </Card>
     </div>
