@@ -65,7 +65,7 @@ export default function StatusPageForm({ defaultValues }: Props) {
         toast({
           title: defaultValues
             ? "Status page saved successfully."
-            : "Status page creted successfully.",
+            : "Status page created successfully.",
         });
         router.push("/status-pages");
         router.refresh();
@@ -94,7 +94,7 @@ export default function StatusPageForm({ defaultValues }: Props) {
             name="name"
             render={({ field }) => (
               <FormItem className="space-y-1">
-                <FormLabel>Company/Org&apso;s Name</FormLabel>
+                <FormLabel>Company/Org&apos;s Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Himali Goat Softwares" {...field} />
                 </FormControl>

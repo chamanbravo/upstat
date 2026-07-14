@@ -75,8 +75,8 @@ export default function CreateNotificationForm({ defaultValues }: Props) {
         setLoading(false);
         toast({
           title: defaultValues
-            ? "Notification saved successfull."
-            : "Notification created successfull.",
+            ? "Notification saved successfully."
+            : "Notification created successfully.",
         });
         router.push("/notifications/");
         router.refresh();
@@ -155,7 +155,7 @@ export default function CreateNotificationForm({ defaultValues }: Props) {
                   <FormLabel>Webhook URL</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="https://discord.com/api/webhooks/..."
+                      placeholder="https://slack.com/services/T.../B.../xxx"
                       {...field}
                     />
                   </FormControl>
