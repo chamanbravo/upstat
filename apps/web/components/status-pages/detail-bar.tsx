@@ -20,16 +20,15 @@ export default function DetailBar({ finalHeartbeat }: Props) {
           const uptime = ((h?.up || 0) / (h?.total || 0)) * 100;
           const barColor = {
             "bg-green-400": uptime > 99,
-            "bg-yellow-400": 95 < uptime && uptime < 98,
+            "bg-yellow-400": uptime >= 95 && uptime <= 99,
             "bg-red-400": uptime <= 95,
           };
           return (
-            <div key={i}>
+            <div key={h?.timestamp || i}>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <div
-                      key={i}
                       className={cn(`h-8 w-[9px] rounded-[2px] bg-gray-600`, {
                         ...barColor,
                         "hover:scale-110": h,
@@ -65,7 +64,7 @@ export default function DetailBar({ finalHeartbeat }: Props) {
       </div>
       <div className="flex justify-between items-center">
         <span className="text-muted-foreground text-xs font-light">
-          45 days ago
+          {finalHeartbeat[0]?.timestamp ? format(new Date(finalHeartbeat[0].timestamp), "LLL d") : "45 days ago"}
         </span>
         <span className="text-muted-foreground text-xs font-light">Today</span>
       </div>
