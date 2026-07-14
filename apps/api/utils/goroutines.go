@@ -56,7 +56,15 @@ func StartGoroutine(monitor *models.Monitor) {
 					continue
 				}
 				if monitor.Status != "yellow" {
-					heartbeat := Ping(monitor)
+					var heartbeat *models.Heartbeat
+						switch monitor.Type {
+						case "icmp":
+							heartbeat = PingICMP(monitor)
+						case "port":
+							heartbeat = PingPort(monitor)
+						default:
+							heartbeat = Ping(monitor)
+						}
 
 					incidents, err := queries.LatestIncidentByMonitorId(id)
 					if err != nil {

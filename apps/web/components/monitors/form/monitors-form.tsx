@@ -25,6 +25,7 @@ const MonitorFormSchema = z.object({
   statusPages: z.array(z.string()),
   frequency: z.number(),
   method: z.string(),
+  type: z.string(),
 });
 
 type MonitorFormValues = z.infer<typeof MonitorFormSchema>;
@@ -54,6 +55,7 @@ export default function MonitorsForm({
             statusPages: [],
             frequency: 60,
             method: "get",
+            type: "http",
           }),
     },
   });
@@ -70,7 +72,7 @@ export default function MonitorsForm({
             url: formData.url,
             frequency: formData.frequency,
             method: formData.method,
-            type: "http",
+            type: formData.type || "http",
             notificationChannels: formData.channels,
             statusPages: formData.statusPages,
           }),
