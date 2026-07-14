@@ -32,11 +32,12 @@ export default async function StatusPages() {
       {!statusPages?.statusPages ? (
         <EmptyState
           icon={<PanelTop />}
+          illustration="status-pages"
           title="No status pages"
-          description="Create your first status page."
+          description="Create a status page to share your service availability with your users."
           action={
             <Button className="mt-4" asChild>
-              <Link href="/status-pages/create">Create</Link>
+              <Link href="/status-pages/create">Create Status Page</Link>
             </Button>
           }
         />
