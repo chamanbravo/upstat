@@ -52,12 +52,29 @@ export function UpdatePasswordForm() {
     }
     try {
       setLoading(true);
-      toast({
-        title: "Password updated.",
+      const response = await clientFetch("/api/users/me/password", {
+        method: "PATCH",
+        body: JSON.stringify({ currentPassword, newPassword }),
       });
+      if (response.ok) {
+        toast({
+          title: "Password updated.",
+        });
+        form.reset();
+      } else {
+        const responseData = await response.json();
+        toast({
+          title: responseData?.message || "Failed to update password.",
+        });
+      }
+    } catch (err) {
+      toast({
+        title: "Something went wrong.",
+        description: "Please try again.",
+      });
+    } finally {
       setLoading(false);
-      setLoading(false);
-    } catch (err) {}
+    }
   }
 
   return (
