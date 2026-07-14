@@ -67,7 +67,7 @@ export function UpdatePasswordForm() {
           title: responseData?.message || "Failed to update password.",
         });
       }
-    } catch (err) {
+    } catch {
       toast({
         title: "Something went wrong.",
         description: "Please try again.",
