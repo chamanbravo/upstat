@@ -1,4 +1,5 @@
 import { AlertTriangle, X } from "lucide-react";
+import { useEffect, useCallback } from "react";
 
 interface ConfirmDeleteProps {
   open: boolean;
@@ -17,6 +18,22 @@ export function ConfirmDeleteDialog({
   description = "This action cannot be undone. All associated data will be permanently removed.",
   confirmLabel = "Delete",
 }: ConfirmDeleteProps) {
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onCancel();
+      }
+    },
+    [onCancel]
+  );
+
+  useEffect(() => {
+    if (open) {
+      document.addEventListener("keydown", handleKeyDown);
+      return () => document.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [open, handleKeyDown]);
+
   if (!open) return null;
 
   return (
@@ -48,13 +65,13 @@ export function ConfirmDeleteDialog({
           <button
             onClick={onCancel}
             className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+            autoFocus
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
             className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
-            autoFocus
           >
             {confirmLabel}
           </button>
