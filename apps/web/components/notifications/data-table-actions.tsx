@@ -12,6 +12,8 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { clientFetch } from "@/lib/api/clientFetch";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 
 interface Props {
   id: number;
@@ -19,6 +21,7 @@ interface Props {
 
 export default function DataTableActions({ id }: Props) {
   const router = useRouter();
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const deleteItem = async () => {
     const response = await clientFetch(`/api/notifications/${id}`, {
@@ -30,25 +33,34 @@ export default function DataTableActions({ id }: Props) {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="w-8 h-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="w-4 h-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem asChild>
-          <Link href={`/notifications/configure/${id}`}>Configure </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={deleteItem}
-          className="text-destructive hover:text-destructive-foreground"
-        >
-          Delete
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="w-8 h-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="w-4 h-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem asChild>
+            <Link href={`/notifications/configure/${id}`}>Configure </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => setConfirmOpen(true)}
+            className="text-destructive hover:text-destructive-foreground"
+          >
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <ConfirmDeleteDialog
+        open={confirmOpen}
+        onConfirm={deleteItem}
+        onCancel={() => setConfirmOpen(false)}
+        title="Delete this notification channel?"
+        description="This action cannot be undone. The channel will be removed from all associated monitors."
+      />
+    </>
   );
 }
