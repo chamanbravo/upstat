@@ -69,6 +69,10 @@ And dozens of smaller features to be added.
 
 ## 🔧 How to Install
 
+### 🚀 One-Click Deploy
+
+[![Deploy on RepoCloud](https://d16t0pc4846x52.cloudfront.net/deploylobe.svg)](https://repocloud.io/details/Upstat/)
+
 ### 🐳 Docker
 
 For Sqlite
